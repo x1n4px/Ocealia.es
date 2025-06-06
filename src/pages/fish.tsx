@@ -8,53 +8,113 @@ type Fish = {
     gh: string;
     temperature: string;
     img: string;
+    mediumSize?: number;
+    maxSize?: number;
+    longevity?: number;
+    diet?: string;
+    sociability?: string;
+    territoriality?: string;
+    wayOfLife?: string;
+    wayOfBreeding?: string;
+    stream?: string;
+    minimumVolume?: number;
 };
 
 const fishList: Fish[] = [
     {
         id: 1,
         name: 'Neon Tetra',
-        ph: '6.0-7.0',
-        kh: '1-2 dKH',
-        gh: '1-2 dGH',
+        ph: '6.0-7.2',
+        kh: '3-10 dKH',
+        gh: '4-10 dGH',
         temperature: '20-26°C',
         img: 'https://www.fishipedia.es/wp-content/uploads/2013/07/Paracheirodon_innesi_1.jpg',
+        mediumSize: 3,
+        maxSize: 4,
+        longevity: 5,
+        diet: 'Carnívoro',
+        sociability: 'Banco',
+        territoriality: 'No',
+        wayOfLife: 'Diurno',
+        wayOfBreeding: 'Ovíparo',
+        stream: 'Lenta',
+        minimumVolume: 60
     },
     {
         id: 2,
-        name: 'Betta',
+        name: 'Betta Splendens',
         ph: '6.5-7.5',
-        kh: '3-5 dKH',
-        gh: '3-4 dGH',
-        temperature: '24-30°C',
+        kh: '4-20 dKH',
+        gh: '5-20 dGH',
+        temperature: '24-28°C',
         img: 'https://www.fishipedia.es/wp-content/uploads/2017/11/Betta-splendens_8087_2-725x483.jpg',
+        mediumSize: 4,
+        maxSize: 4,
+        longevity: 5,
+        diet: 'Carnívoro',
+        sociability: 'Solitario',
+        territoriality: 'Sí',
+        wayOfLife: 'Diurno',
+        wayOfBreeding: 'Ovíparo',
+        stream: 'Lenta',
+        minimumVolume: 60
     },
     {
         id: 3,
         name: 'Guppy',
-        ph: '7.0-8.0',
-        kh: '8-12 dKH',
-        gh: '8-12 dGH',
-        temperature: '22-28°C',
+        ph: '5.5-8.0',
+        kh: '5-15 dKH',
+        gh: '6-15 dGH',
+        temperature: '18-28°C',
         img: 'https://acuarioland.com/wp-content/uploads/2020/04/pez-guppy-acuarioland.jpg',
+        mediumSize: 3,
+        maxSize: 5,
+        longevity: 3,
+        diet: 'Omnívoro',
+        sociability: 'Pequeño grupo',
+        territoriality: 'No',
+        wayOfLife: 'Diurno',
+        wayOfBreeding: 'Ovovivíparo',
+        stream: 'Lenta y estancada',
+        minimumVolume: 60
     },
     {
         id: 4,
         name: 'Escalar',
-        ph: '6.5-7.5',
-        kh: '3-8 dKH',
-        gh: '3-8 dGH',
-        temperature: '24-30°C',
+        ph: '6-7.2',
+        kh: '5-9 dKH',
+        gh: '6-9 dGH',
+        temperature: '24-26°C',
         img: 'https://www.acuariosrtules.top/wp-content/uploads/2020/11/Pterophyllum-scalare-escalar.jpg.webp',
+        mediumSize: 15,
+        maxSize: 20,
+        longevity: 9,
+        diet: 'Carnívoro',
+        sociability: 'Banco',
+        territoriality: 'Sí',
+        wayOfLife: 'Diurno',
+        wayOfBreeding: 'Ovíparo',
+        stream: 'Lenta y estancada',
+        minimumVolume: 300
     },
     {
         id: 5,
         name: 'Corydoras',
-        ph: '6.0-7.8',
-        kh: '2-12 dKH',
-        gh: '2-12 dGH',
-        temperature: '22-26°C',
+        ph: '6.0-7.5',
+        kh: '4-19 dKH',
+        gh: '5-19 dGH',
+        temperature: '25-28°C',
         img: 'https://www.fishipedia.es/wp-content/uploads/2016/11/Corydoras-panda.jpg',
+        mediumSize: 6,
+        maxSize: 7,
+        longevity: 8,
+        diet: 'Omnívoro',
+        sociability: 'Banco',
+        territoriality: 'No',
+        wayOfLife: 'Diurno',
+        wayOfBreeding: 'Ovíparo',
+        stream: 'Lenta y estancada',
+        minimumVolume: 80
     },
 ];
 
@@ -112,6 +172,42 @@ const FishCard: React.FC<{
             <div className="flex justify-between">
                 <span className="font-medium">Temp:</span>
                 <span className="text-gray-700">{fish.temperature}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Tamaño medio:</span>
+                <span className="text-gray-700">{fish.mediumSize}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Tamaño máximo:</span>
+                <span className="text-gray-700">{fish.maxSize}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Longevidad:</span>
+                <span className="text-gray-700">{fish.longevity}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Dieta:</span>
+                <span className="text-gray-700">{fish.diet}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Sociabilidad:</span>
+                <span className="text-gray-700">{fish.sociability}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Territorial:</span>
+                <span className="text-gray-700">{fish.territoriality}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="font-medium">Modo de vida:</span>
+                <span className="text-gray-700">{fish.wayOfLife}</span>
+            </div>
+             <div className="flex justify-between">
+                <span className="font-medium">Modo de reproducción:</span>
+                <span className="text-gray-700">{fish.wayOfBreeding}</span>
+            </div>
+             <div className="flex justify-between">
+                <span className="font-medium">Volumen mínimo:</span>
+                <span className="text-gray-700">{fish.minimumVolume}</span>
             </div>
         </div>
     </div>
