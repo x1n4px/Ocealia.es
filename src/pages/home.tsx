@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Fish, 
   Droplets, 
@@ -19,7 +19,6 @@ import {
   Eye,
   Activity
 } from 'lucide-react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Home() {
   const [activeSection, setActiveSection] = useState('inicio');
