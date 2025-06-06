@@ -218,7 +218,7 @@ const fishList: Fish[] = [
         kh: '3-15 dKH',
         gh: '3-15 dGH',
         temperature: '22-26°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
+        img: 'https://www.fishipedia.es/wp-content/uploads/2020/09/Poropanchax-normani.jpg',
         mediumSize: 3,
         maxSize: 4,
         longevity: 4,
@@ -237,7 +237,7 @@ const fishList: Fish[] = [
         kh: '5-12 dKH',
         gh: '5-12 dGH',
         temperature: '22-30°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
+        img: 'https://www.fishipedia.es/wp-content/uploads/2024/12/Chromobotia_macracanthus_BCH_FISHI_3018_241206_0-725x483.jpg',
         mediumSize: 15,
         maxSize: 30,
         longevity: 20,
@@ -256,7 +256,7 @@ const fishList: Fish[] = [
         kh: '2-20 dKH',
         gh: '2-20 dGH',
         temperature: '22-26°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
+        img: 'https://www.fishipedia.es/wp-content/uploads/2014/07/Ancistrus-aff.-hoplogenys-725x483.jpg',
         mediumSize: 12,
         maxSize: 15,
         longevity: 8,
@@ -275,7 +275,7 @@ const fishList: Fish[] = [
         kh: '7-20 dKH',
         gh: '7-20 dGH',
         temperature: '18-28°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
+        img: 'https://www.fishipedia.es/wp-content/uploads/2019/07/poecilia-sphenops-slaboch-725x483.jpg',
         mediumSize: 4,
         maxSize: 7,
         longevity: 3,
@@ -294,7 +294,7 @@ const fishList: Fish[] = [
         kh: '7-20 dKH',
         gh: '7-20 dGH',
         temperature: '18-28°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
+        img: 'https://www.fishi-pedia.com/wp-content/uploads/2015/11/Platy-Wagtail-Rouge-725x483.jpg',
         mediumSize: 4,
         maxSize: 7,
         longevity: 5,
@@ -470,10 +470,10 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
 
     // Define the ranges for each parameter for visualization
     const parameterRanges = {
-        ph: { min: 5.5, max: 8.5 },
+        ph: { min: 5, max: 8.5 },
         kh: { min: 0, max: 25 },
         gh: { min: 0, max: 25 },
-        temperature: { min: 18, max: 32 }
+        temperature: { min: 10, max: 32 }
     };
 
     return (
