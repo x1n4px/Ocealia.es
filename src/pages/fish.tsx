@@ -1,312 +1,7 @@
 import React, { useState } from 'react';
 
-type Fish = {
-    id: number;
-    name: string;
-    ph: string;
-    kh: string;
-    gh: string;
-    temperature: string;
-    img: string;
-    mediumSize?: number;
-    maxSize?: number;
-    longevity?: number;
-    diet?: string;
-    sociability?: string;
-    territoriality?: string;
-    wayOfLife?: string;
-    wayOfBreeding?: string;
-    stream?: string;
-    minimumVolume?: number;
-};
-
-const fishList: Fish[] = [
-    {
-        id: 1,
-        name: 'Neon Tetra',
-        ph: '6.0-7.2',
-        kh: '3-10 dKH',
-        gh: '4-10 dGH',
-        temperature: '20-26°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2013/07/Paracheirodon_innesi_1.jpg',
-        mediumSize: 3,
-        maxSize: 4,
-        longevity: 5,
-        diet: 'Carnívoro',
-        sociability: 'Banco',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Lenta',
-        minimumVolume: 60
-    },
-    {
-        id: 2,
-        name: 'Betta Splendens',
-        ph: '6.5-7.5',
-        kh: '4-20 dKH',
-        gh: '5-20 dGH',
-        temperature: '24-28°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2017/11/Betta-splendens_8087_2-725x483.jpg',
-        mediumSize: 4,
-        maxSize: 4,
-        longevity: 5,
-        diet: 'Carnívoro',
-        sociability: 'Solitario',
-        territoriality: 'Sí',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Lenta',
-        minimumVolume: 60
-    },
-    {
-        id: 3,
-        name: 'Guppy',
-        ph: '5.5-8.0',
-        kh: '5-15 dKH',
-        gh: '6-15 dGH',
-        temperature: '18-28°C',
-        img: 'https://acuarioland.com/wp-content/uploads/2020/04/pez-guppy-acuarioland.jpg',
-        mediumSize: 3,
-        maxSize: 5,
-        longevity: 3,
-        diet: 'Omnívoro',
-        sociability: 'Pequeño grupo',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovovivíparo',
-        stream: 'Lenta y estancada',
-        minimumVolume: 60
-    },
-    {
-        id: 4,
-        name: 'Escalar',
-        ph: '6-7.2',
-        kh: '5-9 dKH',
-        gh: '6-9 dGH',
-        temperature: '24-26°C',
-        img: 'https://www.acuariosrtules.top/wp-content/uploads/2020/11/Pterophyllum-scalare-escalar.jpg.webp',
-        mediumSize: 15,
-        maxSize: 20,
-        longevity: 9,
-        diet: 'Carnívoro',
-        sociability: 'Banco',
-        territoriality: 'Sí',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Lenta y estancada',
-        minimumVolume: 300
-    },
-    {
-        id: 5,
-        name: 'Corydoras',
-        ph: '6.0-7.5',
-        kh: '4-19 dKH',
-        gh: '5-19 dGH',
-        temperature: '25-28°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2016/11/Corydoras-panda.jpg',
-        mediumSize: 6,
-        maxSize: 7,
-        longevity: 8,
-        diet: 'Omnívoro',
-        sociability: 'Banco',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Lenta y estancada',
-        minimumVolume: 80
-    },
-    {
-        id: 6,
-        name: 'Tetra Fantasma',
-        ph: '5.5-7',
-        kh: '10-20 dKH',
-        gh: '10-20 dGH',
-        temperature: '22-26°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2013/05/Hyphessobrycon_eques_5-725x483.jpg',
-        mediumSize: 3,
-        maxSize: 4,
-        longevity: 5,
-        diet: 'Carnívoro',
-        sociability: 'Vive en pequeños grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Normal',
-        minimumVolume: 100
-    },
-    {
-        id: 7,
-        name: 'Ramirezi',
-        ph: '6-7',
-        kh: '1-6 dKH',
-        gh: '1-6 dGH',
-        temperature: '23-30°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2014/03/Microgeophagus-Ramirezi-725x483.jpg',
-        mediumSize: 3,
-        maxSize: 4,
-        longevity: 4,
-        diet: 'Ommnivoro',
-        sociability: 'Pareja o grupo',
-        territoriality: 'Sí',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Normal',
-        minimumVolume: 60
-    },
-    {
-        id: 8,
-        name: 'Ciclido púrpura',
-        ph: '6-8',
-        kh: '5-14 dKH',
-        gh: '5-14 dGH',
-        temperature: '24-27°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2013/09/Pelvicachromis_Pulcher_1-725x483.jpg',
-        mediumSize: 9,
-        maxSize: 10,
-        longevity: 5,
-        diet: 'Ommnivoro',
-        sociability: 'Pareja',
-        territoriality: 'Sí',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Normal',
-        minimumVolume: 100
-    },
-    {
-        id: 9,
-        name: 'Neocaridina davidi',
-        ph: '6-8',
-        kh: '5-15 dKH',
-        gh: '5-15 dGH',
-        temperature: '4-28°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2017/10/Neocaridina-davidi-Sakura--725x483.jpg',
-        mediumSize: 2,
-        maxSize: 3,
-        longevity: 2,
-        diet: 'Ommnivoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Tranquilo',
-        minimumVolume: 20
-    },
-    {
-        id: 10,
-        name: 'Goldfish',
-        ph: '6.5-8',
-        kh: '5-25 dKH',
-        gh: '5-25 dGH',
-        temperature: '10-25°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2016/01/poisson_rouge-2-725x483.jpg',
-        mediumSize: 20,
-        maxSize: 36,
-        longevity: 35,
-        diet: 'Ommnivoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Normal',
-        minimumVolume: 200
-    },
-    {
-        id: 11,
-        name: 'Ojo de linterna',
-        ph: '6.5-7.2',
-        kh: '3-15 dKH',
-        gh: '3-15 dGH',
-        temperature: '22-26°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2020/09/Poropanchax-normani.jpg',
-        mediumSize: 3,
-        maxSize: 4,
-        longevity: 4,
-        diet: 'Carnívoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Tranquilo',
-        minimumVolume: 50
-    },
-    {
-        id: 12,
-        name: 'Botia payaso',
-        ph: '5-7',
-        kh: '5-12 dKH',
-        gh: '5-12 dGH',
-        temperature: '22-30°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2024/12/Chromobotia_macracanthus_BCH_FISHI_3018_241206_0-725x483.jpg',
-        mediumSize: 15,
-        maxSize: 30,
-        longevity: 20,
-        diet: 'Ommnivoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Normal',
-        minimumVolume: 150
-    },
-    {
-        id: 13,
-        name: 'Ancistrus',
-        ph: '5.5-7.5',
-        kh: '2-20 dKH',
-        gh: '2-20 dGH',
-        temperature: '22-26°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2014/07/Ancistrus-aff.-hoplogenys-725x483.jpg',
-        mediumSize: 12,
-        maxSize: 15,
-        longevity: 8,
-        diet: 'Ommnivoro',
-        sociability: 'Solitario',
-        territoriality: 'Sí',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovíparo',
-        stream: 'Alto',
-        minimumVolume: 150
-    },
-    {
-        id: 14,
-        name: 'Molly',
-        ph: '7-8.2',
-        kh: '7-20 dKH',
-        gh: '7-20 dGH',
-        temperature: '18-28°C',
-        img: 'https://www.fishipedia.es/wp-content/uploads/2019/07/poecilia-sphenops-slaboch-725x483.jpg',
-        mediumSize: 4,
-        maxSize: 7,
-        longevity: 3,
-        diet: 'Ommnivoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovovivíparo',
-        stream: 'Lento y estancada',
-        minimumVolume: 100
-    },
-    {
-        id: 15,
-        name: 'Platy',
-        ph: '7-8',
-        kh: '7-20 dKH',
-        gh: '7-20 dGH',
-        temperature: '18-28°C',
-        img: 'https://www.fishi-pedia.com/wp-content/uploads/2015/11/Platy-Wagtail-Rouge-725x483.jpg',
-        mediumSize: 4,
-        maxSize: 7,
-        longevity: 5,
-        diet: 'Ommnivoro',
-        sociability: 'Grupos',
-        territoriality: 'No',
-        wayOfLife: 'Diurno',
-        wayOfBreeding: 'Ovovivíparo',
-        stream: 'Lento y estancada',
-        minimumVolume: 100
-    }
-];
+import { fishList } from '../data/fishData'; // Importa la lista de peces
+import type { Fish } from '../types/fish';
 
 const FishCard: React.FC<{
     fish: Fish;
@@ -316,7 +11,6 @@ const FishCard: React.FC<{
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = (e: React.MouseEvent) => {
-        // Prevent the card selection from triggering when expanding/collapsing
         e.stopPropagation();
         setIsExpanded(!isExpanded);
     };
@@ -326,13 +20,13 @@ const FishCard: React.FC<{
             onClick={() => onSelect(fish.id)}
             className={`
                 relative overflow-hidden
-                border-2 rounded-xl p-4 m-2 w-64
+                border-2 rounded-xl p-4 m-2 w-64 mx-auto md:w-auto
                 transition-all duration-300 flex flex-col items-center
                 ${selected ?
                     'border-teal-400 shadow-lg shadow-teal-100/50 bg-gradient-to-b from-teal-50 to-white' :
                     'border-gray-200 shadow-md hover:shadow-lg hover:border-teal-200 bg-white'}
                 hover:scale-[1.02] transform-gpu
-                ${isExpanded ? 'h-auto pb-12' : 'h-80'} {/* Adjust height when expanded, add padding for button */}
+                ${isExpanded ? 'h-auto pb-12' : 'h-80'}
             `}
         >
             {selected && (
@@ -356,7 +50,6 @@ const FishCard: React.FC<{
 
             <h3 className="text-lg font-bold text-gray-800 mb-2">{fish.name}</h3>
 
-            {/* Always visible info */}
             <div className="w-full space-y-2 text-sm text-gray-600">
                 <div className="flex justify-between">
                     <span className="font-medium">pH:</span>
@@ -368,7 +61,6 @@ const FishCard: React.FC<{
                 </div>
             </div>
 
-            {/* Expandable detailed information */}
             <div className={`w-full space-y-2 text-sm text-gray-600 overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
                 <div className="flex justify-between">
                     <span className="font-medium">KH:</span>
@@ -416,7 +108,6 @@ const FishCard: React.FC<{
                 </div>
             </div>
 
-            {/* Disguised button to expand/collapse */}
             <div
                 className="absolute bottom-0 left-0 w-full h-8 bg-gray-100 flex items-center justify-center
                            text-gray-500 hover:text-teal-600 cursor-pointer transition-colors duration-200"
@@ -445,66 +136,70 @@ const ParameterRange: React.FC<{
     unit?: string,
     fishNames: string[]
 }> = ({ values, ranges, unit, fishNames }) => {
-    // Colores para cada pez (puedes ajustar estos colores)
     const fishColors = [
         'bg-teal-500',
         'bg-amber-500',
         'bg-rose-500',
         'bg-indigo-500',
-        'bg-emerald-500'
+        'bg-emerald-500',
+        'bg-purple-500',
+        'bg-pink-500',
+        'bg-cyan-500',
     ];
 
-    // Extract numeric ranges from values
     const numericRanges = values.map(v => {
         const nums = v.replace(/[^\d.-]/g, '').split('-').map(Number);
         return { min: nums[0], max: nums[1] || nums[0] };
     });
 
+    const chartHeight = 24 + (numericRanges.length - 1) * 20;
+
     return (
-        <div>
-            {/* Leyenda de colores */}
-            <div className="flex flex-wrap gap-3 mb-2">
+        <div className="flex flex-col">
+            <div className="flex flex-wrap gap-3 mb-4 mt-2">
                 {fishNames.map((name, idx) => (
-                    <div key={idx} className="flex items-center">
-                        <div className={`w-3 h-3 rounded-full mr-1 ${fishColors[idx % fishColors.length]}`}></div> {/* Use modulo for color cycle */}
-                        <span className="text-xs font-medium text-gray-600">{name}</span>
+                    <div key={idx} className="flex items-center text-sm">
+                        <div className={`w-3 h-3 rounded-full mr-1 ${fishColors[idx % fishColors.length]}`}></div>
+                        <span className="font-medium text-gray-600">{name}</span>
                     </div>
                 ))}
             </div>
 
-            {/* Gráfico de rangos */}
-            <div className="relative h-12 w-full my-2">
+            <div className="relative w-full my-2" style={{ height: `${chartHeight}px` }}>
                 <div className="absolute h-1 bg-gray-200 w-full top-1/2 transform -translate-y-1/2 rounded-full"></div>
 
-                {numericRanges.map((range, idx) => (
-                    <div
-                        key={idx}
-                        className={`
-                            absolute h-3 rounded-full top-1/2 transform -translate-y-1/2
-                            ${fishColors[idx % fishColors.length]}
-                        `}
-                        style={{
-                            left: `${((range.min - ranges.min) / (ranges.max - ranges.min)) * 100}%`,
-                            width: `${((range.max - range.min) / (ranges.max - ranges.min)) * 100}%`,
-                        }}
-                    >
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-600">
-                            {values[idx]}
-                        </div>
-                    </div>
-                ))}
+                {numericRanges.map((range, idx) => {
+                    const leftPosition = ((range.min - ranges.min) / (ranges.max - ranges.min)) * 100;
+                    const widthPercentage = ((range.max - range.min) / (ranges.max - ranges.min)) * 100;
+                    const topPosition = (chartHeight / 2) - (numericRanges.length * 10) + (idx * 20);
 
-                <div className="absolute -top-3 left-0 text-xs text-gray-500">{ranges.min}{unit}</div>
-                <div className="absolute -top-3 right-0 text-xs text-gray-500">{ranges.max}{unit}</div>
+                    return (
+                        <div
+                            key={idx}
+                            className={`
+                                absolute h-4 rounded-full
+                                ${fishColors[idx % fishColors.length]}
+                            `}
+                            style={{
+                                left: `${leftPosition}%`,
+                                width: `${widthPercentage}%`,
+                                top: `${topPosition}px`,
+                            }}
+                        ></div>
+                    );
+                })}
+
+                <div className="absolute top-0 left-0 text-xs text-gray-500">{ranges.min}{unit}</div>
+                <div className="absolute top-0 right-0 text-xs text-gray-500">{ranges.max}{unit}</div>
             </div>
         </div>
     );
 };
 
+
 const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) => {
     if (selectedFish.length < 2) return null;
 
-    // Define the ranges for each parameter for visualization
     const parameterRanges = {
         ph: { min: 5, max: 8.5 },
         kh: { min: 0, max: 25 },
@@ -513,15 +208,15 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
     };
 
     return (
-        <div className="mt-10 p-6 bg-white rounded-xl shadow-md border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <div className="mt-10 p-4 md:p-6 bg-white rounded-xl shadow-md border border-gray-100">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                Comparatiba de compatibilidad
+                Comparativa de compatibilidad
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-gray-700 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-teal-500" viewBox="0 0 20 20" fill="currentColor">
@@ -536,7 +231,6 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                             values={selectedFish.map(fish => fish.ph)}
                             ranges={parameterRanges.ph}
                             fishNames={selectedFish.map(fish => fish.name)}
-
                         />
                     </div>
 
@@ -547,7 +241,6 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                             ranges={parameterRanges.kh}
                             unit=" dKH"
                             fishNames={selectedFish.map(fish => fish.name)}
-
                         />
                     </div>
 
@@ -558,7 +251,6 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                             ranges={parameterRanges.gh}
                             unit=" dGH"
                             fishNames={selectedFish.map(fish => fish.name)}
-
                         />
                     </div>
 
@@ -569,7 +261,6 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                             ranges={parameterRanges.temperature}
                             unit="°C"
                             fishNames={selectedFish.map(fish => fish.name)}
-
                         />
                     </div>
                 </div>
@@ -586,7 +277,7 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parameter</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parámetro</th>
                                     {selectedFish.map(fish => (
                                         <th key={fish.id} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             {fish.name}
@@ -632,11 +323,11 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                         </h4>
                         <p className="text-sm text-blue-700">
                             {selectedFish.length >= 2 ? (
-                                <>
-                                    Estos peces {selectedFish.some(f => f.name === 'Betta Splendens') ? 'pueden requerir consideraciones especiales ' : 'están en rango compatible'}
-                                    para la mayoría de los parámetros. Presta especial atención a los rangos de temperatura y niveles de pH para una convivencia óptima.
-                                </>
-                            ) : ''}
+                                selectedFish.some(f => f.name.toLowerCase().includes('betta')) ?
+                                    'Considera la sociabilidad de los peces seleccionados, especialmente si incluyes especies como el Betta Splendens, que pueden ser territoriales. Consulta guías de compatibilidad específicas para asegurar una convivencia pacífica.'
+                                    :
+                                    'Los peces seleccionados muestran rangos de parámetros de agua compatibles. No obstante, siempre es recomendable investigar sus temperamentos individuales y requisitos de espacio para asegurar una buena convivencia en tu acuario.'
+                            ) : 'Selecciona al menos dos peces para ver el análisis de compatibilidad.'}
                         </p>
                     </div>
                 </div>
@@ -647,6 +338,11 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
 
 const FishPage: React.FC = () => {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [filteredFish, setFilteredFish] = useState<Fish[]>(fishList);
+    const [phInput, setPhInput] = useState<string>('');
+    const [khInput, setKhInput] = useState<string>('');
+    const [ghInput, setGhInput] = useState<string>('');
+    const [filterActive, setFilterActive] = useState<boolean>(false);
 
     const handleSelect = (id: number) => {
         setSelectedIds(prev =>
@@ -654,45 +350,194 @@ const FishPage: React.FC = () => {
         );
     };
 
+    const parseRange = (rangeString: string): { min: number, max: number } => {
+        const parts = rangeString.split('-').map(Number);
+        return {
+            min: parts[0],
+            max: parts.length > 1 ? parts[1] : parts[0]
+        };
+    };
+
+    const isCompatible = (fishValue: string, input: number): boolean => {
+        const { min, max } = parseRange(fishValue);
+        return input >= min && input <= max;
+    };
+
+    const applyFilter = () => {
+        const ph = parseFloat(phInput);
+        const kh = parseFloat(khInput);
+        const gh = parseFloat(ghInput);
+
+        // Basic validation
+        if (isNaN(ph) && isNaN(kh) && isNaN(gh)) {
+            alert('Por favor, introduce al menos un valor numérico para filtrar.');
+            return;
+        }
+
+        const newFilteredFish = fishList.filter(fish => {
+            const phMatch = isNaN(ph) || isCompatible(fish.ph, ph);
+            const khMatch = isNaN(kh) || isCompatible(fish.kh, kh);
+            const ghMatch = isNaN(gh) || isCompatible(fish.gh, gh);
+            return phMatch && khMatch && ghMatch;
+        });
+        setFilteredFish(newFilteredFish);
+        setSelectedIds([]); // Clear selections when filter changes
+        setFilterActive(true);
+    };
+
+    const clearFilter = () => {
+        setFilteredFish(fishList);
+        setSelectedIds([]);
+        setPhInput('');
+        setKhInput('');
+        setGhInput('');
+        setFilterActive(false);
+    };
+
     const selectedFish = fishList.filter(fish => selectedIds.includes(fish.id));
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6 md:p-10">
+    <>
+        <div className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-blue-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="text-center">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    <span className="bg-gradient-to-r from-green-600 via-blue-600 to-green-800 bg-clip-text text-transparent">
+                    Comparador de peces ornamentales
+                    </span>
+                </h1>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Selecciona dos o más especies de peces para comparar sus parámetros de agua ideales y verificar su compatibilidad para tu acuario.
+
+                </p>
+                
+            </div>
+
+            <div className="flex justify-center items-center col-span-full mt-4">
+                <button
+                    onClick={() => window.location.href = "/"}
+                    className="inline-flex items-center px-6 py-3 bg-white-600 text-black rounded-xl font-semibold shadow hover:bg-gray-200 transition-all duration-200 text-lg"
+                >
+                    Volver al menú principal
+
+                </button>
+            </div>
+        </div>
+    </div>
+        <div className="min-h-screen bg-gray-50 p-4 md:p-10">
+            
             <div className="max-w-7xl mx-auto">
-                <div className="flex items-center mb-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-teal-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                    <h1 className="text-3xl font-bold text-gray-800">Comparador de peces ornamentales</h1>
+                
+
+                {/* New Filter Section */}
+                <div className="mb-8 p-4 md:p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 00-2 2v10a2 2 0 002 2m0-16a2 2 0 012 2v10a2 2 0 01-2 2m0-16V4m0 0a2 2 0 012 2v10a2 2 0 01-2 2m0 0H9m7 0h-4M9 3h4m-4 18h4" />
+                        </svg>
+                        Filtrar por parámetros de agua
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label htmlFor="ph" className="block text-sm font-medium text-gray-700 mb-1">pH</label>
+                            <input
+                                type="number"
+                                id="ph"
+                                value={phInput}
+                                onChange={(e) => setPhInput(e.target.value)}
+                                placeholder="Ej: 7.0"
+                                step="0.1"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="kh" className="block text-sm font-medium text-gray-700 mb-1">KH</label>
+                            <input
+                                type="number"
+                                id="kh"
+                                value={khInput}
+                                onChange={(e) => setKhInput(e.target.value)}
+                                placeholder="Ej: 5"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="gh" className="block text-sm font-medium text-gray-700 mb-1">GH</label>
+                            <input
+                                type="number"
+                                id="gh"
+                                value={ghInput}
+                                onChange={(e) => setGhInput(e.target.value)}
+                                placeholder="Ej: 8"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                            onClick={applyFilter}
+                            className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                            </svg>
+                            Filtrar peces
+                        </button>
+                        {filterActive && (
+                            <button
+                                onClick={clearFilter}
+                                className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                                </svg>
+                                Limpiar filtro
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                <p className="text-gray-600 mb-8 max-w-3xl">
-                    Selecciona dos o más especies de peces para comparar sus parámetros de agua ideales y verificar su compatibilidad para tu acuario.
-                </p>
-
                 <div className="mb-6 flex items-center">
-                    <h2 className="text-xl font-semibold text-gray-700 mr-4">Especies disponible</h2>
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-700 mr-4">Especies disponibles</h2>
                     {selectedIds.length > 0 && (
                         <span className="px-3 py-1 bg-teal-100 text-teal-800 text-sm font-medium rounded-full">
-                            {selectedIds.length} seleccionado
+                            {selectedIds.length} seleccionado{selectedIds.length !== 1 ? 's' : ''}
                         </span>
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mb-10">
-                    {fishList.map(fish => (
-                        <FishCard
-                            key={fish.id}
-                            fish={fish}
-                            selected={selectedIds.includes(fish.id)}
-                            onSelect={handleSelect}
-                        />
-                    ))}
-                </div>
+                {filteredFish.length === 0 && filterActive ? (
+                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-md">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.542 2.705-1.542 3.47 0l5.58 11.25c.38.766-.112 1.65-.948 1.65H3.596c-.836 0-1.328-.884-.949-1.65l5.58-11.25zM10 11a1 1 0 100-2 1 1 0 000 2zm1-2a1 1 0 10-2 0v2a1 1 0 102 0V9z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700">
+                                    No se encontraron peces que coincidan con los parámetros de agua especificados. Intenta ajustar los valores.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mb-10">
+                        {filteredFish.map(fish => (
+                            <FishCard
+                                key={fish.id}
+                                fish={fish}
+                                selected={selectedIds.includes(fish.id)}
+                                onSelect={handleSelect}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 <CompareSection selectedFish={selectedFish} />
             </div>
         </div>
+        </>
     );
 };
 

@@ -3,6 +3,7 @@ import './App.css'
 
 import Home from './pages/home'
 import FishPage from './pages/fish'
+import AlgasGuide from './pages/algae'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Home />
         } />
         <Route path="/fish" element={<FishPage />} />
+        <Route path="/algae" element={<AlgasGuide />} />
       </Routes>
     </Router>
   )

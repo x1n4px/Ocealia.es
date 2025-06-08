@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
-  Fish, 
-  Droplets, 
-  Thermometer, 
-  Filter, 
-  Leaf, 
-  Settings, 
+import {
+  Fish,
+  Droplets,
+  Thermometer,
+  Filter,
+  Leaf,
+  Settings,
   ChevronDown,
   Clock,
   AlertTriangle,
@@ -65,27 +65,27 @@ function Home() {
             {/* Grid lines */}
             <defs>
               <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="1"/>
+                <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="1" />
               </pattern>
             </defs>
             <rect width="400" height="200" fill="url(#grid)" />
-            
+
             {/* Axes */}
-            <line x1="40" y1="180" x2="380" y2="180" stroke="#374151" strokeWidth="2"/>
-            <line x1="40" y1="20" x2="40" y2="180" stroke="#374151" strokeWidth="2"/>
-            
+            <line x1="40" y1="180" x2="380" y2="180" stroke="#374151" strokeWidth="2" />
+            <line x1="40" y1="20" x2="40" y2="180" stroke="#374151" strokeWidth="2" />
+
             {/* Ammonia curve (red) */}
-            <path d="M 40 180 Q 80 60 120 80 Q 160 100 200 140 Q 240 160 280 170 Q 320 175 360 178" 
-                  fill="none" stroke="#ef4444" strokeWidth="3"/>
-            
+            <path d="M 40 180 Q 80 60 120 80 Q 160 100 200 140 Q 240 160 280 170 Q 320 175 360 178"
+              fill="none" stroke="#ef4444" strokeWidth="3" />
+
             {/* Nitrite curve (orange) */}
-            <path d="M 40 180 Q 100 180 140 120 Q 180 60 220 80 Q 260 100 300 140 Q 340 160 380 170" 
-                  fill="none" stroke="#f97316" strokeWidth="3"/>
-            
+            <path d="M 40 180 Q 100 180 140 120 Q 180 60 220 80 Q 260 100 300 140 Q 340 160 380 170"
+              fill="none" stroke="#f97316" strokeWidth="3" />
+
             {/* Nitrate curve (green) */}
-            <path d="M 40 180 Q 120 180 160 160 Q 200 140 240 120 Q 280 100 320 80 Q 360 60 380 50" 
-                  fill="none" stroke="#22c55e" strokeWidth="3"/>
-            
+            <path d="M 40 180 Q 120 180 160 160 Q 200 140 240 120 Q 280 100 320 80 Q 360 60 380 50"
+              fill="none" stroke="#22c55e" strokeWidth="3" />
+
             {/* Labels */}
             <text x="50" y="15" className="text-xs fill-gray-600">Alto</text>
             <text x="50" y="195" className="text-xs fill-gray-600">Bajo</text>
@@ -94,7 +94,7 @@ function Home() {
             <text x="260" y="195" className="text-xs fill-gray-600">Semana 5</text>
             <text x="340" y="195" className="text-xs fill-gray-600">Semana 7</text>
           </svg>
-          
+
           {/* Legend */}
           <div className="flex justify-center space-x-6 mt-4">
             <div className="flex items-center">
@@ -111,7 +111,7 @@ function Home() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex items-start">
             <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" />
@@ -142,7 +142,7 @@ function Home() {
                 AquaGuía
               </span>
             </div>
-            
+
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-1">
               {[
@@ -159,11 +159,10 @@ function Home() {
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1 ${
-                    activeSection === id
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1 ${activeSection === id
                       ? 'bg-blue-100 text-blue-700 shadow-sm'
                       : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{label}</span>
@@ -198,11 +197,10 @@ function Home() {
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
-                      activeSection === id
+                    className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${activeSection === id
                         ? 'bg-blue-100 text-blue-700'
                         : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{label}</span>
@@ -228,11 +226,11 @@ function Home() {
               </span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Todo lo que necesitas saber para crear y mantener un acuario próspero. 
+              Todo lo que necesitas saber para crear y mantener un acuario próspero.
               Desde el ciclado hasta el cuidado avanzado de peces y plantas.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
@@ -241,7 +239,7 @@ function Home() {
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Fundamentos</h3>
               <p className="text-gray-600 text-sm">Aprende los conceptos básicos del ciclado y montaje</p>
             </div>
-            
+
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
                 <Fish className="w-6 h-6 text-white" />
@@ -249,7 +247,7 @@ function Home() {
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Vida Acuática</h3>
               <p className="text-gray-600 text-sm">Descubre peces y plantas compatibles para tu acuario</p>
             </div>
-            
+
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
                 <Settings className="w-6 h-6 text-white" />
@@ -280,10 +278,10 @@ function Home() {
                 ¿Qué es el Ciclado?
               </h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                El ciclado es el proceso de establecer colonias de bacterias beneficiosas que convertirán 
+                El ciclado es el proceso de establecer colonias de bacterias beneficiosas que convertirán
                 los desechos tóxicos (amoniaco) en compuestos menos dañinos (nitratos) a través del ciclo del nitrógeno.
               </p>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -294,7 +292,7 @@ function Home() {
                     <p className="text-sm text-gray-600">Altamente tóxico para los peces</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-orange-600 font-bold text-sm">2</span>
@@ -304,7 +302,7 @@ function Home() {
                     <p className="text-sm text-gray-600">También tóxicos, pero menos que el amoniaco</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-green-600 font-bold text-sm">3</span>
@@ -326,7 +324,7 @@ function Home() {
               <Leaf className="w-6 h-6 mr-3 text-green-600" />
               Ciclado Sin Peces (Recomendado)
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Proceso Paso a Paso:</h4>
@@ -350,7 +348,7 @@ function Home() {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Ventajas:</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
@@ -371,14 +369,14 @@ function Home() {
                     Método más ético y recomendado
                   </li>
                 </ul>
-                
+
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
                     Duración del Proceso
                   </h5>
                   <p className="text-sm text-blue-700">
-                    El ciclado completo toma entre 4-8 semanas dependiendo de la temperatura, 
+                    El ciclado completo toma entre 4-8 semanas dependiendo de la temperatura,
                     pH y cantidad de bacterias iniciales.
                   </p>
                 </div>
@@ -566,9 +564,9 @@ function Home() {
                     </span>
                   </div>
                 </div>
-                
+
                 <p className="text-gray-600 mb-4 text-sm leading-relaxed">{description}</p>
-                
+
                 <ul className="space-y-2">
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
@@ -601,7 +599,7 @@ function Home() {
               <Filter className="w-6 h-6 mr-3 text-blue-600" />
               ¿Por qué es tan Importante la Filtración?
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white/80 p-6 rounded-xl">
                 <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
@@ -610,7 +608,7 @@ function Home() {
                 <h4 className="font-semibold text-gray-800 mb-2">Filtración Mecánica</h4>
                 <p className="text-sm text-gray-600">Elimina partículas sólidas, restos de comida y detritos visibles del agua</p>
               </div>
-              
+
               <div className="bg-white/80 p-6 rounded-xl">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                   <Activity className="w-6 h-6 text-green-600" />
@@ -618,7 +616,7 @@ function Home() {
                 <h4 className="font-semibold text-gray-800 mb-2">Filtración Biológica</h4>
                 <p className="text-sm text-gray-600">Las bacterias beneficiosas convierten amoniaco tóxico en nitratos menos dañinos</p>
               </div>
-              
+
               <div className="bg-white/80 p-6 rounded-xl">
                 <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
                   <Droplets className="w-6 h-6 text-purple-600" />
@@ -627,14 +625,14 @@ function Home() {
                 <p className="text-sm text-gray-600">Carbón activado y resinas eliminan químicos, olores y coloraciones</p>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <div className="flex items-start">
                 <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="font-semibold text-yellow-800 mb-1">Regla de Oro:</h5>
                   <p className="text-sm text-yellow-700">
-                    El caudal del filtro debe ser en torno a 10 veces el volumen del acuario por hora. 
+                    El caudal del filtro debe ser en torno a 10 veces el volumen del acuario por hora.
                     Para un acuario de 100L, necesitas un filtro de 1000-1200 L/h.
                   </p>
                 </div>
@@ -696,7 +694,7 @@ function Home() {
                     <p className="text-sm text-gray-600">{description}</p>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <h4 className="font-semibold text-green-700 mb-2 flex items-center">
@@ -712,7 +710,7 @@ function Home() {
                       ))}
                     </ul>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold text-red-700 mb-2 flex items-center">
                       <AlertTriangle className="w-4 h-4 mr-1" />
@@ -728,7 +726,7 @@ function Home() {
                     </ul>
                   </div>
                 </div>
-                
+
                 <div className="border-t border-gray-100 pt-4">
                   <div className="flex justify-between items-center text-sm">
                     <div>
@@ -750,7 +748,7 @@ function Home() {
               <Beaker className="w-6 h-6 mr-3 text-blue-600" />
               Medios Filtrantes y su Orden
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white p-6 rounded-xl border border-blue-100">
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
@@ -764,7 +762,7 @@ function Home() {
                   <li>• Se limpia semanalmente</li>
                 </ul>
               </div>
-              
+
               <div className="bg-white p-6 rounded-xl border border-green-100">
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                   <span className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm mr-2">2</span>
@@ -777,7 +775,7 @@ function Home() {
                   <li>• NUNCA lavar con cloro</li>
                 </ul>
               </div>
-              
+
               <div className="bg-white p-6 rounded-xl border border-purple-100">
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                   <span className="w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm mr-2">3</span>
@@ -865,7 +863,7 @@ function Home() {
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800">{category}</h3>
                 </div>
-                
+
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-700 mb-2">Especies Populares:</h4>
                   <div className="flex flex-wrap gap-1">
@@ -876,7 +874,7 @@ function Home() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-700 mb-2">Características:</h4>
                   <ul className="space-y-1">
@@ -888,7 +886,7 @@ function Home() {
                     ))}
                   </ul>
                 </div>
-                
+
                 <div className={`p-3 bg-${color}-50 rounded-lg border border-${color}-200`}>
                   <p className="text-sm font-medium text-gray-700">{parameters}</p>
                 </div>
@@ -896,13 +894,13 @@ function Home() {
             ))}
 
             <div className="flex justify-center items-center col-span-full mt-4">
-                <button
-                    onClick={() => window.location.href = "/fish"}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
-                >
-                    Ver el comparador de especies de peces
-                    <Fish className="w-5 h-5 ml-2" />
-                </button>
+              <button
+                onClick={() => window.location.href = "/fish"}
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
+              >
+                Ver el comparador de especies de peces
+                <Fish className="w-5 h-5 ml-2" />
+              </button>
             </div>
           </div>
 
@@ -912,11 +910,11 @@ function Home() {
               <AlertTriangle className="w-6 h-6 mr-3 text-red-600" />
               Reglas de Compatibilidad - Parámetros del Agua
             </h3>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Parámetros Críticos para Compatibilidad:</h4>
-                
+
                 <div className="space-y-4">
                   <div className="bg-white p-4 rounded-lg border border-red-100">
                     <h5 className="font-semibold text-red-800 mb-2 flex items-center">
@@ -932,7 +930,7 @@ function Home() {
                       <li>• NUNCA mezclar tropicales con agua fría</li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-white p-4 rounded-lg border border-blue-100">
                     <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
                       <Droplets className="w-4 h-4 mr-2" />
@@ -947,7 +945,7 @@ function Home() {
                       <li>• Alcalino: pH 7.2-8.5 (Cíclidos africanos, Mollys)</li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-white p-4 rounded-lg border border-green-100">
                     <h5 className="font-semibold text-green-800 mb-2 flex items-center">
                       <Beaker className="w-4 h-4 mr-2" />
@@ -964,10 +962,10 @@ function Home() {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Incompatibilidades Críticas:</h4>
-                
+
                 <div className="space-y-3">
                   <div className="bg-red-100 p-4 rounded-lg border border-red-200">
                     <h5 className="font-semibold text-red-800 mb-2">❌ NUNCA Juntar:</h5>
@@ -979,7 +977,7 @@ function Home() {
                       <li>• Diferentes necesidades de salinidad</li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-200">
                     <h5 className="font-semibold text-yellow-800 mb-2">⚠️ Cuidado Especial:</h5>
                     <ul className="text-sm text-yellow-700 space-y-1">
@@ -989,7 +987,7 @@ function Home() {
                       <li>• Especies nocturnas + diurnas</li>
                     </ul>
                   </div>
-                  
+
                   <div className="bg-green-100 p-4 rounded-lg border border-green-200">
                     <h5 className="font-semibold text-green-800 mb-2">✅ Combinaciones Ideales:</h5>
                     <ul className="text-sm text-green-700 space-y-1">
@@ -1000,14 +998,14 @@ function Home() {
                     </ul>
                   </div>
                 </div>
-                
+
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
                     <Eye className="w-4 h-4 mr-2" />
                     Regla de Oro
                   </h5>
                   <p className="text-sm text-blue-700">
-                    <strong>Investiga SIEMPRE los parámetros específicos de cada especie antes de comprar.</strong> 
+                    <strong>Investiga SIEMPRE los parámetros específicos de cada especie antes de comprar.</strong>
                     Un pez estresado por parámetros incorrectos será más propenso a enfermedades y agresividad.
                   </p>
                 </div>
@@ -1098,7 +1096,7 @@ function Home() {
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-700 mb-2">Especies:</h4>
                   <div className="flex flex-wrap gap-1">
@@ -1109,7 +1107,7 @@ function Home() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium text-gray-600">Iluminación:</span>
@@ -1122,6 +1120,16 @@ function Home() {
                 </div>
               </div>
             ))}
+
+            <div className="flex justify-center items-center col-span-full mt-4">
+              <button
+                onClick={() => window.location.href = "/algae"}
+                className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-semibold shadow hover:bg-green-700 transition-all duration-200 text-lg"
+              >
+                Ver la guía para algas
+                <Leaf className="w-5 h-5 ml-2" />
+              </button>
+            </div>
           </div>
 
           <div className="mt-12 bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg p-8 border border-green-200">
@@ -1129,7 +1137,7 @@ function Home() {
               <Leaf className="w-6 h-6 mr-3 text-green-600" />
               Beneficios de las Plantas
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1138,7 +1146,7 @@ function Home() {
                 <h4 className="font-semibold text-gray-800 mb-2">Oxigenación</h4>
                 <p className="text-sm text-gray-600">Producen oxígeno durante la fotosíntesis</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Filter className="w-8 h-8 text-blue-600" />
@@ -1146,7 +1154,7 @@ function Home() {
                 <h4 className="font-semibold text-gray-800 mb-2">Filtración Natural</h4>
                 <p className="text-sm text-gray-600">Absorben nitratos y otros nutrientes</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Shield className="w-8 h-8 text-purple-600" />
@@ -1154,7 +1162,7 @@ function Home() {
                 <h4 className="font-semibold text-gray-800 mb-2">Refugio</h4>
                 <p className="text-sm text-gray-600">Proporcionan escondites y zonas de descanso</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Eye className="w-8 h-8 text-orange-600" />
@@ -1242,9 +1250,9 @@ function Home() {
                     </span>
                   </div>
                 </div>
-                
+
                 <p className="text-gray-600 mb-4 text-sm leading-relaxed">{description}</p>
-                
+
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Consejos:</h4>
                   <ul className="space-y-1">
@@ -1265,7 +1273,7 @@ function Home() {
               <Clock className="w-6 h-6 mr-3 text-yellow-600" />
               Programa de Mantenimiento
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white p-6 rounded-xl border border-green-100">
                 <h4 className="font-semibold text-green-800 mb-3">Diario</h4>
@@ -1284,7 +1292,7 @@ function Home() {
                   </li>
                 </ul>
               </div>
-              
+
               <div className="bg-white p-6 rounded-xl border border-blue-100">
                 <h4 className="font-semibold text-blue-800 mb-3">Semanal</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
@@ -1302,7 +1310,7 @@ function Home() {
                   </li>
                 </ul>
               </div>
-              
+
               <div className="bg-white p-6 rounded-xl border border-purple-100">
                 <h4 className="font-semibold text-purple-800 mb-3">Mensual</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
@@ -1343,13 +1351,13 @@ function Home() {
                 <Heart className="w-6 h-6 mr-3 text-red-600" />
                 ¿Qué es un Acuario Hospital?
               </h3>
-              
+
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Un acuario hospital es un tanque separado y temporal donde se aíslan y tratan peces enfermos, 
-                heridos o nuevos. Es fundamental para prevenir la propagación de enfermedades y proporcionar 
+                Un acuario hospital es un tanque separado y temporal donde se aíslan y tratan peces enfermos,
+                heridos o nuevos. Es fundamental para prevenir la propagación de enfermedades y proporcionar
                 cuidados específicos sin afectar al acuario principal.
               </p>
-              
+
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -1360,7 +1368,7 @@ function Home() {
                     <p className="text-sm text-gray-600">Previene contagio de enfermedades</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Activity className="w-4 h-4 text-green-600" />
@@ -1370,7 +1378,7 @@ function Home() {
                     <p className="text-sm text-gray-600">Medicación sin afectar otros peces</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Eye className="w-4 h-4 text-blue-600" />
@@ -1388,16 +1396,16 @@ function Home() {
                 <Settings className="w-6 h-6 mr-3 text-blue-600" />
                 Configuración del Acuario Hospital
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h4 className="font-semibold text-blue-800 mb-2">Tamaño Recomendado:</h4>
                   <p className="text-sm text-blue-700">
-                    20-40 litros para peces pequeños a medianos. 
+                    20-40 litros para peces pequeños a medianos.
                     Debe ser proporcional al tamaño del pez a tratar.
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                   <h4 className="font-semibold text-green-800 mb-2">Equipamiento Básico:</h4>
                   <ul className="text-sm text-green-700 space-y-1">
@@ -1408,7 +1416,7 @@ function Home() {
                     <li>• Iluminación tenue</li>
                   </ul>
                 </div>
-                
+
                 <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                   <h4 className="font-semibold text-yellow-800 mb-2">Decoración Mínima:</h4>
                   <ul className="text-sm text-yellow-700 space-y-1">
@@ -1436,7 +1444,7 @@ function Home() {
                 <li>• Hongos</li>
               </ul>
             </div>
-            
+
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-100">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
                 <Fish className="w-6 h-6 text-blue-600" />
@@ -1450,7 +1458,7 @@ function Home() {
                 <li>• Tratamiento preventivo</li>
               </ul>
             </div>
-            
+
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-100">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                 <Heart className="w-6 h-6 text-green-600" />
@@ -1472,7 +1480,7 @@ function Home() {
               <Activity className="w-6 h-6 mr-3 text-purple-600" />
               Protocolo de Uso del Acuario Hospital
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Antes del Uso:</h4>
@@ -1495,7 +1503,7 @@ function Home() {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-4">Durante el Tratamiento:</h4>
                 <div className="space-y-3">
@@ -1518,15 +1526,15 @@ function Home() {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="font-semibold text-green-800 mb-1">Consejo Importante:</h5>
                   <p className="text-sm text-green-700">
-                    Mantén siempre el acuario hospital listo para usar. Un pez enfermo necesita tratamiento 
-                    inmediato, y preparar el acuario puede tomar tiempo valioso. Considera tenerlo siempre 
+                    Mantén siempre el acuario hospital listo para usar. Un pez enfermo necesita tratamiento
+                    inmediato, y preparar el acuario puede tomar tiempo valioso. Considera tenerlo siempre
                     ciclado con un filtro de esponja conectado al acuario principal.
                   </p>
                 </div>
