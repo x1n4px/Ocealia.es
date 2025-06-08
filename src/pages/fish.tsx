@@ -312,96 +312,132 @@ const FishCard: React.FC<{
     fish: Fish;
     selected: boolean;
     onSelect: (id: number) => void;
-}> = ({ fish, selected, onSelect }) => (
-    <div
-        onClick={() => onSelect(fish.id)}
-        className={`
-            relative overflow-hidden
-            border-2 rounded-xl p-4 m-2 w-64 cursor-pointer
-            transition-all duration-300 flex flex-col items-center
-            ${selected ?
-                'border-teal-400 shadow-lg shadow-teal-100/50 bg-gradient-to-b from-teal-50 to-white' :
-                'border-gray-200 shadow-md hover:shadow-lg hover:border-teal-200 bg-white'}
-            hover:scale-[1.02] transform-gpu
-        `}
-    >
-        {selected && (
-            <div className="absolute top-2 right-2 bg-teal-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+}> = ({ fish, selected, onSelect }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const toggleExpand = (e: React.MouseEvent) => {
+        // Prevent the card selection from triggering when expanding/collapsing
+        e.stopPropagation();
+        setIsExpanded(!isExpanded);
+    };
+
+    return (
+        <div
+            onClick={() => onSelect(fish.id)}
+            className={`
+                relative overflow-hidden
+                border-2 rounded-xl p-4 m-2 w-64
+                transition-all duration-300 flex flex-col items-center
+                ${selected ?
+                    'border-teal-400 shadow-lg shadow-teal-100/50 bg-gradient-to-b from-teal-50 to-white' :
+                    'border-gray-200 shadow-md hover:shadow-lg hover:border-teal-200 bg-white'}
+                hover:scale-[1.02] transform-gpu
+                ${isExpanded ? 'h-auto pb-12' : 'h-80'} {/* Adjust height when expanded, add padding for button */}
+            `}
+        >
+            {selected && (
+                <div className="absolute top-2 right-2 bg-teal-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                </div>
+            )}
+
+            <div className="relative w-full h-32 overflow-hidden rounded-lg mb-3">
+                <img
+                    src={fish.img}
+                    alt={fish.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                    <span className="text-white font-medium text-sm">Click to {selected ? 'deselect' : 'select'}</span>
+                </div>
+            </div>
+
+            <h3 className="text-lg font-bold text-gray-800 mb-2">{fish.name}</h3>
+
+            {/* Always visible info */}
+            <div className="w-full space-y-2 text-sm text-gray-600">
+                <div className="flex justify-between">
+                    <span className="font-medium">pH:</span>
+                    <span className="text-gray-700">{fish.ph}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Temp:</span>
+                    <span className="text-gray-700">{fish.temperature}</span>
+                </div>
+            </div>
+
+            {/* Expandable detailed information */}
+            <div className={`w-full space-y-2 text-sm text-gray-600 overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                <div className="flex justify-between">
+                    <span className="font-medium">KH:</span>
+                    <span className="text-gray-700">{fish.kh}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">GH:</span>
+                    <span className="text-gray-700">{fish.gh}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Tamaño medio:</span>
+                    <span className="text-gray-700">{fish.mediumSize} cm</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Tamaño máximo:</span>
+                    <span className="text-gray-700">{fish.maxSize} cm</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Longevidad:</span>
+                    <span className="text-gray-700">{fish.longevity} años</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Dieta:</span>
+                    <span className="text-gray-700">{fish.diet}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Sociabilidad:</span>
+                    <span className="text-gray-700">{fish.sociability}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Territorial:</span>
+                    <span className="text-gray-700">{fish.territoriality}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-medium">Modo de vida:</span>
+                    <span className="text-gray-700">{fish.wayOfLife}</span>
+                </div>
+                 <div className="flex justify-between">
+                    <span className="font-medium">Modo de reproducción:</span>
+                    <span className="text-gray-700">{fish.wayOfBreeding}</span>
+                </div>
+                 <div className="flex justify-between">
+                    <span className="font-medium">Volumen mínimo:</span>
+                    <span className="text-gray-700">{fish.minimumVolume} L</span>
+                </div>
+            </div>
+
+            {/* Disguised button to expand/collapse */}
+            <div
+                className="absolute bottom-0 left-0 w-full h-8 bg-gray-100 flex items-center justify-center
+                           text-gray-500 hover:text-teal-600 cursor-pointer transition-colors duration-200"
+                onClick={toggleExpand}
+            >
+                <span className="text-sm font-medium">
+                    {isExpanded ? 'Ver menos' : 'Ver más'}
+                </span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`h-4 w-4 ml-1 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
-        )}
-
-        <div className="relative w-full h-32 overflow-hidden rounded-lg mb-3">
-            <img
-                src={fish.img}
-                alt={fish.name}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                <span className="text-white font-medium text-sm">Click to {selected ? 'deselect' : 'select'}</span>
-            </div>
         </div>
-
-        <h3 className="text-lg font-bold text-gray-800 mb-2">{fish.name}</h3>
-
-        <div className="w-full space-y-2 text-sm text-gray-600">
-            <div className="flex justify-between">
-                <span className="font-medium">pH:</span>
-                <span className="text-gray-700">{fish.ph}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">KH:</span>
-                <span className="text-gray-700">{fish.kh}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">GH:</span>
-                <span className="text-gray-700">{fish.gh}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Temp:</span>
-                <span className="text-gray-700">{fish.temperature}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Tamaño medio:</span>
-                <span className="text-gray-700">{fish.mediumSize}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Tamaño máximo:</span>
-                <span className="text-gray-700">{fish.maxSize}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Longevidad:</span>
-                <span className="text-gray-700">{fish.longevity}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Dieta:</span>
-                <span className="text-gray-700">{fish.diet}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Sociabilidad:</span>
-                <span className="text-gray-700">{fish.sociability}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Territorial:</span>
-                <span className="text-gray-700">{fish.territoriality}</span>
-            </div>
-            <div className="flex justify-between">
-                <span className="font-medium">Modo de vida:</span>
-                <span className="text-gray-700">{fish.wayOfLife}</span>
-            </div>
-             <div className="flex justify-between">
-                <span className="font-medium">Modo de reproducción:</span>
-                <span className="text-gray-700">{fish.wayOfBreeding}</span>
-            </div>
-             <div className="flex justify-between">
-                <span className="font-medium">Volumen mínimo:</span>
-                <span className="text-gray-700">{fish.minimumVolume}</span>
-            </div>
-        </div>
-    </div>
-);
+    );
+};
 
 const ParameterRange: React.FC<{
     values: string[],
@@ -430,7 +466,7 @@ const ParameterRange: React.FC<{
             <div className="flex flex-wrap gap-3 mb-2">
                 {fishNames.map((name, idx) => (
                     <div key={idx} className="flex items-center">
-                        <div className={`w-3 h-3 rounded-full mr-1 ${fishColors[idx]}`}></div>
+                        <div className={`w-3 h-3 rounded-full mr-1 ${fishColors[idx % fishColors.length]}`}></div> {/* Use modulo for color cycle */}
                         <span className="text-xs font-medium text-gray-600">{name}</span>
                     </div>
                 ))}
@@ -445,7 +481,7 @@ const ParameterRange: React.FC<{
                         key={idx}
                         className={`
                             absolute h-3 rounded-full top-1/2 transform -translate-y-1/2
-                            ${fishColors[idx]}
+                            ${fishColors[idx % fishColors.length]}
                         `}
                         style={{
                             left: `${((range.min - ranges.min) / (ranges.max - ranges.min)) * 100}%`,
@@ -597,7 +633,7 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                         <p className="text-sm text-blue-700">
                             {selectedFish.length >= 2 ? (
                                 <>
-                                    Estos peces {selectedFish.some(f => f.name === 'Betta') ? 'pueden requerir consideraciones especiales ' : 'están en rango compatible'}
+                                    Estos peces {selectedFish.some(f => f.name === 'Betta Splendens') ? 'pueden requerir consideraciones especiales ' : 'están en rango compatible'}
                                     para la mayoría de los parámetros. Presta especial atención a los rangos de temperatura y niveles de pH para una convivencia óptima.
                                 </>
                             ) : ''}
