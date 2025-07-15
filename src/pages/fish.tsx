@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 
 import { fishList } from '../data/fishData'; // Importa la lista de peces
 import type { Fish } from '../types/fish';
-
+import { COMMUNITY_WATER_PARAMETERS } from '../data/communityParameters'; // Importamos los nuevos datos
+ 
 const FishCard: React.FC<{
     fish: Fish;
     selected: boolean;
     onSelect: (id: number) => void;
-}> = ({ fish, selected, onSelect }) => {
+    compatibilityMessage?: string; // Nuevo prop para el mensaje de compatibilidad
+    isCompatibleOverall?: boolean; // Nuevo prop para saber si es compatible o no
+}> = ({ fish, selected, onSelect, compatibilityMessage, isCompatibleOverall = true }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = (e: React.MouseEvent) => {
@@ -27,6 +30,7 @@ const FishCard: React.FC<{
                     'border-gray-200 shadow-md hover:shadow-lg hover:border-teal-200 bg-white'}
                 hover:scale-[1.02] transform-gpu
                 ${isExpanded ? 'h-auto pb-12' : 'h-80'}
+                ${!isCompatibleOverall ? 'opacity-40 grayscale pointer-events-none' : ''} // Efecto de desvanecimiento
             `}
         >
             {selected && (
@@ -49,6 +53,14 @@ const FishCard: React.FC<{
             </div>
 
             <h3 className="text-lg font-bold text-gray-800 mb-2">{fish.name}</h3>
+
+            {/* Mensaje de compatibilidad solo si no es compatible */}
+            {!isCompatibleOverall && compatibilityMessage && (
+                <div className="absolute inset-x-0 bottom-16 bg-red-100 text-red-700 text-xs p-2 rounded-b-md text-center">
+                    {compatibilityMessage}
+                </div>
+            )}
+
 
             <div className="w-full space-y-2 text-sm text-gray-600">
                 <div className="flex justify-between">
@@ -207,6 +219,24 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
         temperature: { min: 10, max: 32 }
     };
 
+    // Obtenemos todas las claves de los parámetros que queremos mostrar en la tabla
+    const allFishParameters = [
+        { key: 'ph', name: 'pH' },
+        { key: 'kh', name: 'KH' },
+        { key: 'gh', name: 'GH' },
+        { key: 'temperature', name: 'Temperatura' },
+        { key: 'mediumSize', name: 'Tamaño medio (cm)' },
+        { key: 'maxSize', name: 'Tamaño máximo (cm)' },
+        { key: 'longevity', name: 'Longevidad (años)' },
+        { key: 'diet', name: 'Dieta' },
+        { key: 'sociability', name: 'Sociabilidad' },
+        { key: 'territoriality', name: 'Territorialidad' },
+        { key: 'wayOfLife', name: 'Modo de vida' },
+        { key: 'wayOfBreeding', name: 'Modo de reproducción' },
+        { key: 'minimumVolume', name: 'Volumen mínimo (L)' },
+    ];
+
+
     return (
         <div className="mt-10 p-4 md:p-6 bg-white rounded-xl shadow-md border border-gray-100">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 flex items-center">
@@ -286,30 +316,27 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">pH</td>
-                                    {selectedFish.map(fish => (
-                                        <td key={fish.id} className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{fish.ph}</td>
-                                    ))}
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">KH</td>
-                                    {selectedFish.map(fish => (
-                                        <td key={fish.id} className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{fish.kh}</td>
-                                    ))}
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">GH</td>
-                                    {selectedFish.map(fish => (
-                                        <td key={fish.id} className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{fish.gh}</td>
-                                    ))}
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">Temperatura</td>
-                                    {selectedFish.map(fish => (
-                                        <td key={fish.id} className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{fish.temperature}</td>
-                                    ))}
-                                </tr>
+                                {allFishParameters.map(param => (
+                                    <tr key={param.key}>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-700">{param.name}</td>
+                                        {selectedFish.map(fish => {
+                                            let value = fish[param.key as keyof Fish];
+                                            // Añadir unidades si el parámetro lo necesita
+                                            if (param.key === 'temperature') value = `${value}°C`;
+                                            if (param.key === 'kh') value = `${value} dKH`;
+                                            if (param.key === 'gh') value = `${value} dGH`;
+                                            if (param.key === 'minimumVolume') value = `${value} L`;
+                                            if (param.key === 'mediumSize' || param.key === 'maxSize') value = `${value} cm`;
+                                            if (param.key === 'longevity') value = `${value} años`;
+
+                                            return (
+                                                <td key={`${fish.id}-${param.key}`} className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                                    {value}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -336,13 +363,18 @@ const CompareSection: React.FC<{ selectedFish: Fish[] }> = ({ selectedFish }) =>
     );
 };
 
+
 const FishPage: React.FC = () => {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
-    const [filteredFish, setFilteredFish] = useState<Fish[]>(fishList);
+    const [displayedFish, setDisplayedFish] = useState<Fish[]>(fishList); // Cambiado a displayedFish
     const [phInput, setPhInput] = useState<string>('');
     const [khInput, setKhInput] = useState<string>('');
     const [ghInput, setGhInput] = useState<string>('');
     const [filterActive, setFilterActive] = useState<boolean>(false);
+    const [selectedCommunity, setSelectedCommunity] = useState<string>(''); // Nuevo estado para la comunidad seleccionada
+    const [fishCompatibilityMessages, setFishCompatibilityMessages] = useState<Record<number, string | undefined>>({}); // Para mensajes por pez
+    const [fishOverallCompatibility, setFishOverallCompatibility] = useState<Record<number, boolean>>({}); // Para el estado de fade
+
 
     const handleSelect = (id: number) => {
         setSelectedIds(prev =>
@@ -351,47 +383,130 @@ const FishPage: React.FC = () => {
     };
 
     const parseRange = (rangeString: string): { min: number, max: number } => {
-        const parts = rangeString.split('-').map(Number);
+        const parts = rangeString.replace(/[^\d.-]/g, '').split('-').map(Number);
         return {
             min: parts[0],
             max: parts.length > 1 ? parts[1] : parts[0]
         };
     };
 
-    const isCompatible = (fishValue: string, input: number): boolean => {
+    // Modificamos isCompatible para devolver también un mensaje de ajuste
+    const getCompatibilityFeedback = (fishValue: string, input: number, paramName: string): { isCompatible: boolean, message?: string } => {
         const { min, max } = parseRange(fishValue);
-        return input >= min && input <= max;
-    };
+        let message: string | undefined;
+        let compatible = false;
 
-    const applyFilter = () => {
-        const ph = parseFloat(phInput);
-        const kh = parseFloat(khInput);
-        const gh = parseFloat(ghInput);
-
-        // Basic validation
-        if (isNaN(ph) && isNaN(kh) && isNaN(gh)) {
-            alert('Por favor, introduce al menos un valor numérico para filtrar.');
-            return;
+        if (input >= min && input <= max) {
+            compatible = true;
+        } else if (input < min) {
+            message = `Necesita ${paramName} más ${paramName === 'pH' ? 'ácido' : 'blando'} (aumentar ${paramName} del pez)`;
+            if (paramName === 'pH') message = `Necesita pH más bajo (peces de pH ${min}-${max}, agua ${input})`;
+            else if (paramName === 'KH' || paramName === 'GH') message = `Necesita agua más dura (peces de ${paramName} ${min}-${max}, agua ${input})`;
+        } else { // input > max
+            message = `Necesita ${paramName} más ${paramName === 'pH' ? 'básico' : 'duro'} (disminuir ${paramName} del pez)`;
+            if (paramName === 'pH') message = `Necesita pH más alto (peces de pH ${min}-${max}, agua ${input})`;
+            else if (paramName === 'KH' || paramName === 'GH') message = `Necesita agua más blanda (peces de ${paramName} ${min}-${max}, agua ${input})`;
         }
 
-        const newFilteredFish = fishList.filter(fish => {
-            const phMatch = isNaN(ph) || isCompatible(fish.ph, ph);
-            const khMatch = isNaN(kh) || isCompatible(fish.kh, kh);
-            const ghMatch = isNaN(gh) || isCompatible(fish.gh, gh);
-            return phMatch && khMatch && ghMatch;
+        // Ajuste en el mensaje para el caso de incompatibilidad con el agua
+        if (!compatible) {
+            message = `¡Cuidado! El pez requiere ${paramName} entre ${min}-${max}, y tu agua tiene ${input}. Debes ${input < min ? 'aumentar' : 'disminuir'} los parámetros para este pez.`;
+        }
+
+
+        return { isCompatible: compatible, message };
+    };
+
+    const applyFilter = (phVal: number | string, khVal: number | string, ghVal: number | string) => {
+        const ph = typeof phVal === 'string' ? parseFloat(phVal) : phVal;
+        const kh = typeof khVal === 'string' ? parseFloat(khVal) : khVal;
+        const gh = typeof ghVal === 'string' ? parseFloat(ghVal) : ghVal;
+
+        const newMessages: Record<number, string | undefined> = {};
+        const newOverallCompatibility: Record<number, boolean> = {};
+
+        const newFilteredFish = fishList.map(fish => {
+            let fishIsCompatible = true;
+            let messageParts: string[] = [];
+
+            if (!isNaN(ph)) {
+                const { isCompatible, message } = getCompatibilityFeedback(fish.ph, ph, 'pH');
+                if (!isCompatible) {
+                    fishIsCompatible = false;
+                    messageParts.push(`pH: ${message}`);
+                }
+            }
+            if (!isNaN(kh)) {
+                const { isCompatible, message } = getCompatibilityFeedback(fish.kh, kh, 'KH');
+                if (!isCompatible) {
+                    fishIsCompatible = false;
+                    messageParts.push(`KH: ${message}`);
+                }
+            }
+            if (!isNaN(gh)) {
+                const { isCompatible, message } = getCompatibilityFeedback(fish.gh, gh, 'GH');
+                if (!isCompatible) {
+                    fishIsCompatible = false;
+                    messageParts.push(`GH: ${message}`);
+                }
+            }
+
+            newOverallCompatibility[fish.id] = fishIsCompatible;
+            if (!fishIsCompatible) {
+                newMessages[fish.id] = `No es compatible con tu agua. ${messageParts.join('; ')}.`;
+            }
+
+            return fish; // Devolvemos todos los peces, la visibilidad la controla la card
         });
-        setFilteredFish(newFilteredFish);
+
+        setDisplayedFish(newFilteredFish); // Ahora siempre mostramos todos, pero se desvanecen
+        setFishCompatibilityMessages(newMessages);
+        setFishOverallCompatibility(newOverallCompatibility);
         setSelectedIds([]); // Clear selections when filter changes
         setFilterActive(true);
     };
 
+    const handleManualFilterApply = () => {
+        if (isNaN(parseFloat(phInput)) && isNaN(parseFloat(khInput)) && isNaN(parseFloat(ghInput))) {
+            alert('Por favor, introduce al menos un valor numérico para filtrar.');
+            return;
+        }
+        setSelectedCommunity(''); // Deseleccionar comunidad si se usa el filtro manual
+        applyFilter(phInput, khInput, ghInput);
+    };
+
+    const handleCommunityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const communityName = event.target.value;
+        setSelectedCommunity(communityName);
+
+        if (communityName) {
+            const communityData = COMMUNITY_WATER_PARAMETERS.find(c => c.name === communityName);
+            if (communityData) {
+                setPhInput(communityData.parameters.ph.toString());
+                setKhInput(communityData.parameters.kh.toString());
+                setGhInput(communityData.parameters.gh.toString());
+                applyFilter(
+                    communityData.parameters.ph,
+                    communityData.parameters.kh,
+                    communityData.parameters.gh
+                );
+            }
+        } else {
+            clearFilter(); // Si se selecciona la opción "Selecciona tu comunidad", limpia el filtro
+        }
+    };
+
+
     const clearFilter = () => {
-        setFilteredFish(fishList);
+        setDisplayedFish(fishList);
         setSelectedIds([]);
         setPhInput('');
         setKhInput('');
         setGhInput('');
         setFilterActive(false);
+        setSelectedCommunity(''); // Limpiar la comunidad seleccionada
+        setFishCompatibilityMessages({});
+        setFishOverallCompatibility({});
     };
 
     const selectedFish = fishList.filter(fish => selectedIds.includes(fish.id));
@@ -410,7 +525,7 @@ const FishPage: React.FC = () => {
                 Selecciona dos o más especies de peces para comparar sus parámetros de agua ideales y verificar su compatibilidad para tu acuario.
 
                 </p>
-                
+
             </div>
 
             <div className="flex justify-center items-center col-span-full mt-4">
@@ -425,9 +540,9 @@ const FishPage: React.FC = () => {
         </div>
     </div>
         <div className="min-h-screen bg-gray-50 p-4 md:p-10">
-            
+
             <div className="max-w-7xl mx-auto">
-                
+
 
                 {/* New Filter Section */}
                 <div className="mb-8 p-4 md:p-6 bg-white rounded-xl shadow-md border border-gray-100">
@@ -473,28 +588,46 @@ const FishPage: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4">
                         <button
-                            onClick={applyFilter}
+                            onClick={handleManualFilterApply}
                             className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
                             </svg>
-                            Filtrar peces
+                            Aplicar filtro manual
                         </button>
-                        {filterActive && (
-                            <button
-                                onClick={clearFilter}
-                                className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center"
+
+                        <div className="w-full sm:w-auto">
+                            <label htmlFor="community-select" className="sr-only">Selecciona tu comunidad autónoma</label>
+                            <select
+                                id="community-select"
+                                value={selectedCommunity}
+                                onChange={handleCommunityChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-full py-2 px-3 text-gray-700"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
-                                </svg>
-                                Limpiar filtro
-                            </button>
-                        )}
+                                <option value="">-- Selecciona tu comunidad autónoma --</option>
+                                {COMMUNITY_WATER_PARAMETERS.map((community) => (
+                                    <option key={community.name} value={community.name}>
+                                        {community.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
+
+                    {filterActive && (
+                        <button
+                            onClick={clearFilter}
+                            className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" />
+                            </svg>
+                            Limpiar filtro
+                        </button>
+                    )}
                 </div>
 
                 <div className="mb-6 flex items-center">
@@ -506,7 +639,7 @@ const FishPage: React.FC = () => {
                     )}
                 </div>
 
-                {filteredFish.length === 0 && filterActive ? (
+                {displayedFish.length === 0 && filterActive ? (
                     <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-md">
                         <div className="flex">
                             <div className="flex-shrink-0">
@@ -523,12 +656,14 @@ const FishPage: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mb-10">
-                        {filteredFish.map(fish => (
+                        {displayedFish.map(fish => (
                             <FishCard
                                 key={fish.id}
                                 fish={fish}
                                 selected={selectedIds.includes(fish.id)}
                                 onSelect={handleSelect}
+                                compatibilityMessage={fishCompatibilityMessages[fish.id]}
+                                isCompatibleOverall={fishOverallCompatibility[fish.id]}
                             />
                         ))}
                     </div>
@@ -540,5 +675,4 @@ const FishPage: React.FC = () => {
         </>
     );
 };
-
 export default FishPage;

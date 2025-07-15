@@ -26,7 +26,7 @@ function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['inicio', 'ciclado', 'montaje', 'tipos', 'filtracion', 'peces', 'plantas', 'parametros', 'hospital'];
+      const sections = ['inicio', 'ciclado', 'montaje', 'tipos', 'filtracion', 'peces', 'plantas', 'parametros', 'hospital', 'productos'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -154,7 +154,8 @@ function Home() {
                 { id: 'peces', label: 'Peces', icon: Fish },
                 { id: 'plantas', label: 'Plantas', icon: Leaf },
                 { id: 'parametros', label: 'Parámetros', icon: Thermometer },
-                { id: 'hospital', label: 'Hospital', icon: Heart }
+                { id: 'hospital', label: 'Hospital', icon: Heart },
+                { id: 'productos', label: 'Productos', icon: Beaker }
               ].map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
@@ -192,7 +193,8 @@ function Home() {
                   { id: 'peces', label: 'Peces', icon: Fish },
                   { id: 'plantas', label: 'Plantas', icon: Leaf },
                   { id: 'parametros', label: 'Parámetros', icon: Thermometer },
-                  { id: 'hospital', label: 'Hospital', icon: Heart }
+                  { id: 'hospital', label: 'Hospital', icon: Heart },
+                  { id: 'productos', label: 'Productos', icon: Beaker }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
@@ -1540,6 +1542,30 @@ function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Productos Section */}
+      <section id="productos" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Productos Recomendados
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Descubre los mejores productos para mantener tu acuario saludable y próspero.
+            </p>
+          </div>
+
+          <div className="flex justify-center items-center mt-8">
+            <button
+              onClick={() => window.location.href = "/product"}
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
+            >
+              Ver Productos
+              <Beaker className="w-5 h-5 ml-2" />
+            </button>
           </div>
         </div>
       </section>
