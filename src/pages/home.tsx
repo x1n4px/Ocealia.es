@@ -231,6 +231,16 @@ function Home() {
               Todo lo que necesitas saber para crear y mantener un acuario próspero.
               Desde el ciclado hasta el cuidado avanzado de peces y plantas.
             </p>
+
+            <div className="flex justify-center items-center mt-8">
+            <button
+              onClick={() => window.location.href = "/nemo"}
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
+            >
+              NemoAI
+              <Beaker className="w-5 h-5 ml-2" />
+            </button>
+          </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
