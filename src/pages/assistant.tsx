@@ -7,7 +7,7 @@ const AssistantPage: React.FC = () => {
             <div className="container mx-auto">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        🤖 Asistente IA para Acuarios
+                    🐟 Nemo: Asitente IA para Acuarios
                     </h1>
                     <p className="text-gray-600 text-lg max-w-2xl mx-auto">
                         Utiliza inteligencia artificial avanzada para identificar y solucionar problemas de algas en tu acuario

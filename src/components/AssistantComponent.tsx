@@ -281,7 +281,7 @@ const AlgaeAssistant: React.FC = () => {
         <div className="text-center p-8">
             <div className="mb-6">
                 <Bot className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">Asistente IA para Acuarios</h2>
+                <h2 className="text-3xl font-bold text-gray-800 mb-3">Nemo: Asistente IA para Acuarios</h2>
                 <p className="text-gray-600 max-w-md mx-auto">
                     Te ayudo con consultas sobre algas, filtración, problemas generales y más. ¡Selecciona tu tipo de consulta!
                 </p>
@@ -779,7 +779,7 @@ const AlgaeAssistant: React.FC = () => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Bot className="w-6 h-6" />
-                        <h1 className="text-xl font-bold">{selectedTopic ? `${selectedTopic.title} - Asistente IA` : 'Asistente IA para Acuarios'}</h1>
+                        <h1 className="text-xl font-bold">{selectedTopic ? `${selectedTopic.title} - Nemo` : 'Asistente IA para Acuarios'}</h1>
                     </div>
                     {currentStep !== 'welcome' && (
                         <button
