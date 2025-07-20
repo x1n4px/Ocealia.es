@@ -234,7 +234,7 @@ function Home() {
 
             <div className="flex justify-center items-center mt-8">
             <button
-              onClick={() => window.location.href = "/nemo"}
+              onClick={() => window.location.href = "/assistant"}
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
             >
               NemoAI
