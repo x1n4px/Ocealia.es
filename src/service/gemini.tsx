@@ -10,7 +10,13 @@ const API_URL = import.meta.env.VITE_API_URL;;
 const toBase64 = (file:any) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result.split(',')[1]); // Quitamos el prefijo 'data:...'
+    reader.onload = () => {
+        if (typeof reader.result === 'string') {
+            resolve(reader.result.split(',')[1]); // Quitamos el prefijo 'data:...'
+        } else {
+            reject(new Error('El resultado no es una cadena de texto.'));
+        }
+    };
     reader.onerror = (error) => reject(error);
 });
 

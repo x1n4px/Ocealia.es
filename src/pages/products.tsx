@@ -6,7 +6,7 @@ import type { Product } from '../data/productData';
 import ProductCard from '../components/productCard';
 
 // Definimos los tipos de uso posibles para el filtro
-type ProductUse = 'Alimentación' | 'Filtración' | 'Acondicionadores' | 'Decoración' | 'Iluminación' | 'Sustratos' | 'Calefacción' | 'Todos';
+type ProductUse = 'Alimentación' | 'Filtración' | 'Acondicionadores' | 'Decoración' | 'Iluminación' | 'Sustratos' | 'Calefacción' | 'Abonos' | 'Todos';
 
 const ProductsPage: React.FC = () => {
     const [selectedUse, setSelectedUse] = useState<ProductUse>('Todos');

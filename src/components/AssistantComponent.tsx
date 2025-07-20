@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import {
-    Camera,
     Upload,
     Loader2,
     AlertCircle,
@@ -41,7 +40,6 @@ const AlgaeAssistant: React.FC = () => {
     const [description, setDescription] = useState('');
     const [result, setResult] = useState<Alga | null>(null);
     const [textResponse, setTextResponse] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,7 +84,6 @@ const AlgaeAssistant: React.FC = () => {
         setDescription('');
         setResult(null);
         setTextResponse(null);
-        setLoading(false);
         setError(null);
     };
 
@@ -193,7 +190,6 @@ const AlgaeAssistant: React.FC = () => {
         }
 
         setCurrentStep('analyzing');
-        setLoading(true);
         setError(null);
 
         try {
@@ -224,7 +220,6 @@ const AlgaeAssistant: React.FC = () => {
                 } else {
                     setError('No se pudo identificar el alga. Por favor, intenta con otra imagen.');
                     setCurrentStep('description');
-                    setLoading(false);
                     return;
                 }
             } else {
@@ -247,7 +242,6 @@ const AlgaeAssistant: React.FC = () => {
             setCurrentStep('description');
         }
 
-        setLoading(false);
     };
 
     const getDifficultyColor = (difficulty: Alga['difficulty']): string => {
