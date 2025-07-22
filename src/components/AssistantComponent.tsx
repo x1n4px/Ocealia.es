@@ -511,7 +511,7 @@ const AlgaeAssistant: React.FC = () => {
                     <div className="mb-6">
                         <div className="flex items-center gap-3 mb-3">
                             <div className={`p-2 rounded-lg bg-gradient-to-r ${selectedTopic.color} text-white`}>
-                                <selectedTopic.icon className="w-5 h-5" />
+                                {selectedTopic && <selectedTopic.icon className="w-5 h-5" />}
                             </div>
                             <span className="text-sm font-medium text-gray-600">{selectedTopic.title}</span>
                         </div>
@@ -659,7 +659,7 @@ const AlgaeAssistant: React.FC = () => {
             <div className="mb-6">
                 <div className="flex items-center gap-3 mb-3">
                     <div className={`p-2 rounded-lg bg-gradient-to-r ${selectedTopic?.color} text-white`}>
-                        <selectedTopic.icon className="w-5 h-5" />
+                        {selectedTopic && <selectedTopic.icon className="w-5 h-5" />}
                     </div>
                     <span className="text-sm font-medium text-gray-600">{selectedTopic?.title}</span>
                 </div>
