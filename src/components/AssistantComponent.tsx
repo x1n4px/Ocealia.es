@@ -17,7 +17,8 @@ import {
     Filter,
     ChevronRight,
     Image as ImageIcon,
-    Fish as FishIcon
+    Fish as FishIcon,
+    Home
 } from 'lucide-react';
 import { callVisionAPI, callTextAPI } from '../service/gemini';
 import { algaeList, type Alga, families } from '../data/algaeData';
@@ -1147,14 +1148,26 @@ const AlgaeAssistant: React.FC = () => {
                         <Bot className="w-6 h-6" />
                         <h1 className="text-xl font-bold">{selectedTopic ? `${selectedTopic.title} - Nemo` : 'Asistente IA para Acuarios'}</h1>
                     </div>
-                    {currentStep !== 'welcome' && (
+                    <div className="flex items-center gap-2">
+                        {/* Botón Home */}
                         <button
-                            onClick={resetAssistant}
-                            className="p-2 hover:bg-blue-800 rounded-lg transition-colors duration-200"
+                            onClick={() => window.location.href = '/'}
+                            className="flex items-center gap-2 px-3 py-2 bg-blue-800 hover:bg-blue-900 rounded-lg transition-colors duration-200 text-sm font-medium"
+                            title="Volver al inicio"
                         >
-                            <X className="w-5 h-5" />
+                            <Home className="w-4 h-4" />
+                            <span className="hidden sm:inline">Inicio</span>
                         </button>
-                    )}
+                        {currentStep !== 'welcome' && (
+                            <button
+                                onClick={resetAssistant}
+                                className="p-2 hover:bg-blue-800 rounded-lg transition-colors duration-200"
+                                title="Reiniciar asistente"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Progress indicator */}
