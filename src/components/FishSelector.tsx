@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-import { fishList } from '../data/fishData';
-import { COMMUNITY_WATER_PARAMETERS } from '../data/communityParameters';
+import { useState } from 'react';
+import { fishList, type Fish } from '../data/fishData';
+import { COMMUNITY_WATER_PARAMETERS, type CommunityData } from '../data/communityParameters';
 
 const FishSelector = () => {
-    const [selectedFish, setSelectedFish] = useState([]);
-    const [selectedCommunity, setSelectedCommunity] = useState(null);
+    const [selectedFish, setSelectedFish] = useState<Fish[]>([]);
+    const [selectedCommunity, setSelectedCommunity] = useState<CommunityData | null>(null);
     const [customPh, setCustomPh] = useState('');
     const [customKh, setCustomKh] = useState('');
     const [customGh, setCustomGh] = useState('');
     const [tankVolume, setTankVolume] = useState('');
 
-    const handleFishSelection = (fish) => {
+    const handleFishSelection = (fish: Fish) => {
         setSelectedFish(prev => prev.includes(fish) ? prev.filter(f => f !== fish) : [...prev, fish]);
     };
 
-    const handleCommunityChange = (event) => {
+    const handleCommunityChange = (event: { target: { value: string; }; }) => {
         const community = COMMUNITY_WATER_PARAMETERS.find(c => c.name === event.target.value);
-        setSelectedCommunity(community);
-        setCustomPh(community.parameters.ph);
-        setCustomKh(community.parameters.kh);
-        setCustomGh(community.parameters.gh);
+        setSelectedCommunity(community || null);
+        if (community) {
+            setCustomPh(community.parameters.ph.toString());
+            setCustomKh(community.parameters.kh.toString());
+            setCustomGh(community.parameters.gh.toString());
+        }
     };
 
     const handleAnalyze = () => {

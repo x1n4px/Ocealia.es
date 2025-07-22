@@ -49,7 +49,7 @@ const AlgaeAssistant: React.FC = () => {
     
     // Fish selection states
     const [selectedFish, setSelectedFish] = useState<Fish[]>([]);
-    const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
+   // const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
     const [customPh, setCustomPh] = useState('');
     const [customKh, setCustomKh] = useState('');
     const [customGh, setCustomGh] = useState('');
@@ -106,7 +106,7 @@ const AlgaeAssistant: React.FC = () => {
         setError(null);
         // Reset fish selection states
         setSelectedFish([]);
-        setSelectedCommunity(null);
+       // setSelectedCommunity(null);
         setCustomPh('');
         setCustomKh('');
         setCustomGh('');
@@ -152,12 +152,12 @@ const AlgaeAssistant: React.FC = () => {
 
     const handleCommunityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         if (event.target.value === '') {
-            setSelectedCommunity(null);
+            //setSelectedCommunity(null);
             return;
         }
         const community = COMMUNITY_WATER_PARAMETERS.find(c => c.name === event.target.value);
         if (community) {
-            setSelectedCommunity(community);
+            //setSelectedCommunity(community);
             setCustomPh(community.parameters.ph.toString());
             setCustomKh(community.parameters.kh.toString());
             setCustomGh(community.parameters.gh.toString());
@@ -811,7 +811,7 @@ const AlgaeAssistant: React.FC = () => {
             </div>
         </div>
     );
-
+/*
     const renderUpload2 = () => (
         <div className="p-6">
             <div className="mb-6">
@@ -853,7 +853,7 @@ const AlgaeAssistant: React.FC = () => {
             </div>
         </div>
     );
-
+*/
     const renderResults = () => {
         // Handle algae identification results
         if (result && selectedTopic?.id === 'algae') {
