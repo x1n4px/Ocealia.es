@@ -16,12 +16,15 @@ import {
     Droplets,
     Filter,
     ChevronRight,
-    Image as ImageIcon
+    Image as ImageIcon,
+    Fish as FishIcon
 } from 'lucide-react';
 import { callVisionAPI, callTextAPI } from '../service/gemini';
 import { algaeList, type Alga, families } from '../data/algaeData';
+import { fishList, type Fish } from '../data/fishData';
+import { COMMUNITY_WATER_PARAMETERS } from '../data/communityParameters';
 
-type AssistantStep = 'welcome' | 'topic-selection' | 'upload' | 'description' | 'analyzing' | 'results';
+type AssistantStep = 'welcome' | 'topic-selection' | 'upload' | 'description' | 'fish-selection' | 'analyzing' | 'results';
 
 type TopicOption = {
     id: string;
@@ -42,6 +45,14 @@ const AlgaeAssistant: React.FC = () => {
     const [textResponse, setTextResponse] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    // Fish selection states
+    const [selectedFish, setSelectedFish] = useState<Fish[]>([]);
+    const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
+    const [customPh, setCustomPh] = useState('');
+    const [customKh, setCustomKh] = useState('');
+    const [customGh, setCustomGh] = useState('');
+    const [tankVolume, setTankVolume] = useState('');
 
     // Topic options configuration
     const topicOptions: TopicOption[] = [
@@ -52,6 +63,13 @@ const AlgaeAssistant: React.FC = () => {
             icon: Droplets,
             color: 'from-green-500 to-emerald-600',
             requiresImage: true
+        },
+        {
+            id: 'fish-selection',
+            title: 'Selección de Peces',
+            description: 'Recibe recomendaciones de combinaciones de peces para tu acuario',
+            icon: FishIcon,
+            color: 'from-teal-500 to-cyan-600'
         },
         {
             id: 'general',
@@ -85,12 +103,21 @@ const AlgaeAssistant: React.FC = () => {
         setResult(null);
         setTextResponse(null);
         setError(null);
+        // Reset fish selection states
+        setSelectedFish([]);
+        setSelectedCommunity(null);
+        setCustomPh('');
+        setCustomKh('');
+        setCustomGh('');
+        setTankVolume('');
     };
 
     const handleTopicSelection = (topic: TopicOption) => {
         setSelectedTopic(topic);
         if (topic.requiresImage) {
             setCurrentStep('upload');
+        } else if (topic.id === 'fish-selection') {
+            setCurrentStep('fish-selection');
         } else {
             setCurrentStep('description');
         }
@@ -111,64 +138,103 @@ const AlgaeAssistant: React.FC = () => {
         }
     };
 
+    const handleFishSelection = (fish: Fish) => {
+        setSelectedFish(prev => {
+            const isSelected = prev.some(f => f.id === fish.id);
+            if (isSelected) {
+                return prev.filter(f => f.id !== fish.id);
+            } else {
+                return [...prev, fish];
+            }
+        });
+    };
+
+    const handleCommunityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        if (event.target.value === '') {
+            setSelectedCommunity(null);
+            return;
+        }
+        const community = COMMUNITY_WATER_PARAMETERS.find(c => c.name === event.target.value);
+        if (community) {
+            setSelectedCommunity(community);
+            setCustomPh(community.parameters.ph.toString());
+            setCustomKh(community.parameters.kh.toString());
+            setCustomGh(community.parameters.gh.toString());
+        }
+    };
+
     const generatePrompt = (topic: TopicOption, userDescription: string): string => {
-        const baseContext = `Eres un experto en acuarismo y ayudas a usuarios con sus acuarios. Responde de forma útil, detallada y amigable.`;
+        const baseContext = `Eres un experto en acuarismo. Responde de forma concisa y directa.`;
 
         switch (topic.id) {
             case 'algae':
                 return `${baseContext}
                 
-                Analiza esta imagen de algas en un acuario y ayuda a identificar el tipo de alga basándote en la descripción del usuario: "${userDescription}". 
+                Identifica el tipo de alga en esta imagen basándote en: "${userDescription}". 
                 
-                Por favor, compara con la siguiente lista de algas conocidas y devuelve ÚNICAMENTE el número ID de la alga más parecida:
+                Lista de algas:
                 ${JSON.stringify(algaeList.map(alga => ({
                     id: alga.id,
                     name: alga.name,
                     family: alga.family,
-                    visualDescription: alga.visualDescription,
-                    scientificName: alga.scientificName
+                    visualDescription: alga.visualDescription
                 })), null, 2)}
                 
-                Responde ÚNICAMENTE con el número ID de la alga más cercana, sin explicaciones adicionales.`;
+                Responde SOLO con el número ID del alga más parecida.`;
 
             case 'general':
                 return `${baseContext}
                 
-                El usuario tiene la siguiente consulta general sobre acuarismo: "${userDescription}"
+                Pregunta: "${userDescription}"
                 
-                Por favor proporciona una respuesta completa y útil, incluyendo consejos prácticos, recomendaciones específicas y cualquier información relevante que pueda ayudar al usuario.`;
+                Responde de forma clara y práctica. Incluye:
+                - Respuesta directa
+                - 2-3 consejos específicos
+                - Una advertencia importante si aplica
+                
+                Máximo 150 palabras.`;
 
             case 'help':
                 return `${baseContext}
                 
-                El usuario está confundido y no sabe qué hacer con su acuario. Describe su situación: "${userDescription}"
+                Situación de emergencia: "${userDescription}"
                 
-                Por favor:
-                1. Haz un diagnóstico probable de la situación
-                2. Sugiere pasos específicos a seguir
-                3. Proporciona una lista de acciones prioritarias
-                4. Menciona qué síntomas observar
-                5. Incluye consejos preventivos para el futuro
+                Responde con:
+                - **Diagnóstico**: Qué está pasando
+                - **Acción urgente**: Qué hacer AHORA (máximo 3 pasos)
+                - **Causa probable**: Por qué pasó esto
                 
-                Sé muy específico y práctico en tus recomendaciones.`;
+                Máximo 120 palabras. Sé directo y práctico.`;
+
+            case 'fish-selection':
+                return `${baseContext}
+                
+                El usuario ha seleccionado estos peces: ${selectedFish.map(f => f.name).join(', ')}
+                Parámetros del agua: pH ${customPh}, KH ${customKh}, GH ${customGh}
+                Volumen del acuario: ${tankVolume || 'No especificado'} litros
+                
+                Analiza la compatibilidad y responde con:
+                - **Compatibilidad**: Si los peces seleccionados son compatibles
+                - **Recomendaciones**: Si hay problemas, sugiere alternativas adecuadas para el volumen
+                - **Consejos**: Tips importantes para esta combinación
+                
+                Si no hay volumen, sugiere 3 combinaciones: <50L, 50-100L, >100L
+                Máximo 200 palabras.`;
 
             case 'filtration':
                 return `${baseContext}
                 
-                El usuario tiene consultas sobre filtración en su acuario: "${userDescription}"
+                Consulta sobre filtración: "${userDescription}"
                 
-                Por favor proporciona información detallada sobre:
-                1. Tipos de filtración recomendados
-                2. Mantenimiento adecuado
-                3. Problemas comunes y soluciones
-                4. Recomendaciones de productos si es relevante
-                5. Frecuencia de limpieza y cambios
-                6. Muy importanto mantener un filtro maduro, con 10 veces el caudal del acuario por hora y entre el 2% y el 5% de material biológico en relación al volumen del acuario..
+                Responde con:
+                - **Análisis**: Qué está pasando
+                - **Solución**: Qué hacer (máximo 3 recomendaciones)
+                - **Tip clave**: Un consejo importante
                 
-                Incluye consejos prácticos y específicos para su situación.`;
+                Máximo 130 palabras. Sé específico y técnico pero claro.`;
 
             default:
-                return `${baseContext} El usuario pregunta: "${userDescription}". Por favor responde de forma útil y detallada.`;
+                return `${baseContext} Pregunta: "${userDescription}". Responde de forma útil y concisa.`;
         }
     };
 
@@ -178,7 +244,13 @@ const AlgaeAssistant: React.FC = () => {
             return;
         }
 
-        if (description.trim() === '') {
+        // For fish-selection, validate fish selection
+        if (selectedTopic.id === 'fish-selection') {
+            if (selectedFish.length === 0) {
+                setError('Por favor selecciona al menos un pez.');
+                return;
+            }
+        } else if (description.trim() === '') {
             setError('Por favor proporciona una descripción.');
             return;
         }
@@ -581,6 +653,206 @@ const AlgaeAssistant: React.FC = () => {
         );
     };
 
+    const renderFishSelection = () => (
+        <div className="p-6">
+            <div className="mb-6">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className={`p-2 rounded-lg bg-gradient-to-r ${selectedTopic?.color} text-white`}>
+                        <selectedTopic.icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-600">{selectedTopic?.title}</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Selecciona tus peces favoritos</h3>
+                <p className="text-gray-600">Elige los peces que te interesan y te ayudaremos con la mejor combinación para tu acuario.</p>
+            </div>
+
+            {/* Fish Grid */}
+            <div className="mb-6">
+                <h4 className="font-semibold text-gray-800 mb-4">Catálogo de Peces</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto border rounded-lg p-4">
+                    {fishList.map(fish => (
+                        <div
+                            key={fish.id}
+                            onClick={() => handleFishSelection(fish)}
+                            className={`cursor-pointer transition-all duration-200 rounded-lg border-2 p-3 ${
+                                selectedFish.some(f => f.id === fish.id)
+                                    ? 'border-teal-500 bg-teal-50 shadow-md'
+                                    : 'border-gray-200 bg-white hover:border-teal-300 hover:shadow-sm'
+                            }`}
+                        >
+                            <div className="relative">
+                                <img
+                                    src={fish.img}
+                                    alt={fish.name}
+                                    className="w-full h-20 object-cover rounded mb-2"
+                                />
+                                {selectedFish.some(f => f.id === fish.id) && (
+                                    <div className="absolute top-1 right-1 w-5 h-5 bg-teal-500 text-white rounded-full flex items-center justify-center text-xs">
+                                        ✓
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-xs font-medium text-gray-800 text-center">{fish.name}</p>
+                            <p className="text-xs text-gray-500 text-center">{fish.minimumVolume}L mín.</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Selected Fish Display */}
+            {selectedFish.length > 0 && (
+                <div className="mb-6 p-4 bg-teal-50 rounded-lg border border-teal-200">
+                    <h5 className="font-semibold text-teal-800 mb-2">Peces Seleccionados ({selectedFish.length})</h5>
+                    <div className="flex flex-wrap gap-2">
+                        {selectedFish.map(fish => (
+                            <span key={fish.id} className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm">
+                                {fish.name}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleFishSelection(fish); }}
+                                    className="ml-1 text-teal-600 hover:text-teal-800"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Water Parameters */}
+            <div className="mb-6">
+                <h4 className="font-semibold text-gray-800 mb-4">Parámetros del Agua</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Seleccionar por Comunidad</label>
+                        <select
+                            onChange={handleCommunityChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        >
+                            <option value="">Selecciona tu comunidad</option>
+                            {COMMUNITY_WATER_PARAMETERS.map(com => (
+                                <option key={com.name} value={com.name}>{com.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-2">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">pH</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                value={customPh}
+                                onChange={e => setCustomPh(e.target.value)}
+                                placeholder="7.0"
+                                className="w-full px-2 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">KH</label>
+                            <input
+                                type="number"
+                                value={customKh}
+                                onChange={e => setCustomKh(e.target.value)}
+                                placeholder="8"
+                                className="w-full px-2 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">GH</label>
+                            <input
+                                type="number"
+                                value={customGh}
+                                onChange={e => setCustomGh(e.target.value)}
+                                placeholder="12"
+                                className="w-full px-2 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Tank Volume */}
+            <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Volumen del Acuario (Litros)</label>
+                <input
+                    type="number"
+                    value={tankVolume}
+                    onChange={e => setTankVolume(e.target.value)}
+                    placeholder="Ej: 100"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">Opcional: si no lo especificas, recibirás recomendaciones para diferentes tamaños</p>
+            </div>
+
+            {error && (
+                <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-red-700">{error}</p>
+                </div>
+            )}
+
+            <div className="flex justify-between gap-4">
+                <button
+                    onClick={() => setCurrentStep('topic-selection')}
+                    className="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200"
+                >
+                    Cambiar tema
+                </button>
+                <button
+                    onClick={handleAnalyze}
+                    disabled={selectedFish.length === 0}
+                    className="bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                >
+                    <MessageCircle className="w-4 h-4" />
+                    Obtener Recomendaciones
+                </button>
+            </div>
+        </div>
+    );
+
+    const renderUpload2 = () => (
+        <div className="p-6">
+            <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Sube una foto de las algas</h3>
+                <p className="text-gray-600">Toma una foto clara donde se puedan ver bien las algas en tu acuario.</p>
+            </div>
+
+            <div
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors duration-200"
+                onClick={() => fileInputRef.current?.click()}
+            >
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-2">Haz clic para subir una imagen</p>
+                <p className="text-sm text-gray-400">PNG, JPG, JPEG - Máximo 10MB</p>
+            </div>
+
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+            />
+
+            {error && (
+                <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-red-700">{error}</p>
+                </div>
+            )}
+
+            <div className="mt-6 flex justify-between">
+                <button
+                    onClick={resetAssistant}
+                    className="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200"
+                >
+                    Volver
+                </button>
+            </div>
+        </div>
+    );
+
     const renderResults = () => {
         // Handle algae identification results
         if (result && selectedTopic?.id === 'algae') {
@@ -717,23 +989,117 @@ const AlgaeAssistant: React.FC = () => {
             return (
                 <div className="p-6">
                     <div className="mb-6">
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className={`p-3 rounded-lg bg-gradient-to-r ${selectedTopic.color} text-white`}>
-                                <selectedTopic.icon className="w-6 h-6" />
+                        <div className="flex items-start gap-4 mb-4 p-4 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg border border-blue-100">
+                            <div className={`p-3 rounded-xl bg-gradient-to-r ${selectedTopic.color} text-white shadow-md`}>
+                                <selectedTopic.icon className="w-7 h-7" />
                             </div>
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-800">{getResultTitle()}</h3>
-                                <p className="text-sm text-gray-600">{selectedTopic.title}</p>
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-bold text-gray-800 mb-1">{getResultTitle()}</h3>
+                                <p className="text-sm text-gray-600 mb-2">{selectedTopic.title}</p>
+                                <div className="flex items-center gap-2 text-xs text-blue-600">
+                                    <Bot className="w-3 h-3" />
+                                    <span>Respuesta personalizada de Nemo</span>
+                                </div>
+                            </div>
+                            <div className="text-right text-xs text-gray-400">
+                                <p>Generado ahora</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-6">
-                        <div className="prose max-w-none">
-                            {/* Aquí es donde usas ReactMarkdown */}
-                            <ReactMarkdown >
-                                {textResponse}
-                            </ReactMarkdown>
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div className="p-6">
+                            <div className="prose-custom max-w-none">
+                                <ReactMarkdown 
+                                    components={{
+                                        h1: ({children}) => <h1 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">{children}</h1>,
+                                        h2: ({children}) => <h2 className="text-xl font-bold text-gray-800 mb-3 mt-6">{children}</h2>,
+                                        h3: ({children}) => <h3 className="text-lg font-semibold text-gray-700 mb-2 mt-4">{children}</h3>,
+                                        p: ({children}) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                        ul: ({children}) => <ul className="space-y-2 mb-4">{children}</ul>,
+                                        ol: ({children}) => <ol className="space-y-2 mb-4 pl-4">{children}</ol>,
+                                        li: ({children}) => (
+                                            <li className="flex items-start gap-3 text-gray-700">
+                                                <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                                                <span>{children}</span>
+                                            </li>
+                                        ),
+                                        strong: ({children}) => <strong className="font-semibold text-gray-800">{children}</strong>,
+                                        em: ({children}) => <em className="italic text-gray-600">{children}</em>,
+                                        blockquote: ({children}) => (
+                                            <blockquote className="border-l-4 border-blue-500 bg-blue-50 pl-4 py-2 mb-4 italic text-gray-700">
+                                                {children}
+                                            </blockquote>
+                                        ),
+                                        code: ({children}) => (
+                                            <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">
+                                                {children}
+                                            </code>
+                                        )
+                                    }}
+                                >
+                                    {textResponse}
+                                </ReactMarkdown>
+                            </div>
+                        </div>
+                        
+                        {/* Secciones de destaque basadas en el contenido */}
+                        <div className="border-t border-gray-200">
+                            {/* Consejos importantes */}
+                            {textResponse.includes('⚠️') && (
+                                <div className="bg-yellow-50 border-b border-yellow-200 p-4">
+                                    <div className="flex items-start gap-3">
+                                        <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm font-medium text-yellow-800 mb-1">Advertencia Importante</p>
+                                            <p className="text-xs text-yellow-700">
+                                                Revisa los puntos marcados con ⚠️ - requieren atención inmediata
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Información de emergencia */}
+                            {(selectedTopic?.id === 'help' || textResponse.toLowerCase().includes('urgente') || textResponse.toLowerCase().includes('inmediato')) && (
+                                <div className="bg-red-50 border-b border-red-200 p-4">
+                                    <div className="flex items-start gap-3">
+                                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm font-medium text-red-800 mb-1">Situación de Emergencia</p>
+                                            <p className="text-xs text-red-700">
+                                                Sigue las acciones urgentes lo antes posible para proteger tu acuario
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Tips técnicos */}
+                            {selectedTopic?.id === 'filtration' && (
+                                <div className="bg-blue-50 border-b border-blue-200 p-4">
+                                    <div className="flex items-start gap-3">
+                                        <Filter className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm font-medium text-blue-800 mb-1">Consejo Técnico</p>
+                                            <p className="text-xs text-blue-700">
+                                                La filtración es clave para la salud del acuario - implementá gradualmente los cambios
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Footer con tiempo estimado */}
+                            <div className="bg-gray-50 px-4 py-3">
+                                <div className="flex items-center justify-between text-xs text-gray-500">
+                                    <span>Respuesta generada por IA • Verifica la información crítica</span>
+                                    <span className="flex items-center gap-1">
+                                        <CheckCircle className="w-3 h-3" />
+                                        Consejo personalizado
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -821,6 +1187,7 @@ const AlgaeAssistant: React.FC = () => {
                 {currentStep === 'topic-selection' && renderTopicSelection()}
                 {currentStep === 'upload' && renderUpload()}
                 {currentStep === 'description' && renderDescription()}
+                {currentStep === 'fish-selection' && renderFishSelection()}
                 {currentStep === 'analyzing' && renderAnalyzing()}
                 {currentStep === 'results' && renderResults()}
             </div>

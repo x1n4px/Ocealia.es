@@ -1,4 +1,4 @@
-type Fish = {
+export type Fish = {
     id: number;
     name: string;
     ph: string;
