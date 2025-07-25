@@ -156,7 +156,7 @@ function Home() {
                 { id: 'plantas', label: 'Plantas', icon: Leaf },
                 { id: 'parametros', label: 'Parámetros', icon: Thermometer },
                 { id: 'hospital', label: 'Hospital', icon: Heart },
-                { id: 'productos', label: 'Productos', icon: Beaker }
+                //{ id: 'productos', label: 'Productos', icon: Beaker }
               ].map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
@@ -195,7 +195,7 @@ function Home() {
                   { id: 'plantas', label: 'Plantas', icon: Leaf },
                   { id: 'parametros', label: 'Parámetros', icon: Thermometer },
                   { id: 'hospital', label: 'Hospital', icon: Heart },
-                  { id: 'productos', label: 'Productos', icon: Beaker }
+                 // { id: 'productos', label: 'Productos', icon: Beaker }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
