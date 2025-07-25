@@ -5,7 +5,6 @@ import {
     AlertTriangle,
     CheckCircle,
     Eye,
-    Lightbulb,
     X,
     Info,
     Activity,
@@ -13,7 +12,6 @@ import {
     Stethoscope,
     ShieldCheck,
     AlertCircleIcon,
-    TrendingUp
 } from 'lucide-react';
 
 // Importar los datos desde fishDiseaseData

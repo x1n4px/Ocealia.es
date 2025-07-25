@@ -4,7 +4,6 @@ import './App.css'
 import Home from './pages/home'
 import FishPage from './pages/fish'
 import AlgasGuide from './pages/algae'
-import ProductsPage from './pages/products'
 import AssistantPage from './pages/assistant'
 import FishDiseasesGuide from './pages/fish-diseases'
 

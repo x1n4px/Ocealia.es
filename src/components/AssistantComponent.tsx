@@ -24,7 +24,7 @@ import { callVisionAPI, callTextAPI } from '../service/gemini';
 import { algaeList, type Alga, families } from '../data/algaeData';
 import { fishList, type Fish } from '../data/fishData';
 import { COMMUNITY_WATER_PARAMETERS } from '../data/communityParameters';
-import { fishDiseaseList, type FishDisease, diseaseCategories } from '../data/fishDiseaseData'
+import { fishDiseaseList, type FishDisease } from '../data/fishDiseaseData'
 
 type AssistantStep = 'welcome' | 'topic-selection' | 'upload' | 'description' | 'fish-selection' | 'analyzing' | 'results';
 
