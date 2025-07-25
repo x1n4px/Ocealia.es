@@ -18,7 +18,6 @@ function App() {
         } />
         <Route path="/peces" element={<FishPage />} />
         <Route path="/algas" element={<AlgasGuide />} />
-        <Route path="/productos" element={<ProductsPage />} />
         <Route path="/nemo" element={<AssistantPage />} />
         <Route path="/enfermedades" element={<FishDiseasesGuide />} />
       </Routes>

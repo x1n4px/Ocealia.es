@@ -1573,7 +1573,7 @@ function Home() {
       </section>
 
       {/* Productos Section */}
-      <section id="productos" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      {/* <section id="productos" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1594,7 +1594,7 @@ function Home() {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="bg-gradient-to-r from-blue-900 to-green-900 text-white py-12 px-4 sm:px-6 lg:px-8">
