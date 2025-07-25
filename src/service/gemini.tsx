@@ -45,13 +45,11 @@ export const callVisionAPI = async (prompt:String, imageFile:any) => {
     try {
         const imageB64 = await toBase64(imageFile);
         const mimeType = imageFile.type;
-        console.log(prompt)
         const response = await axios.post(`${API_URL}/vision`, {
             prompt,
             imageB64,
             mimeType,
         });
-        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error("Error en la llamada a la API de visión:", error);
