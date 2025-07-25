@@ -24,6 +24,7 @@ import { callVisionAPI, callTextAPI } from '../service/gemini';
 import { algaeList, type Alga, families } from '../data/algaeData';
 import { fishList, type Fish } from '../data/fishData';
 import { COMMUNITY_WATER_PARAMETERS } from '../data/communityParameters';
+import { fishDiseaseList, type FishDisease, diseaseCategories } from '../data/fishDiseaseData'
 
 type AssistantStep = 'welcome' | 'topic-selection' | 'upload' | 'description' | 'fish-selection' | 'analyzing' | 'results';
 
@@ -43,13 +44,14 @@ const AlgaeAssistant: React.FC = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [description, setDescription] = useState('');
     const [result, setResult] = useState<Alga | null>(null);
+    const [fishDiseaseResult, setFishDiseaseResult] = useState<FishDisease | null>(null);
     const [textResponse, setTextResponse] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    
+
     // Fish selection states
     const [selectedFish, setSelectedFish] = useState<Fish[]>([]);
-   // const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
+    // const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
     const [customPh, setCustomPh] = useState('');
     const [customKh, setCustomKh] = useState('');
     const [customGh, setCustomGh] = useState('');
@@ -63,6 +65,14 @@ const AlgaeAssistant: React.FC = () => {
             description: 'Identifica tipos de algas y obtén soluciones específicas',
             icon: Droplets,
             color: 'from-green-500 to-emerald-600',
+            requiresImage: true
+        },
+        {
+            id: 'diseases',
+            title: 'Enfermedades de Peces',
+            description: 'Consulta sobre enfermedades comunes y sus tratamientos',
+            icon: Home,
+            color: 'from-red-500 to-pink-600',
             requiresImage: true
         },
         {
@@ -102,11 +112,12 @@ const AlgaeAssistant: React.FC = () => {
         setImagePreview(null);
         setDescription('');
         setResult(null);
+        setFishDiseaseResult(null);
         setTextResponse(null);
         setError(null);
         // Reset fish selection states
         setSelectedFish([]);
-       // setSelectedCommunity(null);
+        // setSelectedCommunity(null);
         setCustomPh('');
         setCustomKh('');
         setCustomGh('');
@@ -182,6 +193,21 @@ const AlgaeAssistant: React.FC = () => {
                 })), null, 2)}
                 
                 Responde SOLO con el número ID del alga más parecida.`;
+            case 'diseases':
+                return `${baseContext}
+                
+                Identifica el tipo de enfermedad en esta imagen basándote en: "${userDescription}". 
+                
+                Lista de enfermedades:
+                ${JSON.stringify(fishDiseaseList.map(disease => ({
+                    id: disease.id,
+                    name: disease.name,
+                    scientificName: disease.scientificName,
+                    category: disease.category,
+                    visualDescription: disease.visualSymptoms
+                })), null, 2)}
+                
+                Responde SOLO con el número ID de la enfermedad más parecida.`;
 
             case 'general':
                 return `${baseContext}
@@ -256,9 +282,9 @@ const AlgaeAssistant: React.FC = () => {
             return;
         }
 
-        // For algae topic, require image
-        if (selectedTopic.id === 'algae' && !imageFile) {
-            setError('Para problemas con algas, necesitas subir una imagen.');
+        // For topics that require image
+        if ((selectedTopic.id === 'algae' || selectedTopic.id === 'diseases') && !imageFile) {
+            setError(`Para ${selectedTopic.id === 'algae' ? 'problemas con algas' : 'identificación de enfermedades'}, necesitas subir una imagen.`);
             return;
         }
 
@@ -295,6 +321,25 @@ const AlgaeAssistant: React.FC = () => {
                     setCurrentStep('description');
                     return;
                 }
+            } else if (selectedTopic.id === 'diseases' && imageFile) {
+                let diseaseId: number;
+                if (typeof response === 'object' && response.parts) {
+                    const content = response.parts;
+                    diseaseId = parseInt(content.match(/\d+/)?.[0] || '1');
+                } else {
+                    diseaseId = parseInt(response.toString().match(/\d+/)?.[0] || '1');
+                }
+
+                const identifiedDisease = fishDiseaseList.find(disease => disease.id === diseaseId);
+
+                if (identifiedDisease) {
+                    setFishDiseaseResult(identifiedDisease);
+                } else {
+                    setError('No se pudo identificar la enfermedad. Por favor, intenta con otra imagen.');
+                    setCurrentStep('description');
+                    return;
+                }
+
             } else {
                 // Handle text-based responses
                 let textContent = '';
@@ -478,6 +523,12 @@ const AlgaeAssistant: React.FC = () => {
                     placeholder: 'Ejemplo: Veo filamentos verdes largos que salen de las plantas, son suaves al tacto y forman como telarañas...',
                     buttonText: 'Identificar Algas'
                 };
+            case 'diseases':
+                return {
+                    title: 'Describe los síntomas de tus peces',
+                    placeholder: 'Ejemplo: Mis peces tienen manchas blancas, nadan erráticamente y algunos están en el fondo sin moverse.',
+                    buttonText: 'Identificar Enfermedad'
+                };
             case 'general':
                 return {
                     title: 'Cuéntanos tu duda',
@@ -617,6 +668,12 @@ const AlgaeAssistant: React.FC = () => {
                         title: 'Identificando algas...',
                         description: 'La IA está analizando la imagen y comparándola con nuestra base de datos de algas.'
                     };
+                case 'diseases':
+                    return {
+                        title: 'Identificando enfermedad...',
+                        description: 'La IA está analizando la imagen y comparándola con nuestra base de datos de enfermedades de peces.'
+                    };
+                        
                 case 'general':
                     return {
                         title: 'Procesando consulta...',
@@ -675,11 +732,10 @@ const AlgaeAssistant: React.FC = () => {
                         <div
                             key={fish.id}
                             onClick={() => handleFishSelection(fish)}
-                            className={`cursor-pointer transition-all duration-200 rounded-lg border-2 p-3 ${
-                                selectedFish.some(f => f.id === fish.id)
+                            className={`cursor-pointer transition-all duration-200 rounded-lg border-2 p-3 ${selectedFish.some(f => f.id === fish.id)
                                     ? 'border-teal-500 bg-teal-50 shadow-md'
                                     : 'border-gray-200 bg-white hover:border-teal-300 hover:shadow-sm'
-                            }`}
+                                }`}
                         >
                             <div className="relative">
                                 <img
@@ -736,7 +792,7 @@ const AlgaeAssistant: React.FC = () => {
                             ))}
                         </select>
                     </div>
-                    
+
                     <div className="grid grid-cols-3 gap-2">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">pH</label>
@@ -811,49 +867,49 @@ const AlgaeAssistant: React.FC = () => {
             </div>
         </div>
     );
-/*
-    const renderUpload2 = () => (
-        <div className="p-6">
-            <div className="mb-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">Sube una foto de las algas</h3>
-                <p className="text-gray-600">Toma una foto clara donde se puedan ver bien las algas en tu acuario.</p>
-            </div>
-
-            <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors duration-200"
-                onClick={() => fileInputRef.current?.click()}
-            >
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-2">Haz clic para subir una imagen</p>
-                <p className="text-sm text-gray-400">PNG, JPG, JPEG - Máximo 10MB</p>
-            </div>
-
-            <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-            />
-
-            {error && (
-                <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-red-700">{error}</p>
+    /*
+        const renderUpload2 = () => (
+            <div className="p-6">
+                <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">Sube una foto de las algas</h3>
+                    <p className="text-gray-600">Toma una foto clara donde se puedan ver bien las algas en tu acuario.</p>
                 </div>
-            )}
-
-            <div className="mt-6 flex justify-between">
-                <button
-                    onClick={resetAssistant}
-                    className="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200"
+    
+                <div
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors duration-200"
+                    onClick={() => fileInputRef.current?.click()}
                 >
-                    Volver
-                </button>
+                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-2">Haz clic para subir una imagen</p>
+                    <p className="text-sm text-gray-400">PNG, JPG, JPEG - Máximo 10MB</p>
+                </div>
+    
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                />
+    
+                {error && (
+                    <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                        <p className="text-red-700">{error}</p>
+                    </div>
+                )}
+    
+                <div className="mt-6 flex justify-between">
+                    <button
+                        onClick={resetAssistant}
+                        className="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200"
+                    >
+                        Volver
+                    </button>
+                </div>
             </div>
-        </div>
-    );
-*/
+        );
+    */
     const renderResults = () => {
         // Handle algae identification results
         if (result && selectedTopic?.id === 'algae') {
@@ -975,6 +1031,139 @@ const AlgaeAssistant: React.FC = () => {
                 </div>
             );
         }
+        
+        // Handle fish disease identification results
+        if (fishDiseaseResult && selectedTopic?.id === 'diseases') {
+            //const categoryData = diseaseCategories.find(c => c.id === fishDiseaseResult.category);
+        
+            return (
+                <div className="p-6">
+                    <div className="mb-6 text-center">
+                        <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                        <h3 className="text-2xl font-bold text-gray-800">¡Enfermedad Identificada!</h3>
+                    </div>
+        
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div className="relative h-48 overflow-hidden">
+                            <img
+                                src={fishDiseaseResult.image}
+                                alt={fishDiseaseResult.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+        
+                        <div className="p-6">
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {/* Categoría */}
+                                {/* <span className={`px-3 py-1 rounded-full text-xs font-medium bg-${categoryData?.color}-100 text-${categoryData?.color}-800`}>
+                                    {categoryData?.name}
+                                </span> */}
+                                {/* Gravedad */}
+                                <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    Peligro: {fishDiseaseResult.severity}
+                                </span>
+                                {/* Nivel de contagio */}
+                                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {fishDiseaseResult.contagiousLevel}
+                                </span>
+                            </div>
+        
+                            <h4 className="text-xl font-bold text-gray-800 mb-2">{fishDiseaseResult.name}</h4>
+                            {fishDiseaseResult.scientificName && (
+                                <p className="text-sm text-gray-500 mb-3 italic">{fishDiseaseResult.scientificName}</p>
+                            )}
+                            <p className="text-gray-700 mb-4">{fishDiseaseResult.description}</p>
+        
+                            {/* Síntomas visuales */}
+                            {fishDiseaseResult.visualSymptoms && (
+                                <div className="mb-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Eye className="w-4 h-4 text-blue-600" />
+                                        <h5 className="font-semibold text-gray-800">Síntomas Visuales</h5>
+                                    </div>
+                                    <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.visualSymptoms}</p>
+                                </div>
+                            )}
+        
+                            {/* Síntomas conductuales */}
+                            {fishDiseaseResult.behavioralSymptoms && (
+                                <div className="mb-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Info className="w-4 h-4 text-blue-600" />
+                                        <h5 className="font-semibold text-gray-800">Síntomas Conductuales</h5>
+                                    </div>
+                                    <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.behavioralSymptoms}</p>
+                                </div>
+                            )}
+        
+                            {/* Causas */}
+                            <div className="mb-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <AlertCircle className="w-4 h-4 text-orange-600" />
+                                    <h5 className="font-semibold text-gray-800">Causas Principales</h5>
+                                </div>
+                                <ul className="text-sm text-gray-700 pl-6 space-y-1">
+                                    {fishDiseaseResult.causes.map((cause, index) => (
+                                        <li key={index} className="flex items-start gap-2">
+                                            <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+                                            {cause}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+        
+                            {/* Tratamientos */}
+                            <div className="mb-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Lightbulb className="w-4 h-4 text-green-600" />
+                                    <h5 className="font-semibold text-gray-800">Tratamientos</h5>
+                                </div>
+                                <ul className="text-sm text-gray-700 pl-6 space-y-1">
+                                    {fishDiseaseResult.treatments.map((treatment, index) => (
+                                        <li key={index} className="flex items-start gap-2">
+                                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                                            {treatment}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+        
+                            {/* Prevención */}
+                            <div className="mb-4">
+                                <h5 className="font-semibold text-gray-800 mb-2">Prevención</h5>
+                                <p className="text-sm text-gray-700 bg-blue-50 p-3 rounded-lg">{fishDiseaseResult.prevention}</p>
+                            </div>
+        
+                            {/* Advertencias */}
+                            {fishDiseaseResult.warnings && fishDiseaseResult.warnings.length > 0 && (
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <h5 className="font-semibold text-yellow-800 mb-2">⚠️ Advertencias</h5>
+                                    <ul className="text-sm text-yellow-700 space-y-1">
+                                        {fishDiseaseResult.warnings.map((warning, index) => (
+                                            <li key={index} className="flex items-start gap-2">
+                                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
+                                                {warning}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+        
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={resetAssistant}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                        >
+                            <Bot className="w-4 h-4" />
+                            Nueva Consulta
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+        
 
         // Handle text-based responses
         if (textResponse && selectedTopic) {
@@ -1011,28 +1200,28 @@ const AlgaeAssistant: React.FC = () => {
                     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
                         <div className="p-6">
                             <div className="prose-custom max-w-none">
-                                <ReactMarkdown 
+                                <ReactMarkdown
                                     components={{
-                                        h1: ({children}) => <h1 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">{children}</h1>,
-                                        h2: ({children}) => <h2 className="text-xl font-bold text-gray-800 mb-3 mt-6">{children}</h2>,
-                                        h3: ({children}) => <h3 className="text-lg font-semibold text-gray-700 mb-2 mt-4">{children}</h3>,
-                                        p: ({children}) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
-                                        ul: ({children}) => <ul className="space-y-2 mb-4">{children}</ul>,
-                                        ol: ({children}) => <ol className="space-y-2 mb-4 pl-4">{children}</ol>,
-                                        li: ({children}) => (
+                                        h1: ({ children }) => <h1 className="text-2xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">{children}</h1>,
+                                        h2: ({ children }) => <h2 className="text-xl font-bold text-gray-800 mb-3 mt-6">{children}</h2>,
+                                        h3: ({ children }) => <h3 className="text-lg font-semibold text-gray-700 mb-2 mt-4">{children}</h3>,
+                                        p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                        ul: ({ children }) => <ul className="space-y-2 mb-4">{children}</ul>,
+                                        ol: ({ children }) => <ol className="space-y-2 mb-4 pl-4">{children}</ol>,
+                                        li: ({ children }) => (
                                             <li className="flex items-start gap-3 text-gray-700">
                                                 <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
                                                 <span>{children}</span>
                                             </li>
                                         ),
-                                        strong: ({children}) => <strong className="font-semibold text-gray-800">{children}</strong>,
-                                        em: ({children}) => <em className="italic text-gray-600">{children}</em>,
-                                        blockquote: ({children}) => (
+                                        strong: ({ children }) => <strong className="font-semibold text-gray-800">{children}</strong>,
+                                        em: ({ children }) => <em className="italic text-gray-600">{children}</em>,
+                                        blockquote: ({ children }) => (
                                             <blockquote className="border-l-4 border-blue-500 bg-blue-50 pl-4 py-2 mb-4 italic text-gray-700">
                                                 {children}
                                             </blockquote>
                                         ),
-                                        code: ({children}) => (
+                                        code: ({ children }) => (
                                             <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">
                                                 {children}
                                             </code>
@@ -1043,7 +1232,7 @@ const AlgaeAssistant: React.FC = () => {
                                 </ReactMarkdown>
                             </div>
                         </div>
-                        
+
                         {/* Secciones de destaque basadas en el contenido */}
                         <div className="border-t border-gray-200">
                             {/* Consejos importantes */}
@@ -1060,7 +1249,7 @@ const AlgaeAssistant: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Información de emergencia */}
                             {(selectedTopic?.id === 'help' || textResponse.toLowerCase().includes('urgente') || textResponse.toLowerCase().includes('inmediato')) && (
                                 <div className="bg-red-50 border-b border-red-200 p-4">
@@ -1075,7 +1264,7 @@ const AlgaeAssistant: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Tips técnicos */}
                             {selectedTopic?.id === 'filtration' && (
                                 <div className="bg-blue-50 border-b border-blue-200 p-4">
@@ -1090,7 +1279,7 @@ const AlgaeAssistant: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Footer con tiempo estimado */}
                             <div className="bg-gray-50 px-4 py-3">
                                 <div className="flex items-center justify-between text-xs text-gray-500">

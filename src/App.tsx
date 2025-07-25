@@ -6,6 +6,7 @@ import FishPage from './pages/fish'
 import AlgasGuide from './pages/algae'
 import ProductsPage from './pages/products'
 import AssistantPage from './pages/assistant'
+import FishDiseasesGuide from './pages/fish-diseases'
 
 function App() {
   return (
@@ -15,10 +16,11 @@ function App() {
          
             <Home />
         } />
-        <Route path="/fish" element={<FishPage />} />
-        <Route path="/algae" element={<AlgasGuide />} />
-        <Route path="/product" element={<ProductsPage />} />
-        <Route path="/assistant" element={<AssistantPage />} />
+        <Route path="/peces" element={<FishPage />} />
+        <Route path="/algas" element={<AlgasGuide />} />
+        <Route path="/productos" element={<ProductsPage />} />
+        <Route path="/nemo" element={<AssistantPage />} />
+        <Route path="/enfermedades" element={<FishDiseasesGuide />} />
       </Routes>
     </Router>
   )

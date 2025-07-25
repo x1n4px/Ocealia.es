@@ -17,7 +17,8 @@ import {
   Zap,
   Waves,
   Eye,
-  Activity
+  Activity,
+  Github
 } from 'lucide-react';
 
 function Home() {
@@ -233,13 +234,18 @@ function Home() {
             </p>
 
             <div className="flex justify-center items-center mt-8">
-            <button
-              onClick={() => window.location.href = "/assistant"}
+            <div className="flex flex-col items-center space-y-2">
+              <p className="text-sm text-gray-500 font-medium">
+              Conoce la IA de acuariofilia más avanzada
+              </p>
+              <button
+              onClick={() => window.location.href = "/nemo"}
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
-            >
+              >
               NemoAI
-              <Beaker className="w-5 h-5 ml-2" />
-            </button>
+              <Fish className="w-5 h-5 ml-2" />
+              </button>
+            </div>
           </div>
           </div>
 
@@ -907,7 +913,7 @@ function Home() {
 
             <div className="flex justify-center items-center col-span-full mt-4">
               <button
-                onClick={() => window.location.href = "/fish"}
+                onClick={() => window.location.href = "/peces"}
                 className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
               >
                 Ver el comparador de especies de peces
@@ -1135,7 +1141,7 @@ function Home() {
 
             <div className="flex justify-center items-center col-span-full mt-4">
               <button
-                onClick={() => window.location.href = "/algae"}
+                onClick={() => window.location.href = "/algas"}
                 className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-xl font-semibold shadow hover:bg-green-700 transition-all duration-200 text-lg"
               >
                 Ver la guía para algas
@@ -1441,6 +1447,16 @@ function Home() {
             </div>
           </div>
 
+          <div className="flex justify-center items-center col-span-full my-4">
+              <button
+                onClick={() => window.location.href = "/enfermedades"}
+                className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-xl font-semibold shadow hover:bg-red-700 transition-all duration-200 text-lg"
+              >
+                Ver las enfermedades comunes de los peces
+                <Fish className="w-5 h-5 ml-2" />
+              </button>
+            </div>
+
           {/* Usos del Acuario Hospital */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-red-100">
@@ -1582,19 +1598,35 @@ function Home() {
 
       {/* Footer */}
       <footer className="bg-gradient-to-r from-blue-900 to-green-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <Fish className="w-8 h-8" />
-            <span className="text-2xl font-bold">AquaGuía</span>
-          </div>
-          <p className="text-blue-200 mb-4">
-            Tu compañero completo en el mundo de la acuariofilia
-          </p>
-          <p className="text-blue-300 text-sm">
-            Recuerda: la paciencia y la observación son las claves del éxito en la acuariofilia
-          </p>
+      <div className="max-w-7xl mx-auto text-center">
+        {/* Logo */}
+        <div className="flex items-center justify-center space-x-2 mb-6">
+          <Fish className="w-8 h-8" />
+          <span className="text-2xl font-bold">AquaGuía</span>
         </div>
-      </footer>
+
+        {/* Texto principal */}
+        <p className="text-blue-200 mb-4">
+          Tu compañero completo en el mundo de la acuariofilia
+        </p>
+        <p className="text-blue-300 text-sm mb-6">
+          Recuerda: la paciencia y la observación son las claves del éxito en la acuariofilia
+        </p>
+
+        {/* Redes sociales */}
+        <div className="flex justify-center space-x-4">
+          <a
+            href="https://github.com/x1n4px" // <-- PON AQUÍ TU GITHUB
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-2 text-white hover:text-blue-400 transition"
+          >
+            <Github className="w-6 h-6" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 }

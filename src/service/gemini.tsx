@@ -51,6 +51,7 @@ export const callVisionAPI = async (prompt:String, imageFile:any) => {
             imageB64,
             mimeType,
         });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error("Error en la llamada a la API de visión:", error);
