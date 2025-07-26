@@ -87,7 +87,7 @@ const AlgaeAssistant: React.FC = () => {
             title: 'Duda General',
             description: 'Preguntas generales sobre acuarismo y cuidado de peces',
             icon: HelpCircle,
-            color: 'from-blue-500 to-blue-600'
+            color: 'from-blue-500 to-blue-400'
         },
         {
             id: 'help',
@@ -375,7 +375,7 @@ const AlgaeAssistant: React.FC = () => {
     const getDangerColor = (level: Alga['dangerLevel']): string => {
         switch (level) {
             case 'Muy Bajo': return 'text-green-700 bg-green-100';
-            case 'Bajo': return 'text-blue-700 bg-blue-100';
+            case 'Bajo': return 'text-ocealia-blue bg-blue-100';
             case 'Medio': return 'text-yellow-700 bg-yellow-100';
             case 'Alto': return 'text-orange-700 bg-orange-100';
             case 'Muy Alto': return 'text-red-700 bg-red-100';
@@ -388,7 +388,7 @@ const AlgaeAssistant: React.FC = () => {
         switch (familyData?.color) {
             case 'green': return 'bg-green-100 text-green-700';
             case 'yellow': return 'bg-yellow-100 text-yellow-700';
-            case 'blue': return 'bg-blue-100 text-blue-700';
+            case 'blue': return 'bg-blue-100 text-ocealia-blue';
             case 'red': return 'bg-red-100 text-red-700';
             case 'emerald': return 'bg-emerald-100 text-emerald-700';
             default: return 'bg-gray-100 text-gray-700';
@@ -398,7 +398,7 @@ const AlgaeAssistant: React.FC = () => {
     const renderWelcome = () => (
         <div className="text-center p-8">
             <div className="mb-6">
-                <Bot className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+                <Bot className="w-16 h-16 text-ocealia-blue mx-auto mb-4" />
                 <h2 className="text-3xl font-bold text-gray-800 mb-3">Nemo: Asistente IA para Acuarios</h2>
                 <p className="text-gray-600 max-w-md mx-auto">
                     Te ayudo con consultas sobre algas, filtración, problemas generales y más. ¡Selecciona tu tipo de consulta!
@@ -406,15 +406,15 @@ const AlgaeAssistant: React.FC = () => {
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-blue-800 mb-2">¿Qué tipo de consulta tienes?</h3>
-                <p className="text-sm text-blue-700 max-w-sm mx-auto">
+                <h3 className="font-semibold text-ocealia-blue mb-2">¿Qué tipo de consulta tienes?</h3>
+                <p className="text-sm text-ocealia-blue max-w-sm mx-auto">
                     Selecciona una de las opciones para obtener análisis personalizado con IA.
                 </p>
             </div>
 
             <button
                 onClick={() => setCurrentStep('topic-selection')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                className="bg-ocealia-blue hover:bg-ocealia-blue-dark text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
             >
                 <ChevronRight className="w-5 h-5" />
                 Continuar
@@ -648,7 +648,7 @@ const AlgaeAssistant: React.FC = () => {
                     <button
                         onClick={handleAnalyze}
                         disabled={!description.trim() || description.trim().length < 10}
-                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                        className="bg-blue-400 hover:bg-ocealia-blue disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
                     >
                         <MessageCircle className="w-4 h-4" />
                         {topicInfo.buttonText}
@@ -699,13 +699,13 @@ const AlgaeAssistant: React.FC = () => {
         return (
             <div className="p-8 text-center">
                 <div className="mb-6">
-                    <Loader2 className="w-16 h-16 text-blue-600 mx-auto mb-4 animate-spin" />
+                    <Loader2 className="w-16 h-16 text-blue-400 mx-auto mb-4 animate-spin" />
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">{analyzingText.title}</h3>
                     <p className="text-gray-600">{analyzingText.description}</p>
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-700">Esto puede tomar unos segundos...</p>
+                    <p className="text-sm text-ocealia-blue">Esto puede tomar unos segundos...</p>
                 </div>
             </div>
         );
@@ -951,7 +951,7 @@ const AlgaeAssistant: React.FC = () => {
                             {result.visualDescription && (
                                 <div className="mb-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Eye className="w-4 h-4 text-blue-600" />
+                                        <Eye className="w-4 h-4 text-blue-400" />
                                         <h5 className="font-semibold text-gray-800">Descripción Visual</h5>
                                     </div>
                                     <p className="text-sm text-gray-700 pl-6">{result.visualDescription}</p>
@@ -961,7 +961,7 @@ const AlgaeAssistant: React.FC = () => {
                             {result.impact && (
                                 <div className="mb-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Info className="w-4 h-4 text-blue-600" />
+                                        <Info className="w-4 h-4 text-blue-400" />
                                         <h5 className="font-semibold text-gray-800">Impacto</h5>
                                     </div>
                                     <p className="text-sm text-gray-700 pl-6">{result.impact}</p>
@@ -1022,7 +1022,7 @@ const AlgaeAssistant: React.FC = () => {
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={resetAssistant}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                            className="bg-blue-400 hover:bg-ocealia-blue text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
                         >
                             <Bot className="w-4 h-4" />
                             Nueva Consulta
@@ -1063,7 +1063,7 @@ const AlgaeAssistant: React.FC = () => {
                                     Peligro: {fishDiseaseResult.severity}
                                 </span>
                                 {/* Nivel de contagio */}
-                                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-ocealia-blue-dark">
                                     {fishDiseaseResult.contagiousLevel}
                                 </span>
                             </div>
@@ -1078,7 +1078,7 @@ const AlgaeAssistant: React.FC = () => {
                             {fishDiseaseResult.visualSymptoms && (
                                 <div className="mb-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Eye className="w-4 h-4 text-blue-600" />
+                                        <Eye className="w-4 h-4 text-blue-400" />
                                         <h5 className="font-semibold text-gray-800">Síntomas Visuales</h5>
                                     </div>
                                     <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.visualSymptoms}</p>
@@ -1089,7 +1089,7 @@ const AlgaeAssistant: React.FC = () => {
                             {fishDiseaseResult.behavioralSymptoms && (
                                 <div className="mb-4">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Info className="w-4 h-4 text-blue-600" />
+                                        <Info className="w-4 h-4 text-blue-400" />
                                         <h5 className="font-semibold text-gray-800">Síntomas Conductuales</h5>
                                     </div>
                                     <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.behavioralSymptoms}</p>
@@ -1154,7 +1154,7 @@ const AlgaeAssistant: React.FC = () => {
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={resetAssistant}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                            className="bg-blue-400 hover:bg-ocealia-blue text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
                         >
                             <Bot className="w-4 h-4" />
                             Nueva Consulta
@@ -1186,7 +1186,7 @@ const AlgaeAssistant: React.FC = () => {
                             <div className="flex-1">
                                 <h3 className="text-2xl font-bold text-gray-800 mb-1">{getResultTitle()}</h3>
                                 <p className="text-sm text-gray-600 mb-2">{selectedTopic.title}</p>
-                                <div className="flex items-center gap-2 text-xs text-blue-600">
+                                <div className="flex items-center gap-2 text-xs text-blue-400">
                                     <Bot className="w-3 h-3" />
                                     <span>Respuesta personalizada de Nemo</span>
                                 </div>
@@ -1269,10 +1269,10 @@ const AlgaeAssistant: React.FC = () => {
                             {selectedTopic?.id === 'filtration' && (
                                 <div className="bg-blue-50 border-b border-blue-200 p-4">
                                     <div className="flex items-start gap-3">
-                                        <Filter className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                        <Filter className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <p className="text-sm font-medium text-blue-800 mb-1">Consejo Técnico</p>
-                                            <p className="text-xs text-blue-700">
+                                            <p className="text-sm font-medium text-ocealia-blue-dark mb-1">Consejo Técnico</p>
+                                            <p className="text-xs text-ocealia-blue">
                                                 La filtración es clave para la salud del acuario - implementá gradualmente los cambios
                                             </p>
                                         </div>
@@ -1308,14 +1308,14 @@ const AlgaeAssistant: React.FC = () => {
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={() => setCurrentStep('topic-selection')}
-                            className="text-blue-600 hover:text-blue-800 px-6 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+                            className="text-blue-400 hover:text-ocealia-blue-dark px-6 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
                         >
                             <ChevronRight className="w-4 h-4 transform rotate-180" />
                             Cambiar Tema
                         </button>
                         <button
                             onClick={resetAssistant}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                            className="bg-blue-400 hover:bg-ocealia-blue text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
                         >
                             <Bot className="w-4 h-4" />
                             Nueva Consulta
@@ -1331,7 +1331,7 @@ const AlgaeAssistant: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
+            <div className="bg-gradient-to-r from-blue-400 to-ocealia-blue text-white p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Bot className="w-6 h-6" />
@@ -1341,7 +1341,7 @@ const AlgaeAssistant: React.FC = () => {
                         {/* Botón Home */}
                         <button
                             onClick={() => window.location.href = '/'}
-                            className="flex items-center gap-2 px-3 py-2 bg-blue-800 hover:bg-blue-900 rounded-lg transition-colors duration-200 text-sm font-medium"
+                            className="flex items-center gap-2 px-3 py-2 bg-ocealia-blue-dark hover:bg-blue-900 rounded-lg transition-colors duration-200 text-sm font-medium"
                             title="Volver al inicio"
                         >
                             <Home className="w-4 h-4" />
@@ -1350,7 +1350,7 @@ const AlgaeAssistant: React.FC = () => {
                         {currentStep !== 'welcome' && (
                             <button
                                 onClick={resetAssistant}
-                                className="p-2 hover:bg-blue-800 rounded-lg transition-colors duration-200"
+                                className="p-2 hover:bg-ocealia-blue-dark rounded-lg transition-colors duration-200"
                                 title="Reiniciar asistente"
                             >
                                 <X className="w-5 h-5" />

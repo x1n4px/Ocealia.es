@@ -56,7 +56,7 @@ function Home() {
 
   const NitrogenCycleChart = () => {
     return (
-      <div className="bg-gradient-to-br from-blue-50 to-green-50 p-6 rounded-xl border border-blue-200">
+      <div className="bg-gradient-to-br from-blue-50 to-green-250 p-6 rounded-xl border border-blue-200">
         <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
           <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
           Evolución del Ciclo del Nitrógeno
@@ -132,31 +132,176 @@ function Home() {
   };
 
 
-  <div className="min-h-screen w-full relative">
-  {/* Radial Gradient Background from Bottom */}
-  <div
-    className="absolute inset-0 z-0"
-    style={{
-      background: "radial-gradient(125% 125% at 50% 90%, #fff 40%, #6366f1 100%)",
-    }}
-  />
-     {/* Your Content/Components */}
-</div>
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen w-full relative bg-gradient-to-b from-green-50 via-blue-200 to-blue-400 overflow-hidden">
+      {/* Fondo acuático con ondas */}
+      <img src="/layered-waves-haikei.svg" alt="Fondo acuático" className="absolute inset-0 w-full object-cover opacity-20" />
+      <div className="fixed inset-0 z-0">
+        {/* Gradiente acuático de fondo más suave */}
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-50/15 via-blue-100/10 to-blue-200/20"></div>
+
+        {/* Ondas de agua animadas más sutiles */}
+        <div className="absolute inset-0 opacity-15">
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="wave-animation-1 absolute inset-0 bg-gradient-to-r from-transparent via-blue-200/15 to-transparent transform rotate-2"></div>
+            <div className="wave-animation-2 absolute inset-0 bg-gradient-to-r from-transparent via-cyan-100/10 to-transparent transform -rotate-1" style={{ animationDelay: '2s' }}></div>
+            <div className="wave-animation-3 absolute inset-0 bg-gradient-to-r from-transparent via-blue-300/8 to-transparent transform rotate-1" style={{ animationDelay: '4s' }}></div>
+          </div>
+        </div>
+
+        {/* Burbujas animadas - Muchas más burbujas */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Burbujas grandes */}
+          <div className="bubble-large absolute bottom-0 left-[5%] w-4 h-4 bg-white/40 rounded-full animate-float" style={{ animationDelay: '0s', animationDuration: '8s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[12%] w-3 h-3 bg-white/30 rounded-full animate-float" style={{ animationDelay: '2s', animationDuration: '10s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[20%] w-5 h-5 bg-white/35 rounded-full animate-float" style={{ animationDelay: '4s', animationDuration: '7s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[28%] w-2 h-2 bg-white/45 rounded-full animate-float" style={{ animationDelay: '1s', animationDuration: '9s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[35%] w-4 h-4 bg-white/40 rounded-full animate-float" style={{ animationDelay: '3s', animationDuration: '11s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[42%] w-3 h-3 bg-white/50 rounded-full animate-float" style={{ animationDelay: '5s', animationDuration: '8s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[50%] w-6 h-6 bg-white/25 rounded-full animate-float" style={{ animationDelay: '6s', animationDuration: '12s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[58%] w-3 h-3 bg-white/35 rounded-full animate-float" style={{ animationDelay: '1.5s', animationDuration: '9s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[65%] w-4 h-4 bg-white/40 rounded-full animate-float" style={{ animationDelay: '7s', animationDuration: '10s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[72%] w-2 h-2 bg-white/50 rounded-full animate-float" style={{ animationDelay: '2.5s', animationDuration: '8s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[80%] w-5 h-5 bg-white/30 rounded-full animate-float" style={{ animationDelay: '4.5s', animationDuration: '11s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[88%] w-3 h-3 bg-white/45 rounded-full animate-float" style={{ animationDelay: '0.5s', animationDuration: '9s' }}></div>
+          <div className="bubble-large absolute bottom-0 left-[95%] w-4 h-4 bg-white/40 rounded-full animate-float" style={{ animationDelay: '8s', animationDuration: '10s' }}></div>
+
+          {/* Burbujas medianas - Más cantidad */}
+          <div className="bubble-medium absolute bottom-0 left-[3%] w-2 h-2 bg-white/60 rounded-full animate-float" style={{ animationDelay: '1.5s', animationDuration: '6s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[8%] w-1.5 h-1.5 bg-white/55 rounded-full animate-float" style={{ animationDelay: '3.5s', animationDuration: '7s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[15%] w-2.5 h-2.5 bg-white/45 rounded-full animate-float" style={{ animationDelay: '0.5s', animationDuration: '8s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[23%] w-1 h-1 bg-white/70 rounded-full animate-float" style={{ animationDelay: '2.5s', animationDuration: '5s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[30%] w-2 h-2 bg-white/50 rounded-full animate-float" style={{ animationDelay: '4.5s', animationDuration: '9s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[38%] w-1.5 h-1.5 bg-white/65 rounded-full animate-float" style={{ animationDelay: '6.5s', animationDuration: '6s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[45%] w-2 h-2 bg-white/55 rounded-full animate-float" style={{ animationDelay: '1.8s', animationDuration: '7s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[53%] w-1 h-1 bg-white/75 rounded-full animate-float" style={{ animationDelay: '3.8s', animationDuration: '5s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[60%] w-2.5 h-2.5 bg-white/40 rounded-full animate-float" style={{ animationDelay: '5.8s', animationDuration: '8s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[68%] w-1.5 h-1.5 bg-white/60 rounded-full animate-float" style={{ animationDelay: '7.8s', animationDuration: '6s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[75%] w-2 h-2 bg-white/50 rounded-full animate-float" style={{ animationDelay: '2.2s', animationDuration: '9s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[83%] w-1 h-1 bg-white/70 rounded-full animate-float" style={{ animationDelay: '4.2s', animationDuration: '5s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[90%] w-2 h-2 bg-white/55 rounded-full animate-float" style={{ animationDelay: '6.2s', animationDuration: '7s' }}></div>
+          <div className="bubble-medium absolute bottom-0 left-[97%] w-1.5 h-1.5 bg-white/65 rounded-full animate-float" style={{ animationDelay: '8.2s', animationDuration: '8s' }}></div>
+
+          {/* Burbujas pequeñas - Muchas más */}
+          <div className="bubble-small absolute bottom-0 left-[2%] w-1 h-1 bg-white/80 rounded-full animate-float" style={{ animationDelay: '0.8s', animationDuration: '4s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[6%] w-0.5 h-0.5 bg-white/90 rounded-full animate-float" style={{ animationDelay: '2.8s', animationDuration: '5s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[11%] w-1 h-1 bg-white/75 rounded-full animate-float" style={{ animationDelay: '1.2s', animationDuration: '6s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[16%] w-0.5 h-0.5 bg-white/85 rounded-full animate-float" style={{ animationDelay: '3.2s', animationDuration: '4s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[22%] w-1 h-1 bg-white/70 rounded-full animate-float" style={{ animationDelay: '0.3s', animationDuration: '7s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[27%] w-0.5 h-0.5 bg-white/95 rounded-full animate-float" style={{ animationDelay: '4.3s', animationDuration: '5s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[33%] w-1 h-1 bg-white/80 rounded-full animate-float" style={{ animationDelay: '1.8s', animationDuration: '6s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[39%] w-0.5 h-0.5 bg-white/85 rounded-full animate-float" style={{ animationDelay: '5.8s', animationDuration: '4s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[44%] w-1 h-1 bg-white/75 rounded-full animate-float" style={{ animationDelay: '2.1s', animationDuration: '7s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[49%] w-0.5 h-0.5 bg-white/90 rounded-full animate-float" style={{ animationDelay: '6.1s', animationDuration: '5s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[55%] w-1 h-1 bg-white/80 rounded-full animate-float" style={{ animationDelay: '3.4s', animationDuration: '6s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[61%] w-0.5 h-0.5 bg-white/85 rounded-full animate-float" style={{ animationDelay: '7.4s', animationDuration: '4s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[66%] w-1 h-1 bg-white/70 rounded-full animate-float" style={{ animationDelay: '1.7s', animationDuration: '7s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[71%] w-0.5 h-0.5 bg-white/95 rounded-full animate-float" style={{ animationDelay: '5.7s', animationDuration: '5s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[77%] w-1 h-1 bg-white/80 rounded-full animate-float" style={{ animationDelay: '2.9s', animationDuration: '6s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[82%] w-0.5 h-0.5 bg-white/85 rounded-full animate-float" style={{ animationDelay: '6.9s', animationDuration: '4s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[87%] w-1 h-1 bg-white/75 rounded-full animate-float" style={{ animationDelay: '3.6s', animationDuration: '7s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[92%] w-0.5 h-0.5 bg-white/90 rounded-full animate-float" style={{ animationDelay: '7.6s', animationDuration: '5s' }}></div>
+          <div className="bubble-small absolute bottom-0 left-[98%] w-1 h-1 bg-white/80 rounded-full animate-float" style={{ animationDelay: '4.8s', animationDuration: '6s' }}></div>
+        </div>
+
+        {/* Rayos de luz acuática más sutiles */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="light-ray-1 absolute top-0 left-[20%] w-1 h-full bg-gradient-to-b from-yellow-100/40 to-transparent transform skew-x-12 animate-sway"></div>
+          <div className="light-ray-2 absolute top-0 left-[45%] w-2 h-full bg-gradient-to-b from-yellow-50/30 to-transparent transform -skew-x-6 animate-sway" style={{ animationDelay: '2s' }}></div>
+          <div className="light-ray-3 absolute top-0 left-[70%] w-1 h-full bg-gradient-to-b from-yellow-100/35 to-transparent transform skew-x-8 animate-sway" style={{ animationDelay: '4s' }}></div>
+        </div>
+      </div>
+
+      {/* Estilos CSS para animaciones */}
+      <style jsx>{`
+        @keyframes float {
+          0% {
+            transform: translateY(100vh) scale(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-20vh) scale(1);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes wave-move {
+          0%, 100% {
+            transform: translateX(-100%) translateY(0px) rotate(2deg);
+          }
+          50% {
+            transform: translateX(100%) translateY(-10px) rotate(-1deg);
+          }
+        }
+        
+        @keyframes sway {
+          0%, 100% {
+            transform: skew(8deg) scaleY(1);
+          }
+          50% {
+            transform: skew(-8deg) scaleY(1.1);
+          }
+        }
+        
+        @keyframes seaweed-sway {
+          0%, 100% {
+            transform: rotate(-2deg) scale(1);
+          }
+          50% {
+            transform: rotate(2deg) scale(1.05);
+          }
+        }
+        
+        .animate-float {
+          animation: float linear infinite;
+        }
+        
+        .wave-animation-1 {
+          animation: wave-move 15s ease-in-out infinite;
+        }
+        
+        .wave-animation-2 {
+          animation: wave-move 18s ease-in-out infinite;
+        }
+        
+        .wave-animation-3 {
+          animation: wave-move 12s ease-in-out infinite;
+        }
+        
+        .animate-sway {
+          animation: sway 8s ease-in-out infinite;
+        }
+        
+        .animate-seaweed {
+          animation: seaweed-sway 4s ease-in-out infinite;
+        }
+      `}</style>
+
+
       {/* Navigation */}
-      
-      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-lg z-50 border-b border-blue-100">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] md:w-auto mx-auto
+  bg-white md:bg-white/80 md:backdrop-blur-xl md:border md:border-white/90 md:shadow-lg rounded-full
+  z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Fish className="w-8 h-8 text-blue-600" />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+          <div className="flex justify-between items-center h-14">
+            {/* <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.webp" 
+                alt="Ocealia Logo" 
+                className="w-10 h-10 object-contain"
+              />
+              <span className="text-xl font-bold text-ocealia-blue-dark">
                 Ocealia
               </span>
-            </div>
+            </div> */}
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-1">
@@ -170,14 +315,13 @@ function Home() {
                 { id: 'plantas', label: 'Plantas', icon: Leaf },
                 { id: 'parametros', label: 'Parámetros', icon: Thermometer },
                 { id: 'hospital', label: 'Hospital', icon: Heart },
-                //{ id: 'productos', label: 'Productos', icon: Beaker }
               ].map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1 ${activeSection === id
-                      ? 'bg-blue-100 text-blue-700 shadow-sm'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-1 ${activeSection === id
+                    ? 'bg-blue-100 text-blue-700 shadow-sm'
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                     }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -209,14 +353,14 @@ function Home() {
                   { id: 'plantas', label: 'Plantas', icon: Leaf },
                   { id: 'parametros', label: 'Parámetros', icon: Thermometer },
                   { id: 'hospital', label: 'Hospital', icon: Heart },
-                 // { id: 'productos', label: 'Productos', icon: Beaker }
+                  // { id: 'productos', label: 'Productos', icon: Beaker }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
                     className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${activeSection === id
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                       }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -230,69 +374,118 @@ function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section id="inicio" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-600 via-green-600 to-blue-800 bg-clip-text text-transparent">
-                Guía Completa de
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-green-600 via-blue-600 to-green-800 bg-clip-text text-transparent">
-                Acuariofilia
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Todo lo que necesitas saber para crear y mantener un acuario próspero.
-              Desde el ciclado hasta el cuidado avanzado de peces y plantas.
-            </p>
+      <section id="inicio" className="relative pt-12 md:pt-24 pb-16 h-[80vh] flex items-center z-10">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <div className="inline-block p-4 rounded-full  backdrop-blur-md mb-6">
+            <img
+              src="/logo.webp"
+              alt="Ocealia Logo"
+              className="w-32 h-32 sm:w-32 sm:h-32 object-contain filter drop-shadow-lg"
+            />
+          </div>
 
-            <div className="flex justify-center items-center mt-8">
-            <div className="flex flex-col items-center space-y-2">
-              <p className="text-sm text-gray-500 font-medium">
-              Conoce la IA de acuariofilia más avanzada
-              </p>
-              <button
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-md leading-tight text-ocealia-blue">
+            Ocealia
+          </h1>
+
+          {/* Potenciado por IA */}
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-ocealia-blue/20 to-ocealia-blue-light/20 backdrop-blur-sm rounded-full border border-ocealia-blue/30 mb-6">
+            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full animate-pulse mr-3"></div>
+            <span className="text-sm font-semibold text-ocealia-blue-dark">
+              Potenciado por Nemo AI - Inteligencia Artificial Acuática
+            </span>
+          </div>
+
+          {/* Slogan */}
+          <p className="text-xl sm:text-2xl font-medium max-w-4xl mx-auto mb-6 drop-shadow-sm text-ocealia-blue-dark">
+            Explora el océano de la acuariofilia con Nemo
+          </p>
+
+          {/* Descripción secundaria */}
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6 leading-relaxed">
+            Tu guía completa para un acuario próspero, impulsada por inteligencia artificial.
+          </p>
+
+          {/* Descripción de Nemo AI */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center mr-3">
+                  <Fish className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-ocealia-blue-dark">Nemo AI te ayuda con:</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  <span>Diagnóstico de enfermedades de peces</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  <span>Compatibilidad entre especies</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  <span>Análisis de parámetros del agua</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                  <span>Recomendaciones personalizadas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button
               onClick={() => window.location.href = "/nemo"}
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition-all duration-200 text-lg"
-              >
-              NemoAI
-              <Fish className="w-5 h-5 ml-2" />
-              </button>
-            </div>
-          </div>
-          </div>
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-ocealia-blue-dark to-ocealia-blue text-white rounded-full font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-lg sm:text-xl"
+            >
+              <Fish className="w-6 h-6 mr-3" />
+              Chatea con Nemo AI
+              <span className="ml-2 text-sm bg-white/20 px-2 py-1 rounded-full">IA</span>
+            </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <Droplets className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Fundamentos</h3>
-              <p className="text-gray-600 text-sm">Aprende los conceptos básicos del ciclado y montaje</p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <Fish className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Vida Acuática</h3>
-              <p className="text-gray-600 text-sm">Descubre peces y plantas compatibles para tu acuario</p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <Settings className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Mantenimiento</h3>
-              <p className="text-gray-600 text-sm">Mantén tu acuario saludable con técnicas avanzadas</p>
-            </div>
+            <button
+              onClick={() => scrollToSection('ciclado')}
+              className="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-ocealia-blue-dark rounded-full font-semibold shadow-lg hover:bg-white transition-all duration-300 border border-ocealia-blue/30"
+            >
+              Explorar Guías
+              <Droplets className="w-5 h-5 ml-2" />
+            </button>
           </div>
         </div>
       </section>
 
+      {/* Hero Cards - Rediseñadas para un estilo profesional, fuera de la sección hero para no romper el flujo*/}
+      <div className="relative -top-16 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-blue-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-14 h-14 bg-ocealia-blue rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+            <Droplets className="w-7 h-7 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Fundamentos</h3>
+          <p className="text-gray-600">Aprende los conceptos básicos del ciclado y montaje.</p>
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-green-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-14 h-14 bg-ocealia-blue-dark rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+            <Fish className="w-7 h-7 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Vida Acuática</h3>
+          <p className="text-gray-600">Descubre peces y plantas compatibles para tu acuario.</p>
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-purple-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-14 h-14 bg-ocealia-blue-light rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+            <Settings className="w-7 h-7 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Mantenimiento</h3>
+          <p className="text-gray-600">Mantén tu acuario saludable con técnicas avanzadas.</p>
+        </div>
+      </div>
+
       {/* Ciclado Section */}
-      <section id="ciclado" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section id="ciclado" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -419,7 +612,7 @@ function Home() {
       </section>
 
       {/* Montaje Section */}
-      <section id="montaje" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="montaje" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -522,7 +715,7 @@ function Home() {
       </section>
 
       {/* Tipos de Acuarios Section */}
-      <section id="tipos" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section id="tipos" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -614,7 +807,7 @@ function Home() {
       </section>
 
       {/* Filtración Section - Expandida */}
-      <section id="filtracion" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="filtracion" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -667,6 +860,8 @@ function Home() {
                     El caudal del filtro debe ser en torno a 10 veces el volumen del acuario por hora.
                     Para un acuario de 100L, necesitas un filtro de 1000-1200 L/h.
                   </p>
+                  <br />
+                  <p className="text-sm text-yellow-700">Debe de haber entre el 2% y el 5% de material biológico en tu filtro, es decir, para un acuario de 100l, deberás de tener entre 2 y 5 litros de material biológico.</p>
                 </div>
               </div>
             </div>
@@ -691,7 +886,7 @@ function Home() {
                 description: "Cuelgan en el borde del acuario, muy populares",
                 pros: ["Fácil mantenimiento", "Buen rendimiento", "Acceso sencillo a medios", "Oxigenación extra"],
                 cons: ["Ruido de cascada", "Evaporación", "Estética externa"],
-                bestFor: "Acuarios de 20-200 litros, principiantes",
+                bestFor: "Acuarios de 20-100 litros, principiantes",
                 flow: "200-1000 L/h",
                 color: "green"
               },
@@ -700,8 +895,8 @@ function Home() {
                 icon: Settings,
                 description: "La opción más potente y versátil",
                 pros: ["Máxima capacidad", "Silenciosos", "Múltiples medios", "No ocupan espacio interno"],
-                cons: ["Más caros", "Instalación compleja", "Mantenimiento elaborado"],
-                bestFor: "Acuarios grandes >100L, plantados, marinos",
+                cons: ["Más caros", "Instalación externa", "Mantenimiento elaborado"],
+                bestFor: "Acuarios grandes >80L, plantados, marinos",
                 flow: "500-2000+ L/h",
                 color: "purple"
               },
@@ -712,7 +907,7 @@ function Home() {
                 pros: ["Capacidad máxima", "Personalizable", "Fácil mantenimiento", "Equipamiento adicional"],
                 cons: ["Muy caro", "Instalación compleja", "Requiere espacio", "Riesgo de inundación"],
                 bestFor: "Acuarios marinos, sistemas grandes >300L",
-                flow: "1000-5000+ L/h",
+                flow: "1000-12000+ L/h",
                 color: "indigo"
               }
             ].map(({ title, icon: Icon, description, pros, cons, bestFor, flow, color }) => (
@@ -826,7 +1021,7 @@ function Home() {
       </section>
 
       {/* Peces Section */}
-      <section id="peces" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section id="peces" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1048,7 +1243,7 @@ function Home() {
       </section>
 
       {/* Plantas Section */}
-      <section id="plantas" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="plantas" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10  backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1208,7 +1403,7 @@ function Home() {
       </section>
 
       {/* Parámetros Section */}
-      <section id="parametros" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section id="parametros" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10  backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1366,7 +1561,7 @@ function Home() {
       </section>
 
       {/* Acuario Hospital Section - Nueva */}
-      <section id="hospital" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="hospital" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10  backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1462,14 +1657,14 @@ function Home() {
           </div>
 
           <div className="flex justify-center items-center col-span-full my-4">
-              <button
-                onClick={() => window.location.href = "/enfermedades"}
-                className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-xl font-semibold shadow hover:bg-red-700 transition-all duration-200 text-lg"
-              >
-                Ver las enfermedades comunes de los peces
-                <Fish className="w-5 h-5 ml-2" />
-              </button>
-            </div>
+            <button
+              onClick={() => window.location.href = "/enfermedades"}
+              className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-xl font-semibold shadow hover:bg-red-700 transition-all duration-200 text-lg"
+            >
+              Ver las enfermedades comunes de los peces
+              <Fish className="w-5 h-5 ml-2" />
+            </button>
+          </div>
 
           {/* Usos del Acuario Hospital */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -1587,7 +1782,7 @@ function Home() {
       </section>
 
       {/* Productos Section */}
-      {/* <section id="productos" className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50">
+      {/* <section id="productos" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -1610,37 +1805,156 @@ function Home() {
         </div>
       </section> */}
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-900 to-green-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto text-center">
-        {/* Logo */}
-        <div className="flex items-center justify-center space-x-2 mb-6">
-          <Fish className="w-8 h-8" />
-          <span className="text-2xl font-bold">Ocealia</span>
+      {/* Footer - Lecho Marino */}
+      <footer className="relative  text-white py-20 px-4 sm:px-6 lg:px-8 overflow-hidden z-10">
+        {/* Arena del fondo marino */}
+        <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-yellow-700/60 to-yellow-600/40"></div>
+
+        {/* Corales y rocas del fondo */}
+        <div className="absolute bottom-2 left-0 w-full h-16 overflow-hidden">
+          {/* Rocas */}
+          <div className="absolute bottom-0 left-[10%] w-20 h-8 bg-gray-600 rounded-t-full opacity-70"></div>
+          <div className="absolute bottom-0 left-[30%] w-16 h-6 bg-gray-700 rounded-t-full opacity-60"></div>
+          <div className="absolute bottom-0 left-[60%] w-24 h-10 bg-gray-600 rounded-t-full opacity-75"></div>
+          <div className="absolute bottom-0 left-[85%] w-12 h-5 bg-gray-700 rounded-t-full opacity-65"></div>
+
+          {/* Corales */}
+          <div className="absolute bottom-2 left-[15%] w-3 h-12 bg-pink-400 rounded-t-full opacity-80 animate-seaweed"></div>
+          <div className="absolute bottom-2 left-[17%] w-2 h-8 bg-pink-300 rounded-t-full opacity-70 animate-seaweed" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-2 left-[45%] w-4 h-14 bg-orange-400 rounded-t-full opacity-75 animate-seaweed" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-2 left-[70%] w-2 h-10 bg-red-400 rounded-t-full opacity-80 animate-seaweed" style={{ animationDelay: '0.5s' }}></div>
         </div>
 
-        {/* Texto principal */}
-        <p className="text-blue-200 mb-4">
-          Tu compañero completo en el mundo de la acuariofilia
-        </p>
-        <p className="text-blue-300 text-sm mb-6">
-          Recuerda: la paciencia y la observación son las claves del éxito en la acuariofilia
-        </p>
+        {/* Algas marinas animadas - Más grandes y abundantes */}
+        <div className="absolute bottom-0 left-0 w-full h-48 overflow-hidden pointer-events-none">
+          {/* Algas verdes - Grupo 1 */}
+          <div className="absolute bottom-0 left-[2%]">
+            <div className="w-3 h-40 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-85 animate-seaweed origin-bottom"></div>
+            <div className="w-2 h-35 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-35 origin-bottom" style={{ animationDelay: '1.5s' }}></div>
+            <div className="w-1 h-30 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-70 animate-seaweed ml-2 -mt-30 origin-bottom" style={{ animationDelay: '2.8s' }}></div>
+          </div>
 
-        {/* Redes sociales */}
-        <div className="flex justify-center space-x-4">
-          <a
-            href="https://github.com/x1n4px" // <-- PON AQUÍ TU GITHUB
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center space-x-2 text-white hover:text-blue-400 transition"
-          >
-            <Github className="w-6 h-6" />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
+          <div className="absolute bottom-0 left-[8%]">
+            <div className="w-2 h-38 bg-gradient-to-t from-green-800 to-green-600 rounded-t-full opacity-80 animate-seaweed origin-bottom" style={{ animationDelay: '0.5s' }}></div>
+            <div className="w-1 h-32 bg-gradient-to-t from-green-700 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-32 origin-bottom" style={{ animationDelay: '1.8s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[15%]">
+            <div className="w-4 h-45 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-90 animate-seaweed origin-bottom" style={{ animationDelay: '0.8s' }}></div>
+            <div className="w-2 h-38 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-80 animate-seaweed ml-1 -mt-38 origin-bottom" style={{ animationDelay: '2.3s' }}></div>
+            <div className="w-1 h-33 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-70 animate-seaweed ml-2 -mt-33 origin-bottom" style={{ animationDelay: '1.1s' }}></div>
+            <div className="w-1.5 h-35 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-3 -mt-35 origin-bottom" style={{ animationDelay: '3.1s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[25%]">
+            <div className="w-2 h-42 bg-gradient-to-t from-green-800 to-green-600 rounded-t-full opacity-85 animate-seaweed origin-bottom" style={{ animationDelay: '1.2s' }}></div>
+            <div className="w-1 h-36 bg-gradient-to-t from-green-700 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-36 origin-bottom" style={{ animationDelay: '2.7s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[32%]">
+            <div className="w-3 h-40 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-80 animate-seaweed origin-bottom" style={{ animationDelay: '1.8s' }}></div>
+            <div className="w-2 h-34 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-34 origin-bottom" style={{ animationDelay: '0.3s' }}></div>
+            <div className="w-1 h-28 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-70 animate-seaweed ml-2 -mt-28 origin-bottom" style={{ animationDelay: '2.5s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[42%]">
+            <div className="w-5 h-48 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-90 animate-seaweed origin-bottom" style={{ animationDelay: '2.1s' }}></div>
+            <div className="w-3 h-42 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-85 animate-seaweed ml-1 -mt-42 origin-bottom" style={{ animationDelay: '0.7s' }}></div>
+            <div className="w-2 h-36 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-75 animate-seaweed ml-2 -mt-36 origin-bottom" style={{ animationDelay: '3.2s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[52%]">
+            <div className="w-2 h-38 bg-gradient-to-t from-green-800 to-green-600 rounded-t-full opacity-80 animate-seaweed origin-bottom" style={{ animationDelay: '0.9s' }}></div>
+            <div className="w-1 h-32 bg-gradient-to-t from-green-700 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-32 origin-bottom" style={{ animationDelay: '2.4s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[60%]">
+            <div className="w-4 h-44 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-85 animate-seaweed origin-bottom" style={{ animationDelay: '1.4s' }}></div>
+            <div className="w-2 h-38 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-80 animate-seaweed ml-1 -mt-38 origin-bottom" style={{ animationDelay: '2.7s' }}></div>
+            <div className="w-1 h-32 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-70 animate-seaweed ml-2 -mt-32 origin-bottom" style={{ animationDelay: '0.9s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[70%]">
+            <div className="w-3 h-41 bg-gradient-to-t from-green-800 to-green-600 rounded-t-full opacity-85 animate-seaweed origin-bottom" style={{ animationDelay: '0.6s' }}></div>
+            <div className="w-2 h-35 bg-gradient-to-t from-green-700 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-35 origin-bottom" style={{ animationDelay: '1.9s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[78%]">
+            <div className="w-4 h-46 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-90 animate-seaweed origin-bottom" style={{ animationDelay: '1.6s' }}></div>
+            <div className="w-3 h-40 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-80 animate-seaweed ml-1 -mt-40 origin-bottom" style={{ animationDelay: '0.4s' }}></div>
+            <div className="w-2 h-34 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-75 animate-seaweed ml-2 -mt-34 origin-bottom" style={{ animationDelay: '2.8s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[87%]">
+            <div className="w-2 h-39 bg-gradient-to-t from-green-800 to-green-600 rounded-t-full opacity-80 animate-seaweed origin-bottom" style={{ animationDelay: '2.4s' }}></div>
+            <div className="w-1 h-33 bg-gradient-to-t from-green-700 to-green-500 rounded-t-full opacity-75 animate-seaweed ml-1 -mt-33 origin-bottom" style={{ animationDelay: '1.2s' }}></div>
+          </div>
+
+          <div className="absolute bottom-0 left-[94%]">
+            <div className="w-3 h-43 bg-gradient-to-t from-green-900 to-green-600 rounded-t-full opacity-85 animate-seaweed origin-bottom" style={{ animationDelay: '0.8s' }}></div>
+            <div className="w-2 h-37 bg-gradient-to-t from-green-800 to-green-500 rounded-t-full opacity-80 animate-seaweed ml-1 -mt-37 origin-bottom" style={{ animationDelay: '2.1s' }}></div>
+            <div className="w-1 h-31 bg-gradient-to-t from-green-700 to-green-400 rounded-t-full opacity-70 animate-seaweed ml-2 -mt-31 origin-bottom" style={{ animationDelay: '3.4s' }}></div>
+          </div>
         </div>
-      </div>
-    </footer>
+
+        {/* Contenido del footer */}
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
+          {/* Logo */}
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="relative">
+              <img
+                src="/logo.webp"
+                alt="Logo Ocealia"
+                className="w-16 h-16 rounded-full shadow-lg border-2 border-white/30">
+              </img>
+              {/* Brillo del logo */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent to-white/20"></div>
+            </div>
+            <span className="text-3xl font-bold text-white drop-shadow-lg">Ocealia</span>
+          </div>
+
+          {/* Texto principal */}
+          <p className="text-blue-100 mb-4 text-lg">
+            Tu compañero completo en el mundo de la acuariofilia
+          </p>
+          <p className="text-blue-200 text-sm mb-8 max-w-2xl mx-auto">
+            Recuerda: la paciencia y la observación son las claves del éxito en la acuariofilia.
+            Con Nemo AI, tienes la sabiduría del océano a tu alcance.
+          </p>
+
+          {/* Destacar Nemo AI */}
+          <div className="mb-8 inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+            <Fish className="w-5 h-5 mr-2 text-blue-200" />
+            <span className="text-white font-semibold">Potenciado por Nemo AI</span>
+          </div>
+
+          {/* Redes sociales */}
+          {/* <div className="flex justify-center space-x-6">
+            <a
+              href="https://github.com/x1n4px"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-white hover:text-blue-300 transition-colors duration-300 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/20 hover:bg-white/20"
+            >
+              <Github className="w-5 h-5" />
+              <span className="font-medium">GitHub</span>
+            </a>
+          </div> */}
+
+          {/* Copyright */}
+          <div className="mt-8 pt-6 border-t border-white/70">
+            <p className="text-ocealia-blue-dark text-sm">© 2025 Ocealia - Todos los derechos reservados</p>
+          </div>
+        </div>
+
+        {/* Partículas flotantes */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="particle absolute top-[20%] left-[10%] w-1 h-1 bg-white/60 rounded-full animate-float" style={{ animationDelay: '3s', animationDuration: '12s' }}></div>
+          <div className="particle absolute top-[40%] left-[30%] w-0.5 h-0.5 bg-white/80 rounded-full animate-float" style={{ animationDelay: '5s', animationDuration: '10s' }}></div>
+          <div className="particle absolute top-[60%] left-[70%] w-1 h-1 bg-white/50 rounded-full animate-float" style={{ animationDelay: '7s', animationDuration: '14s' }}></div>
+          <div className="particle absolute top-[30%] left-[80%] w-0.5 h-0.5 bg-white/70 rounded-full animate-float" style={{ animationDelay: '2s', animationDuration: '11s' }}></div>
+        </div>
+      </footer>
     </div>
   );
 }
