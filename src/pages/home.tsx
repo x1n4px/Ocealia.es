@@ -131,16 +131,30 @@ function Home() {
     );
   };
 
+
+  <div className="min-h-screen w-full relative">
+  {/* Radial Gradient Background from Bottom */}
+  <div
+    className="absolute inset-0 z-0"
+    style={{
+      background: "radial-gradient(125% 125% at 50% 90%, #fff 40%, #6366f1 100%)",
+    }}
+  />
+     {/* Your Content/Components */}
+</div>
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Navigation */}
+      
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-lg z-50 border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Fish className="w-8 h-8 text-blue-600" />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                AquaGuía
+                Ocealia
               </span>
             </div>
 
@@ -1602,7 +1616,7 @@ function Home() {
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-6">
           <Fish className="w-8 h-8" />
-          <span className="text-2xl font-bold">AquaGuía</span>
+          <span className="text-2xl font-bold">Ocealia</span>
         </div>
 
         {/* Texto principal */}
