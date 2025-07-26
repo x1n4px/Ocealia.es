@@ -214,7 +214,7 @@ function Home() {
       </div>
 
       {/* Estilos CSS para animaciones */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0% {
             transform: translateY(100vh) scale(0);
