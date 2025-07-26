@@ -286,21 +286,22 @@ function Home() {
 
 
       {/* Navigation */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] md:w-auto mx-auto
-  bg-white md:bg-white/80 md:backdrop-blur-xl md:border md:border-white/90 md:shadow-lg rounded-full
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl mx-auto
+  bg-white/95 md:bg-white/80 backdrop-blur-xl border border-white/20 md:border-white/90 shadow-xl rounded-2xl md:rounded-full
   z-50 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
-            {/* <div className="flex items-center space-x-3">
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 md:h-14">
+            {/* Logo móvil y desktop */}
+            <div className="flex items-center space-x-3">
               <img 
                 src="/logo.webp" 
                 alt="Ocealia Logo" 
-                className="w-10 h-10 object-contain"
+                className="w-8 h-8 md:w-10 md:h-10 object-contain"
               />
-              <span className="text-xl font-bold text-ocealia-blue-dark">
+              <span className="text-lg md:text-xl font-bold text-ocealia-blue-dark">
                 Ocealia
               </span>
-            </div> */}
+            </div>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-1">
@@ -373,7 +374,7 @@ function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section id="inicio" className="relative pt-12 md:pt-24 pb-16 h-[80vh] flex items-center z-10">
+      <section id="inicio" className="relative pt-12 md:pt-24 pb-32 md:pb-40 min-h-screen flex items-center z-10">
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <div className="inline-block p-4 rounded-full  backdrop-blur-md mb-6">
             <img
@@ -435,7 +436,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
             <button
               onClick={() => window.location.href = "/nemo"}
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-ocealia-blue-dark to-ocealia-blue text-white rounded-full font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-lg sm:text-xl"
@@ -453,35 +454,35 @@ function Home() {
               <Droplets className="w-5 h-5 ml-2" />
             </button>
           </div>
+
+          {/* Hero Cards - Integradas dentro del hero para mejor flujo */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-blue-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-14 h-14 bg-ocealia-blue rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+                <Droplets className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Fundamentos</h3>
+              <p className="text-gray-600">Aprende los conceptos básicos del ciclado y montaje.</p>
+            </div>
+
+            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-green-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-14 h-14 bg-ocealia-blue-dark rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+                <Fish className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Vida Acuática</h3>
+              <p className="text-gray-600">Descubre peces y plantas compatibles para tu acuario.</p>
+            </div>
+
+            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-purple-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-14 h-14 bg-ocealia-blue-light rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
+                <Settings className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Mantenimiento</h3>
+              <p className="text-gray-600">Mantén tu acuario saludable con técnicas avanzadas.</p>
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* Hero Cards - Rediseñadas para un estilo profesional, fuera de la sección hero para no romper el flujo*/}
-      <div className="relative -top-16 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-blue-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-          <div className="w-14 h-14 bg-ocealia-blue rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
-            <Droplets className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Fundamentos</h3>
-          <p className="text-gray-600">Aprende los conceptos básicos del ciclado y montaje.</p>
-        </div>
-
-        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-green-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-          <div className="w-14 h-14 bg-ocealia-blue-dark rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
-            <Fish className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Vida Acuática</h3>
-          <p className="text-gray-600">Descubre peces y plantas compatibles para tu acuario.</p>
-        </div>
-
-        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-purple-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-          <div className="w-14 h-14 bg-ocealia-blue-light rounded-full flex items-center justify-center mb-4 mx-auto shadow-md">
-            <Settings className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Mantenimiento</h3>
-          <p className="text-gray-600">Mantén tu acuario saludable con técnicas avanzadas.</p>
-        </div>
-      </div>
 
       {/* Ciclado Section */}
       <section id="ciclado" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
