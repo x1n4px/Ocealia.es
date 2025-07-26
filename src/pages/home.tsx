@@ -18,7 +18,6 @@ import {
   Waves,
   Eye,
   Activity,
-  Github
 } from 'lucide-react';
 
 function Home() {
