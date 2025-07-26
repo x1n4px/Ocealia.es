@@ -397,27 +397,39 @@ const AlgaeAssistant: React.FC = () => {
 
     const renderWelcome = () => (
         <div className="text-center p-8">
-            <div className="mb-6">
-                <Bot className="w-16 h-16 text-ocealia-blue mx-auto mb-4" />
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">Nemo: Asistente IA para Acuarios</h2>
-                <p className="text-gray-600 max-w-md mx-auto">
-                    Te ayudo con consultas sobre algas, filtración, problemas generales y más. ¡Selecciona tu tipo de consulta!
+            <div className="mb-8">
+                <div className="relative inline-block mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-r from-ocealia-blue/20 to-cyan-400/20 rounded-full blur-xl scale-110"></div>
+                    <Bot className="relative w-20 h-20 text-ocealia-blue mx-auto drop-shadow-lg" />
+                </div>
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-ocealia-blue to-cyan-600 bg-clip-text text-transparent mb-4">
+                    Nemo: Asistente IA para Acuarios
+                </h2>
+                <p className="text-gray-700 max-w-lg mx-auto text-lg leading-relaxed">
+                    Tu compañero inteligente para el mundo acuático. Te ayudo con consultas sobre algas, filtración,
+                    enfermedades y mucho más. ¡Sumergámonos juntos en la solución!
                 </p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-ocealia-blue mb-2">¿Qué tipo de consulta tienes?</h3>
-                <p className="text-sm text-ocealia-blue max-w-sm mx-auto">
+            <div className="bg-gradient-to-r from-blue-50/80 to-cyan-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-6 mb-8 shadow-lg">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-ocealia-blue to-cyan-500 rounded-full flex items-center justify-center">
+                        <Droplets className="w-4 h-4 text-white" />
+                    </div>
+                    <h3 className="font-bold text-ocealia-blue text-xl">¿Qué tipo de consulta tienes?</h3>
+                </div>
+                <p className="text-ocealia-blue/80 max-w-md mx-auto leading-relaxed">
                     Selecciona una de las opciones para obtener análisis personalizado con IA.
+                    Cada consulta está optimizada para brindarte la mejor experiencia acuática.
                 </p>
             </div>
 
             <button
                 onClick={() => setCurrentStep('topic-selection')}
-                className="bg-ocealia-blue hover:bg-ocealia-blue-dark text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200 inline-flex items-center gap-2"
+                className="bg-gradient-to-r from-ocealia-blue to-cyan-500 hover:from-ocealia-blue-dark hover:to-cyan-600 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 inline-flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
                 <ChevronRight className="w-5 h-5" />
-                Continuar
+                Comenzar Exploración
             </button>
         </div>
     );
@@ -673,7 +685,7 @@ const AlgaeAssistant: React.FC = () => {
                         title: 'Identificando enfermedad...',
                         description: 'La IA está analizando la imagen y comparándola con nuestra base de datos de enfermedades de peces.'
                     };
-                        
+
                 case 'general':
                     return {
                         title: 'Procesando consulta...',
@@ -733,8 +745,8 @@ const AlgaeAssistant: React.FC = () => {
                             key={fish.id}
                             onClick={() => handleFishSelection(fish)}
                             className={`cursor-pointer transition-all duration-200 rounded-lg border-2 p-3 ${selectedFish.some(f => f.id === fish.id)
-                                    ? 'border-teal-500 bg-teal-50 shadow-md'
-                                    : 'border-gray-200 bg-white hover:border-teal-300 hover:shadow-sm'
+                                ? 'border-teal-500 bg-teal-50 shadow-md'
+                                : 'border-gray-200 bg-white hover:border-teal-300 hover:shadow-sm'
                                 }`}
                         >
                             <div className="relative">
@@ -1031,18 +1043,18 @@ const AlgaeAssistant: React.FC = () => {
                 </div>
             );
         }
-        
+
         // Handle fish disease identification results
         if (fishDiseaseResult && selectedTopic?.id === 'diseases') {
             //const categoryData = diseaseCategories.find(c => c.id === fishDiseaseResult.category);
-        
+
             return (
                 <div className="p-6">
                     <div className="mb-6 text-center">
                         <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
                         <h3 className="text-2xl font-bold text-gray-800">¡Enfermedad Identificada!</h3>
                     </div>
-        
+
                     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
                         <div className="relative h-48 overflow-hidden">
                             <img
@@ -1051,7 +1063,7 @@ const AlgaeAssistant: React.FC = () => {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-        
+
                         <div className="p-6">
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {/* Categoría */}
@@ -1067,13 +1079,13 @@ const AlgaeAssistant: React.FC = () => {
                                     {fishDiseaseResult.contagiousLevel}
                                 </span>
                             </div>
-        
+
                             <h4 className="text-xl font-bold text-gray-800 mb-2">{fishDiseaseResult.name}</h4>
                             {fishDiseaseResult.scientificName && (
                                 <p className="text-sm text-gray-500 mb-3 italic">{fishDiseaseResult.scientificName}</p>
                             )}
                             <p className="text-gray-700 mb-4">{fishDiseaseResult.description}</p>
-        
+
                             {/* Síntomas visuales */}
                             {fishDiseaseResult.visualSymptoms && (
                                 <div className="mb-4">
@@ -1084,7 +1096,7 @@ const AlgaeAssistant: React.FC = () => {
                                     <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.visualSymptoms}</p>
                                 </div>
                             )}
-        
+
                             {/* Síntomas conductuales */}
                             {fishDiseaseResult.behavioralSymptoms && (
                                 <div className="mb-4">
@@ -1095,7 +1107,7 @@ const AlgaeAssistant: React.FC = () => {
                                     <p className="text-sm text-gray-700 pl-6">{fishDiseaseResult.behavioralSymptoms}</p>
                                 </div>
                             )}
-        
+
                             {/* Causas */}
                             <div className="mb-4">
                                 <div className="flex items-center gap-2 mb-2">
@@ -1111,7 +1123,7 @@ const AlgaeAssistant: React.FC = () => {
                                     ))}
                                 </ul>
                             </div>
-        
+
                             {/* Tratamientos */}
                             <div className="mb-4">
                                 <div className="flex items-center gap-2 mb-2">
@@ -1127,13 +1139,13 @@ const AlgaeAssistant: React.FC = () => {
                                     ))}
                                 </ul>
                             </div>
-        
+
                             {/* Prevención */}
                             <div className="mb-4">
                                 <h5 className="font-semibold text-gray-800 mb-2">Prevención</h5>
                                 <p className="text-sm text-gray-700 bg-blue-50 p-3 rounded-lg">{fishDiseaseResult.prevention}</p>
                             </div>
-        
+
                             {/* Advertencias */}
                             {fishDiseaseResult.warnings && fishDiseaseResult.warnings.length > 0 && (
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -1150,7 +1162,7 @@ const AlgaeAssistant: React.FC = () => {
                             )}
                         </div>
                     </div>
-        
+
                     <div className="flex justify-center gap-4">
                         <button
                             onClick={resetAssistant}
@@ -1163,7 +1175,7 @@ const AlgaeAssistant: React.FC = () => {
                 </div>
             );
         }
-        
+
 
         // Handle text-based responses
         if (textResponse && selectedTopic) {
@@ -1329,72 +1341,142 @@ const AlgaeAssistant: React.FC = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-blue-400 to-ocealia-blue text-white p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Bot className="w-6 h-6" />
-                        <h1 className="text-xl font-bold">{selectedTopic ? `${selectedTopic.title} - Nemo` : 'Asistente IA para Acuarios'}</h1>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {/* Botón Home */}
-                        <button
-                            onClick={() => window.location.href = '/'}
-                            className="flex items-center gap-2 px-3 py-2 bg-ocealia-blue-dark hover:bg-blue-900 rounded-lg transition-colors duration-200 text-sm font-medium"
-                            title="Volver al inicio"
-                        >
-                            <Home className="w-4 h-4" />
-                            <span className="hidden sm:inline">Inicio</span>
-                        </button>
-                        {currentStep !== 'welcome' && (
-                            <button
-                                onClick={resetAssistant}
-                                className="p-2 hover:bg-ocealia-blue-dark rounded-lg transition-colors duration-200"
-                                title="Reiniciar asistente"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        )}
-                    </div>
-                </div>
+        <div className="relative min-h-screen">
+            {/* Aquatic Background */}
+            <div className="fixed inset-0 bg-gradient-to-b from-sky-100 via-blue-50 to-cyan-100 opacity-60 z-0" />
 
-                {/* Progress indicator */}
-                {currentStep !== 'welcome' && currentStep !== 'topic-selection' && (
-                    <div className="mt-4">
-                        <div className="flex items-center gap-2 text-sm">
-                            {selectedTopic?.requiresImage && (
-                                <>
-                                    <div className={`w-2 h-2 rounded-full ${currentStep === 'upload' ? 'bg-white' : 'bg-blue-400'}`}></div>
-                                    <span>Subir</span>
-                                    <div className="flex-1 h-0.5 bg-blue-400"></div>
-                                </>
-                            )}
-                            <div className={`w-2 h-2 rounded-full ${currentStep === 'description' ? 'bg-white' : currentStep === 'analyzing' || currentStep === 'results' ? 'bg-blue-400' : 'bg-blue-500'}`}></div>
-                            <span>Describir</span>
-                            <div className="flex-1 h-0.5 bg-blue-400"></div>
-                            <div className={`w-2 h-2 rounded-full ${currentStep === 'analyzing' ? 'bg-white animate-pulse' : currentStep === 'results' ? 'bg-white' : 'bg-blue-500'}`}></div>
-                            <span>Analizar</span>
-                            <div className="flex-1 h-0.5 bg-blue-400"></div>
-                            <div className={`w-2 h-2 rounded-full ${currentStep === 'results' ? 'bg-white' : 'bg-blue-500'}`}></div>
-                            <span>Resultados</span>
-                        </div>
-                    </div>
-                )}
+            {/* Animated Water Waves */}
+            <div className="fixed inset-0 z-10 opacity-20">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-transparent to-cyan-400/20 animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-l from-teal-300/15 via-transparent to-blue-300/15 animate-pulse" style={{ animationDelay: '1s', animationDuration: '4s' }} />
             </div>
 
-            {/* Content */}
-            <div className="min-h-96">
-                {currentStep === 'welcome' && renderWelcome()}
-                {currentStep === 'topic-selection' && renderTopicSelection()}
-                {currentStep === 'upload' && renderUpload()}
-                {currentStep === 'description' && renderDescription()}
-                {currentStep === 'fish-selection' && renderFishSelection()}
-                {currentStep === 'analyzing' && renderAnalyzing()}
-                {currentStep === 'results' && renderResults()}
+            {/* Floating Bubbles */}
+            <div className="fixed inset-0 z-20 pointer-events-none overflow-hidden">
+                {/* Large bubbles */}
+                {[...Array(8)].map((_, i) => (
+                    <div
+                        key={`large-${i}`}
+                        className="absolute w-6 h-6 bg-white/20 rounded-full animate-bounce"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 4}s`,
+                            animationDuration: `${4 + Math.random() * 2}s`
+                        }}
+                    />
+                ))}
+                {/* Medium bubbles */}
+                {[...Array(15)].map((_, i) => (
+                    <div
+                        key={`medium-${i}`}
+                        className="absolute w-4 h-4 bg-blue-200/30 rounded-full animate-bounce"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 5}s`,
+                            animationDuration: `${3 + Math.random() * 2}s`
+                        }}
+                    />
+                ))}
+                {/* Small bubbles */}
+                {[...Array(25)].map((_, i) => (
+                    <div
+                        key={`small-${i}`}
+                        className="absolute w-2 h-2 bg-cyan-300/40 rounded-full animate-pulse"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 6}s`,
+                            animationDuration: `${2 + Math.random() * 2}s`
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Main Content Container */}
+            <div className="relative z-30 max-w-4xl mx-auto">
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 overflow-hidden m-4">
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-ocealia-blue via-blue-500 to-cyan-500 text-white p-6 relative overflow-hidden">
+                        {/* Header bubbles */}
+                        <div className="absolute inset-0 pointer-events-none">
+                            {[...Array(6)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="absolute w-3 h-3 bg-white/20 rounded-full animate-pulse"
+                                    style={{
+                                        left: `${10 + Math.random() * 80}%`,
+                                        top: `${10 + Math.random() * 80}%`,
+                                        animationDelay: `${Math.random() * 3}s`
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Bot className="w-6 h-6" />
+                                <h1 className="text-xl font-bold">{selectedTopic ? `${selectedTopic.title} - Nemo` : 'Asistente IA para Acuarios'}</h1>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {/* Botón Home */}
+                                <button
+                                    onClick={() => window.location.href = '/'}
+                                    className="flex items-center gap-2 px-3 py-2 bg-ocealia-blue-dark hover:bg-blue-900 rounded-lg transition-colors duration-200 text-sm font-medium"
+                                    title="Volver al inicio"
+                                >
+                                    <Home className="w-4 h-4" />
+                                    <span className="hidden sm:inline">Inicio</span>
+                                </button>
+                                {currentStep !== 'welcome' && (
+                                    <button
+                                        onClick={resetAssistant}
+                                        className="p-2 hover:bg-ocealia-blue-dark rounded-lg transition-colors duration-200"
+                                        title="Reiniciar asistente"
+                                    >
+                                        <X className="w-5 h-5" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Progress indicator */}
+                        {currentStep !== 'welcome' && currentStep !== 'topic-selection' && (
+                            <div className="mt-4">
+                                <div className="flex items-center gap-2 text-sm">
+                                    {selectedTopic?.requiresImage && (
+                                        <>
+                                            <div className={`w-2 h-2 rounded-full ${currentStep === 'upload' ? 'bg-white' : 'bg-blue-400'}`}></div>
+                                            <span>Subir</span>
+                                            <div className="flex-1 h-0.5 bg-blue-400"></div>
+                                        </>
+                                    )}
+                                    <div className={`w-2 h-2 rounded-full ${currentStep === 'description' ? 'bg-white' : currentStep === 'analyzing' || currentStep === 'results' ? 'bg-blue-400' : 'bg-blue-500'}`}></div>
+                                    <span>Describir</span>
+                                    <div className="flex-1 h-0.5 bg-blue-400"></div>
+                                    <div className={`w-2 h-2 rounded-full ${currentStep === 'analyzing' ? 'bg-white animate-pulse' : currentStep === 'results' ? 'bg-white' : 'bg-blue-500'}`}></div>
+                                    <span>Analizar</span>
+                                    <div className="flex-1 h-0.5 bg-blue-400"></div>
+                                    <div className={`w-2 h-2 rounded-full ${currentStep === 'results' ? 'bg-white' : 'bg-blue-500'}`}></div>
+                                    <span>Resultados</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="min-h-96">
+                        {currentStep === 'welcome' && renderWelcome()}
+                        {currentStep === 'topic-selection' && renderTopicSelection()}
+                        {currentStep === 'upload' && renderUpload()}
+                        {currentStep === 'description' && renderDescription()}
+                        {currentStep === 'fish-selection' && renderFishSelection()}
+                        {currentStep === 'analyzing' && renderAnalyzing()}
+                        {currentStep === 'results' && renderResults()}
+                    </div>
+                </div>
             </div>
         </div>
     );
-};
-
-export default AlgaeAssistant;
+}
+    export default AlgaeAssistant;
