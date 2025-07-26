@@ -245,7 +245,7 @@ const AlgaeAssistant: React.FC = () => {
                 - **Recomendaciones**: Si hay problemas, sugiere alternativas adecuadas para el volumen
                 - **Consejos**: Tips importantes para esta combinación
                 
-                Si no hay volumen, sugiere 3 combinaciones: <50L, 50-100L, >100L
+                Si el volumen es 'No especificado', sugiere 3 combinaciones: <50L, 50-100L, >100L, en caso contrario, sugiere 3 combinaciones basadas en el volumen del acuario.
                 Máximo 200 palabras.`;
 
             case 'filtration':
