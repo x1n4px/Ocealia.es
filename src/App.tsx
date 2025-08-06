@@ -6,6 +6,7 @@ import FishPage from './pages/fish'
 import AlgasGuide from './pages/algae'
 import AssistantPage from './pages/assistant'
 import FishDiseasesGuide from './pages/fish-diseases'
+import InformesPage from './pages/informes'
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
         <Route path="/algas" element={<AlgasGuide />} />
         <Route path="/nemo" element={<AssistantPage />} />
         <Route path="/enfermedades" element={<FishDiseasesGuide />} />
+        <Route path="/informes" element={<InformesPage />} />
       </Routes>
     </Router>
   )
