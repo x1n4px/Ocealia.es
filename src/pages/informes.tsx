@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FileText,
   Plus,
@@ -10,6 +10,8 @@ import {
   X,
   FileImage,
   Eye,
+  Camera,
+  Image as ImageIcon,
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 
@@ -29,6 +31,7 @@ const InformesPage: React.FC = () => {
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [nombreTienda, setNombreTienda] = useState('tienda');
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const [nuevoModulo, setNuevoModulo] = useState({
     titulo: '',
@@ -36,13 +39,41 @@ const InformesPage: React.FC = () => {
     imagen: '',
   });
 
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pdfContentRef = useRef<HTMLDivElement>(null);
 
+  // Cargar datos desde localStorage al montar el componente
+  useEffect(() => {
+    const savedData = localStorage.getItem('informes-data');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setModulos(parsedData.modulos.map((m: any) => ({ ...m, fechaCreacion: new Date(m.fechaCreacion) })));
+      setNombreTienda(parsedData.nombreTienda || 'tienda');
+    }
+  }, []);
+
+  // Guardar datos en localStorage cuando cambien
+  useEffect(() => {
+    const dataToSave = {
+      modulos,
+      nombreTienda,
+    };
+    localStorage.setItem('informes-data', JSON.stringify(dataToSave));
+  }, [modulos, nombreTienda]);
+
+  // Función para tomar foto con la cámara
+  const handleCameraCapture = () => {
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  };
+
   // Funciones de manejo
   const handleCrearModulo = () => {
-    if (nuevoModulo.titulo.trim() === '' || nuevoModulo.descripcion.trim() === '') {
-      alert('Por favor, completa el título y la descripción');
+    if (nuevoModulo.titulo.trim() === '') {
+      alert('Por favor, completa al menos el título');
       return;
     }
 
@@ -202,11 +233,11 @@ const InformesPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
       <div className="container mx-auto p-4 md:p-8">
-        {/* Encabezado */}
-        <div className="text-center mb-6 md:mb-10">
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-2">Generador de Informes</h1>
-          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Crea módulos informativos con título, descripción e imágenes, y genera un PDF profesional.
+        {/* Encabezado optimizado para móviles */}
+        <div className="text-center mb-4 md:mb-10">
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">Informes de Tienda</h1>
+          <p className="text-sm md:text-lg text-gray-600 px-2">
+            Crea y gestiona informes de manera rápida y sencilla
           </p>
         </div>
 
@@ -301,13 +332,13 @@ const InformesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Descripción *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Descripción (Opcional)</label>
                 <textarea
                   value={nuevoModulo.descripcion}
                   onChange={(e) => setNuevoModulo({ ...nuevoModulo, descripcion: e.target.value })}
-                  rows={5}
+                  rows={3}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-gray-800 resize-none"
-                  placeholder="Describe el contenido del módulo..."
+                  placeholder="Describe el contenido del módulo (opcional)..."
                 />
               </div>
 
@@ -323,6 +354,14 @@ const InformesPage: React.FC = () => {
                     onChange={(e) => handleImagenUpload(e)}
                     className="hidden"
                   />
+                  <input
+                    ref={cameraInputRef}
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={(e) => handleImagenUpload(e)}
+                    className="hidden"
+                  />
 
                   {nuevoModulo.imagen ? (
                     <div className="space-y-4">
@@ -331,23 +370,45 @@ const InformesPage: React.FC = () => {
                         alt="Vista previa"
                         className="max-w-xs mx-auto rounded-lg shadow"
                       />
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        Cambiar imagen
-                      </button>
+                      <div className="flex gap-4 justify-center">
+                        <button
+                          onClick={() => cameraInputRef.current?.click()}
+                          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+                        >
+                          <Camera className="w-4 h-4 mr-2" />
+                          Tomar Foto
+                        </button>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="inline-flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                        >
+                          <ImageIcon className="w-4 h-4 mr-2" />
+                          Galería
+                        </button>
+                      </div>
                     </div>
                   ) : (
-                    <div>
-                      <Upload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        Subir imagen
-                      </button>
-                      <p className="text-sm text-gray-500 mt-1">JPG, PNG o GIF</p>
+                    <div className="space-y-4">
+                      <div className="flex justify-center">
+                        <Camera className="w-12 h-12 text-gray-400" />
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button
+                          onClick={() => cameraInputRef.current?.click()}
+                          className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+                        >
+                          <Camera className="w-5 h-5 mr-2" />
+                          Tomar Foto
+                        </button>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="inline-flex items-center justify-center px-6 py-3 text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                        >
+                          <ImageIcon className="w-5 h-5 mr-2" />
+                          Galería
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-2">Toma una foto directamente o selecciona desde galería</p>
                     </div>
                   )}
                 </div>
