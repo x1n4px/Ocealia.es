@@ -44,41 +44,76 @@ const InformesPage: React.FC = () => {
 
   // Cargar datos desde localStorage al montar el componente
   useEffect(() => {
-    const savedData = localStorage.getItem('informes-data');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setModulos(parsedData.modulos.map((m: any) => ({ ...m, fechaCreacion: new Date(m.fechaCreacion) })));
-      setNombreTienda(parsedData.nombreTienda || 'tienda');
+    try {
+      const savedData = localStorage.getItem('informes-data');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        if (parsedData.modulos && Array.isArray(parsedData.modulos)) {
+          const modulosConFecha = parsedData.modulos.map((m: any) => ({
+            ...m,
+            fechaCreacion: m.fechaCreacion ? new Date(m.fechaCreacion) : new Date(),
+            id: m.id || Date.now().toString() + Math.random(),
+          }));
+          setModulos(modulosConFecha);
+        }
+        if (parsedData.nombreTienda) {
+          setNombreTienda(parsedData.nombreTienda);
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar datos del localStorage:', error);
+      // Si hay error, limpiar localStorage corrupto
+      localStorage.removeItem('informes-data');
     }
   }, []);
 
   // Guardar datos en localStorage cuando cambien
   useEffect(() => {
-    const dataToSave = {
-      modulos,
-      nombreTienda,
-    };
-    localStorage.setItem('informes-data', JSON.stringify(dataToSave));
+    try {
+      const dataToSave = {
+        modulos: modulos.map(m => ({
+          ...m,
+          fechaCreacion: m.fechaCreacion.toISOString(), // Convertir a string para almacenamiento
+        })),
+        nombreTienda,
+      };
+      localStorage.setItem('informes-data', JSON.stringify(dataToSave));
+    } catch (error) {
+      console.error('Error al guardar en localStorage:', error);
+    }
   }, [modulos, nombreTienda]);
+
+  // Función para generar ID único
+  const generateUniqueId = () => {
+    return Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9);
+  };
 
   // Funciones de manejo
   const handleCrearModulo = () => {
-    if (nuevoModulo.titulo.trim() === '') {
-      alert('Por favor, completa al menos el título');
-      return;
+    try {
+      if (nuevoModulo.titulo.trim() === '') {
+        alert('Por favor, completa al menos el título');
+        return;
+      }
+
+      const modulo: ModuloInforme = {
+        id: generateUniqueId(),
+        titulo: nuevoModulo.titulo.trim(),
+        descripcion: nuevoModulo.descripcion.trim(),
+        imagen: nuevoModulo.imagen,
+        fechaCreacion: new Date(),
+      };
+
+      console.log('Creando módulo:', modulo);
+      const nuevosModulos = [...modulos, modulo];
+      setModulos(nuevosModulos);
+      setNuevoModulo({ titulo: '', descripcion: '', imagen: '' });
+      setIsCreating(false);
+      console.log('Módulo creado exitosamente. Total módulos:', nuevosModulos.length);
+    } catch (error) {
+      console.error('Error al crear módulo:', error);
+      alert('Error al crear el módulo. Por favor, intenta de nuevo.');
     }
-
-    const modulo: ModuloInforme = {
-      id: Date.now().toString(),
-      titulo: nuevoModulo.titulo,
-      descripcion: nuevoModulo.descripcion,
-      imagen: nuevoModulo.imagen,
-      fechaCreacion: new Date(),
-    };
-
-    setModulos([...modulos, modulo]);
-    setNuevoModulo({ titulo: '', descripcion: '', imagen: '' });
-    setIsCreating(false);
   };
 
   const handleEliminarModulo = (id: string) => {
@@ -289,6 +324,25 @@ const InformesPage: React.FC = () => {
               className="flex-1 min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-800"
               placeholder="Ingresa el nombre de tu tienda"
             />
+          </div>
+          {/* Botón de debug oculto */}
+          <div className="mt-2 text-right">
+            <button
+              onClick={() => {
+                if (confirm('¿Estás seguro de que quieres limpiar todos los datos?')) {
+                  localStorage.removeItem('informes-data');
+                  setModulos([]);
+                  setNombreTienda('tienda');
+                  setIsCreating(false);
+                  setEditingId(null);
+                  setPreviewId(null);
+                  alert('Datos limpiados exitosamente');
+                }
+              }}
+              className="text-xs text-red-500 hover:text-red-700 px-2 py-1"
+            >
+              Limpiar Datos
+            </button>
           </div>
         </div>
 
