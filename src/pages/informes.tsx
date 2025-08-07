@@ -4,7 +4,6 @@ import {
   Plus,
   Trash2,
   Download,
-  Upload,
   Edit,
   Save,
   X,
@@ -31,7 +30,6 @@ const InformesPage: React.FC = () => {
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [nombreTienda, setNombreTienda] = useState('tienda');
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const [nuevoModulo, setNuevoModulo] = useState({
     titulo: '',
@@ -62,13 +60,6 @@ const InformesPage: React.FC = () => {
     };
     localStorage.setItem('informes-data', JSON.stringify(dataToSave));
   }, [modulos, nombreTienda]);
-
-  // Función para tomar foto con la cámara
-  const handleCameraCapture = () => {
-    if (cameraInputRef.current) {
-      cameraInputRef.current.click();
-    }
-  };
 
   // Funciones de manejo
   const handleCrearModulo = () => {
