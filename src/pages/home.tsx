@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import NemoInactiveModal from '../components/NemoInactiveModal';
 import {
   Fish,
   Droplets,
@@ -23,8 +24,12 @@ import {
 function Home() {
   const [activeSection, setActiveSection] = useState('inicio');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showNemoInactiveModal, setShowNemoInactiveModal] = useState(false);
 
   useEffect(() => {
+    const isIaActive = import.meta.env.VITE_IA_ACTIVE;
+    setShowNemoInactiveModal(!isIaActive)
+ 
     const handleScroll = () => {
       const sections = ['inicio', 'ciclado', 'montaje', 'tipos', 'filtracion', 'peces', 'plantas', 'parametros', 'hospital', 'productos'];
       const scrollPosition = window.scrollY + 100;
@@ -134,7 +139,8 @@ function Home() {
 
 
   return (
-    <div className="min-h-screen w-full relative bg-gradient-to-b from-green-50 via-blue-200 to-blue-400 overflow-hidden">
+    <>
+      <div className="min-h-screen w-full relative bg-gradient-to-b from-green-50 via-blue-200 to-blue-400 overflow-hidden">
       {/* Fondo acuático con ondas */}
       <img src="/layered-waves-haikei.svg" alt="Fondo acuático" className="absolute inset-0 w-full object-cover opacity-20" />
       <div className="fixed inset-0 z-0">
@@ -438,8 +444,13 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
             <button
+              disabled={showNemoInactiveModal}
               onClick={() => window.location.href = "/nemo"}
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-ocealia-blue-dark to-ocealia-blue text-white rounded-full font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-lg sm:text-xl"
+              className={`inline-flex items-center px-8 py-4 rounded-full font-semibold shadow-xl transition-all duration-300 transform text-lg sm:text-xl ${
+              showNemoInactiveModal
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
+                : 'bg-gradient-to-r from-ocealia-blue-dark to-ocealia-blue text-white hover:shadow-2xl hover:scale-105'
+              }`}
             >
               <Fish className="w-6 h-6 mr-3" />
               Chatea con Nemo AI
@@ -1956,6 +1967,8 @@ function Home() {
         </div>
       </footer>
     </div>
+      {showNemoInactiveModal && <NemoInactiveModal />}
+    </>
   );
 }
 
