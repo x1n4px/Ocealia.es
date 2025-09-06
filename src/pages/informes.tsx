@@ -281,9 +281,14 @@ const InformesPage: React.FC = () => {
         // Imágenes si existen
         if (modulo.imagenes && modulo.imagenes.length > 0) {
           const maxImagesPerRow = 2;
-          const imgMargin = 5;
+          const imgMargin = 10; // Aumentado para más espacio entre imágenes
           const availableWidth = pageWidth - (margin * 2);
-          const imgWidth = (availableWidth - imgMargin * (maxImagesPerRow - 1)) / maxImagesPerRow;
+          const imgMaxWidth = (availableWidth - imgMargin * (maxImagesPerRow - 1)) / maxImagesPerRow;
+          const imgMaxHeight = 80; // Altura máxima para limitar imágenes muy altas
+          
+          // Agrupar imágenes por filas
+          let currentRowImages: { image: string, width: number, height: number }[] = [];
+          let maxRowHeight = 0;
           
           for (let j = 0; j < modulo.imagenes.length; j++) {
             try {
@@ -297,26 +302,46 @@ const InformesPage: React.FC = () => {
                 img.src = optimizedImage;
               });
               
-              // Calcular altura manteniendo proporción
+              // Calcular dimensiones respetando límites
               const aspectRatio = img.height / img.width;
-              const imgHeight = imgWidth * aspectRatio;
+              let imgWidth = imgMaxWidth;
+              let imgHeight = imgWidth * aspectRatio;
               
-              // Verificar si hay espacio para la imagen
-              if (yPosition + imgHeight > pageHeight - margin) {
-                pdf.addPage();
-                yPosition = margin;
+              // Si la imagen es muy alta, ajustar basándose en la altura máxima
+              if (imgHeight > imgMaxHeight) {
+                imgHeight = imgMaxHeight;
+                imgWidth = imgHeight / aspectRatio;
               }
               
-              // Calcular posición X para distribuir imágenes en columnas
-              const colIndex = j % maxImagesPerRow;
-              const xPosition = margin + (colIndex * (imgWidth + imgMargin));
+              // Añadir a la fila actual
+              currentRowImages.push({ image: optimizedImage, width: imgWidth, height: imgHeight });
+              maxRowHeight = Math.max(maxRowHeight, imgHeight);
               
-              // Añadir imagen al PDF
-              pdf.addImage(optimizedImage, 'JPEG', xPosition, yPosition, imgWidth, imgHeight);
-              
-              // Actualizar posición Y solo cuando completamos una fila
-              if ((j + 1) % maxImagesPerRow === 0 || j === modulo.imagenes.length - 1) {
-                yPosition += imgHeight + 10;
+              // Procesar fila cuando está completa o es la última imagen
+              if (currentRowImages.length === maxImagesPerRow || j === modulo.imagenes.length - 1) {
+                // Verificar si hay espacio para esta fila de imágenes
+                if (yPosition + maxRowHeight > pageHeight - margin) {
+                  pdf.addPage();
+                  yPosition = margin;
+                }
+                
+                // Dibujar todas las imágenes de la fila actual
+                for (let k = 0; k < currentRowImages.length; k++) {
+                  const imgData = currentRowImages[k];
+                  const xPosition = margin + (k * (imgMaxWidth + imgMargin));
+                  
+                  // Centrar verticalmente si las imágenes tienen diferentes alturas
+                  const yOffset = (maxRowHeight - imgData.height) / 2;
+                  
+                  pdf.addImage(imgData.image, 'JPEG', xPosition, yPosition + yOffset, imgData.width, imgData.height);
+                }
+                
+                // Actualizar posición Y con espacio adicional
+                yPosition += maxRowHeight + 15; // Más espacio después de las imágenes
+                
+                // Resetear para la siguiente fila
+                currentRowImages = [];
+                maxRowHeight = 0;
               }
             } catch (error) {
               console.error('Error agregando imagen al PDF:', error);
@@ -324,32 +349,47 @@ const InformesPage: React.FC = () => {
           }
         }
 
-        // Descripción
-        pdf.setFontSize(11);
-        pdf.setFont('helvetica', 'normal');
+        // Descripción (si existe)
+        if (modulo.descripcion && modulo.descripcion.trim() !== '') {
+          // Añadir un pequeño espacio antes del texto si hay imágenes
+          if (modulo.imagenes && modulo.imagenes.length > 0) {
+            yPosition += 5;
+          }
+          
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
 
-        const descripcionLines = pdf.splitTextToSize(modulo.descripcion, pageWidth - margin * 2);
+          const descripcionLines = pdf.splitTextToSize(modulo.descripcion, pageWidth - margin * 2);
 
-        // Verificar si hay espacio para la descripción
-        const lineHeight = 6;
-        const descripcionHeight = descripcionLines.length * lineHeight;
-        if (yPosition + descripcionHeight > pageHeight - margin) {
-          pdf.addPage();
-          yPosition = margin;
+          // Verificar si hay espacio para la descripción
+          const lineHeight = 6;
+          const descripcionHeight = descripcionLines.length * lineHeight;
+          if (yPosition + descripcionHeight > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+          }
+
+          pdf.text(descripcionLines, margin, yPosition);
+          yPosition += descripcionHeight + 20; // Más espacio después del texto
+        } else if (modulo.imagenes && modulo.imagenes.length > 0) {
+          // Si solo hay imágenes, añadir espacio después
+          yPosition += 10;
         }
-
-        pdf.text(descripcionLines, margin, yPosition);
-        yPosition += descripcionHeight + 15;
 
         // Línea separadora (excepto para el último módulo)
         if (i < modulos.length - 1) {
+          // Asegurar espacio mínimo antes de la línea
+          yPosition += 5;
+          
           if (yPosition > pageHeight - 30) {
             pdf.addPage();
             yPosition = margin;
           }
-          pdf.setLineWidth(0.5);
+          
+          pdf.setLineWidth(0.3);
+          pdf.setDrawColor(200, 200, 200); // Línea más suave
           pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-          yPosition += 10;
+          yPosition += 15; // Más espacio después de la línea
         }
       }
 
