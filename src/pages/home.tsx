@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import NemoInactiveModal from '../components/NemoInactiveModal';
+import CyclingGuideComplete from '../components/CyclingGuideComplete';
+import TestingGuideComplete from '../components/TestingGuideComplete';
 import {
   Fish,
   Droplets,
@@ -31,7 +33,7 @@ function Home() {
     setShowNemoInactiveModal(!isIaActive)
  
     const handleScroll = () => {
-      const sections = ['inicio', 'ciclado', 'montaje', 'tipos', 'filtracion', 'peces', 'plantas', 'parametros', 'hospital', 'productos'];
+      const sections = ['inicio', 'ciclado', 'tests', 'montaje', 'tipos', 'filtracion', 'peces', 'plantas', 'parametros', 'hospital', 'productos'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -314,6 +316,7 @@ function Home() {
               {[
                 { id: 'inicio', label: 'Inicio', icon: Fish },
                 { id: 'ciclado', label: 'Ciclado', icon: Activity },
+                { id: 'tests', label: 'Tests', icon: Beaker },
                 { id: 'montaje', label: 'Montaje', icon: Settings },
                 { id: 'tipos', label: 'Tipos', icon: Droplets },
                 { id: 'filtracion', label: 'Filtración', icon: Filter },
@@ -352,6 +355,7 @@ function Home() {
                 {[
                   { id: 'inicio', label: 'Inicio', icon: Fish },
                   { id: 'ciclado', label: 'Ciclado', icon: Activity },
+                  { id: 'tests', label: 'Tests', icon: Beaker },
                   { id: 'montaje', label: 'Montaje', icon: Settings },
                   { id: 'tipos', label: 'Tipos', icon: Droplets },
                   { id: 'filtracion', label: 'Filtración', icon: Filter },
@@ -495,130 +499,17 @@ function Home() {
         </div>
       </section>
 
-      {/* Ciclado Section */}
+      {/* Ciclado Section - Guía Completa Mejorada */}
       <section id="ciclado" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Ciclado del Acuario
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              El proceso más importante antes de introducir vida en tu acuario
-            </p>
-          </div>
+          <CyclingGuideComplete />
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-blue-100">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                <Activity className="w-6 h-6 mr-3 text-blue-600" />
-                ¿Qué es el Ciclado?
-              </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                El ciclado es el proceso de establecer colonias de bacterias beneficiosas que convertirán
-                los desechos tóxicos (amoniaco) en compuestos menos dañinos (nitratos) a través del ciclo del nitrógeno.
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-red-600 font-bold text-sm">1</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Amoniaco (NH₃)</h4>
-                    <p className="text-sm text-gray-600">Altamente tóxico para los peces</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-orange-600 font-bold text-sm">2</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Nitritos (NO₂⁻)</h4>
-                    <p className="text-sm text-gray-600">También tóxicos, pero menos que el amoniaco</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-green-600 font-bold text-sm">3</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Nitratos (NO₃⁻)</h4>
-                    <p className="text-sm text-gray-600">Relativamente seguros en concentraciones bajas</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <NitrogenCycleChart />
-          </div>
-
-          {/* Ciclado Sin Peces */}
-          <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg p-8 border border-green-200">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <Leaf className="w-6 h-6 mr-3 text-green-600" />
-              Ciclado Sin Peces (Recomendado)
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">Proceso Paso a Paso:</h4>
-                <div className="space-y-4">
-                  {[
-                    { step: 1, title: "Preparación", desc: "Monta el acuario completo con filtro, calentador y decoración" },
-                    { step: 2, title: "Fuente de Amoniaco", desc: "Añade comida de peces o amoniaco puro (2-3 ppm)" },
-                    { step: 3, title: "Espera y Mide", desc: "Mide diariamente NH₃, NO₂⁻ y NO₃⁻" },
-                    { step: 4, title: "Pico de Nitritos", desc: "Los nitritos subirán después del amoniaco" },
-                    { step: 5, title: "Finalización", desc: "NH₃ y NO₂⁻ en 0, NO₃⁻ presente" }
-                  ].map(({ step, title, desc }) => (
-                    <div key={step} className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm">
-                        {step}
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-800">{title}</h5>
-                        <p className="text-sm text-gray-600">{desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">Ventajas:</h4>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    No hay riesgo para los peces
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    Proceso más rápido y controlado
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    Permite ajustar parámetros sin estrés
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    Método más ético y recomendado
-                  </li>
-                </ul>
-
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
-                    <Clock className="w-4 h-4 mr-2" />
-                    Duración del Proceso
-                  </h5>
-                  <p className="text-sm text-blue-700">
-                    El ciclado completo toma entre 4-8 semanas dependiendo de la temperatura,
-                    pH y cantidad de bacterias iniciales.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Tests Section - Guía Completa de Tests de Acuario */}
+      <section id="tests" className="relative py-16 px-4 sm:px-6 lg:px-8 z-10 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto">
+          <TestingGuideComplete />
         </div>
       </section>
 

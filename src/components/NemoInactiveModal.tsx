@@ -1,12 +1,25 @@
-import React from 'react';
-import { Fish } from 'lucide-react';
+import React, { useState } from 'react';
+import { Fish, X } from 'lucide-react';
 
 const NemoInactiveModal: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!isVisible) return null;
+
   return (
 
     <div className="fixed bottom-4 right-4 z-[100] max-w-sm">
       <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-blue-200/50 overflow-hidden">
         <div className="bg-gradient-to-r from-ocealia-blue/90 to-ocealia-blue-light/90 p-4 text-white relative">
+          {/* Botón de cerrar */}
+          <button
+            onClick={() => setIsVisible(false)}
+            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors duration-200 group"
+            aria-label="Cerrar"
+          >
+            <X className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+          </button>
+          
           <div className="flex items-center space-x-3">
             {/* Anémona con Nemo */}
             <div className="relative flex-shrink-0">

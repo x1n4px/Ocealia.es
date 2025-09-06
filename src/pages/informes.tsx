@@ -19,7 +19,7 @@ interface ModuloInforme {
   id: string;
   titulo: string;
   descripcion: string;
-  imagen?: string;
+  imagenes: string[]; // Cambiado de imagen opcional a array de imágenes
   fechaCreacion: Date;
 }
 
@@ -34,7 +34,7 @@ const InformesPage: React.FC = () => {
   const [nuevoModulo, setNuevoModulo] = useState({
     titulo: '',
     descripcion: '',
-    imagen: '',
+    imagenes: [] as string[],
   });
 
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -49,11 +49,23 @@ const InformesPage: React.FC = () => {
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         if (parsedData.modulos && Array.isArray(parsedData.modulos)) {
-          const modulosConFecha = parsedData.modulos.map((m: any) => ({
-            ...m,
-            fechaCreacion: m.fechaCreacion ? new Date(m.fechaCreacion) : new Date(),
-            id: m.id || Date.now().toString() + Math.random(),
-          }));
+          const modulosConFecha = parsedData.modulos.map((m: any) => {
+            // Migración de datos antiguos: convertir imagen única a array
+            let imagenes = m.imagenes;
+            if (!imagenes) {
+              if (m.imagen) {
+                imagenes = [m.imagen]; // Convertir imagen única a array
+              } else {
+                imagenes = [];
+              }
+            }
+            return {
+              ...m,
+              imagenes,
+              fechaCreacion: m.fechaCreacion ? new Date(m.fechaCreacion) : new Date(),
+              id: m.id || Date.now().toString() + Math.random(),
+            };
+          });
           setModulos(modulosConFecha);
         }
         if (parsedData.nombreTienda) {
@@ -88,6 +100,42 @@ const InformesPage: React.FC = () => {
     return Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9);
   };
 
+  // Funciones de optimización de imágenes
+  const compressImage = async (dataUrl: string, maxWidth: number = 1200, quality: number = 0.85): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        
+        // Calcular nuevas dimensiones manteniendo la relación de aspecto
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Dibujar imagen redimensionada
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convertir a dataURL con compresión
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedDataUrl);
+      };
+      img.src = dataUrl;
+    });
+  };
+
+  // Optimizar imagen para PDF (más agresiva)
+  const optimizeImageForPDF = async (dataUrl: string): Promise<string> => {
+    return compressImage(dataUrl, 800, 0.7);
+  };
+
   // Funciones de manejo
   const handleCrearModulo = () => {
     try {
@@ -100,14 +148,14 @@ const InformesPage: React.FC = () => {
         id: generateUniqueId(),
         titulo: nuevoModulo.titulo.trim(),
         descripcion: nuevoModulo.descripcion.trim(),
-        imagen: nuevoModulo.imagen,
+        imagenes: nuevoModulo.imagenes,
         fechaCreacion: new Date(),
       };
 
       console.log('Creando módulo:', modulo);
       const nuevosModulos = [...modulos, modulo];
       setModulos(nuevosModulos);
-      setNuevoModulo({ titulo: '', descripcion: '', imagen: '' });
+      setNuevoModulo({ titulo: '', descripcion: '', imagenes: [] });
       setIsCreating(false);
       console.log('Módulo creado exitosamente. Total módulos:', nuevosModulos.length);
     } catch (error) {
@@ -122,19 +170,51 @@ const InformesPage: React.FC = () => {
     }
   };
 
-  const handleImagenUpload = (event: React.ChangeEvent<HTMLInputElement>, isEditing: boolean = false) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageDataUrl = e.target?.result as string;
-        if (isEditing && editingId) {
-          setModulos(modulos.map((m) => (m.id === editingId ? { ...m, imagen: imageDataUrl } : m)));
-        } else {
-          setNuevoModulo({ ...nuevoModulo, imagen: imageDataUrl });
-        }
-      };
-      reader.readAsDataURL(file);
+  const handleImagenUpload = async (event: React.ChangeEvent<HTMLInputElement>, isEditing: boolean = false, moduleId?: string) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const newImages: string[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        const imageDataUrl = await new Promise<string>((resolve) => {
+          reader.onload = (e) => {
+            resolve(e.target?.result as string);
+          };
+          reader.readAsDataURL(file);
+        });
+        
+        // Comprimir imagen para almacenamiento
+        const compressedImage = await compressImage(imageDataUrl);
+        newImages.push(compressedImage);
+      }
+      
+      if (isEditing && moduleId) {
+        setModulos(modulos.map((m) => 
+          m.id === moduleId 
+            ? { ...m, imagenes: [...m.imagenes, ...newImages] }
+            : m
+        ));
+      } else {
+        setNuevoModulo({ ...nuevoModulo, imagenes: [...nuevoModulo.imagenes, ...newImages] });
+      }
+    }
+  };
+
+  const handleEliminarImagen = (index: number, isEditing: boolean = false, moduleId?: string) => {
+    if (isEditing && moduleId) {
+      setModulos(modulos.map((m) => 
+        m.id === moduleId 
+          ? { ...m, imagenes: m.imagenes.filter((_, i) => i !== index) }
+          : m
+      ));
+    } else {
+      setNuevoModulo({ 
+        ...nuevoModulo, 
+        imagenes: nuevoModulo.imagenes.filter((_, i) => i !== index) 
+      });
     }
   };
 
@@ -198,22 +278,49 @@ const InformesPage: React.FC = () => {
         pdf.text(`Creado: ${modulo.fechaCreacion.toLocaleDateString('es-ES')}`, margin, yPosition);
         yPosition += 15;
 
-        // Imagen si existe
-        if (modulo.imagen) {
-          try {
-            const imgWidth = 60;
-            const imgHeight = 45;
-
-            // Verificar si hay espacio para la imagen
-            if (yPosition + imgHeight > pageHeight - margin) {
-              pdf.addPage();
-              yPosition = margin;
+        // Imágenes si existen
+        if (modulo.imagenes && modulo.imagenes.length > 0) {
+          const maxImagesPerRow = 2;
+          const imgMargin = 5;
+          const availableWidth = pageWidth - (margin * 2);
+          const imgWidth = (availableWidth - imgMargin * (maxImagesPerRow - 1)) / maxImagesPerRow;
+          
+          for (let j = 0; j < modulo.imagenes.length; j++) {
+            try {
+              // Optimizar imagen para PDF
+              const optimizedImage = await optimizeImageForPDF(modulo.imagenes[j]);
+              
+              // Obtener dimensiones de la imagen
+              const img = new Image();
+              await new Promise((resolve) => {
+                img.onload = resolve;
+                img.src = optimizedImage;
+              });
+              
+              // Calcular altura manteniendo proporción
+              const aspectRatio = img.height / img.width;
+              const imgHeight = imgWidth * aspectRatio;
+              
+              // Verificar si hay espacio para la imagen
+              if (yPosition + imgHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
+              }
+              
+              // Calcular posición X para distribuir imágenes en columnas
+              const colIndex = j % maxImagesPerRow;
+              const xPosition = margin + (colIndex * (imgWidth + imgMargin));
+              
+              // Añadir imagen al PDF
+              pdf.addImage(optimizedImage, 'JPEG', xPosition, yPosition, imgWidth, imgHeight);
+              
+              // Actualizar posición Y solo cuando completamos una fila
+              if ((j + 1) % maxImagesPerRow === 0 || j === modulo.imagenes.length - 1) {
+                yPosition += imgHeight + 10;
+              }
+            } catch (error) {
+              console.error('Error agregando imagen al PDF:', error);
             }
-
-            pdf.addImage(modulo.imagen, 'JPEG', margin, yPosition, imgWidth, imgHeight);
-            yPosition += imgHeight + 10;
-          } catch (error) {
-            console.error('Error agregando imagen al PDF:', error);
           }
         }
 
@@ -284,8 +391,10 @@ const InformesPage: React.FC = () => {
               <FileImage className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-xl font-bold text-gray-800">{modulos.filter((m) => m.imagen).length}</p>
-              <p className="text-sm text-gray-600">Con Imágenes</p>
+              <p className="text-xl font-bold text-gray-800">
+                {modulos.reduce((total, m) => total + m.imagenes.length, 0)}
+              </p>
+              <p className="text-sm text-gray-600">Imágenes Totales</p>
             </div>
           </div>
 
@@ -389,13 +498,14 @@ const InformesPage: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Imagen (Opcional)
+                  Imágenes (Opcional) - {nuevoModulo.imagenes.length} añadidas
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-blue-400 transition-colors duration-200">
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-blue-400 transition-colors duration-200">
                   <input
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={(e) => handleImagenUpload(e)}
                     className="hidden"
                   />
@@ -408,54 +518,52 @@ const InformesPage: React.FC = () => {
                     className="hidden"
                   />
 
-                  {nuevoModulo.imagen ? (
-                    <div className="space-y-4">
-                      <img
-                        src={nuevoModulo.imagen}
-                        alt="Vista previa"
-                        className="max-w-xs mx-auto rounded-lg shadow"
-                      />
-                      <div className="flex gap-4 justify-center">
-                        <button
-                          onClick={() => cameraInputRef.current?.click()}
-                          className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
-                        >
-                          <Camera className="w-4 h-4 mr-2" />
-                          Tomar Foto
-                        </button>
-                        <button
-                          onClick={() => fileInputRef.current?.click()}
-                          className="inline-flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                        >
-                          <ImageIcon className="w-4 h-4 mr-2" />
-                          Galería
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="flex justify-center">
-                        <Camera className="w-12 h-12 text-gray-400" />
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <button
-                          onClick={() => cameraInputRef.current?.click()}
-                          className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
-                        >
-                          <Camera className="w-5 h-5 mr-2" />
-                          Tomar Foto
-                        </button>
-                        <button
-                          onClick={() => fileInputRef.current?.click()}
-                          className="inline-flex items-center justify-center px-6 py-3 text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                        >
-                          <ImageIcon className="w-5 h-5 mr-2" />
-                          Galería
-                        </button>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-2">Toma una foto directamente o selecciona desde galería</p>
+                  {/* Galería de imágenes añadidas */}
+                  {nuevoModulo.imagenes.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {nuevoModulo.imagenes.map((imagen, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={imagen}
+                            alt={`Imagen ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-lg shadow"
+                          />
+                          <button
+                            onClick={() => handleEliminarImagen(index)}
+                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
+
+                  {/* Botones de acción */}
+                  <div className="space-y-4">
+                    <div className="flex justify-center">
+                      <Camera className="w-12 h-12 text-gray-400" />
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <button
+                        onClick={() => cameraInputRef.current?.click()}
+                        className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+                      >
+                        <Camera className="w-5 h-5 mr-2" />
+                        Tomar Foto
+                      </button>
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center justify-center px-6 py-3 text-blue-600 hover:text-blue-700 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                      >
+                        <ImageIcon className="w-5 h-5 mr-2" />
+                        Galería
+                      </button>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-2 text-center">
+                      Puedes añadir múltiples imágenes. Selecciona varias a la vez o una por una.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -471,7 +579,7 @@ const InformesPage: React.FC = () => {
               <button
                 onClick={() => {
                   setIsCreating(false);
-                  setNuevoModulo({ titulo: '', descripcion: '', imagen: '' });
+                  setNuevoModulo({ titulo: '', descripcion: '', imagenes: [] });
                 }}
                 className="flex-1 bg-gray-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-gray-600 transition-colors"
               >
@@ -495,7 +603,8 @@ const InformesPage: React.FC = () => {
               onSave={(titulo, descripcion) => handleGuardarEdicion(modulo.id, titulo, descripcion)}
               onCancelEdit={() => setEditingId(null)}
               onTogglePreview={() => setPreviewId(previewId === modulo.id ? null : modulo.id)}
-              onImageUpload={(e) => handleImagenUpload(e, true)}
+              onImageUpload={(e) => handleImagenUpload(e, true, modulo.id)}
+              onDeleteImage={(index) => handleEliminarImagen(index, true, modulo.id)}
             />
           ))}
         </div>
@@ -535,6 +644,7 @@ interface ModuloCardProps {
   onCancelEdit: () => void;
   onTogglePreview: () => void;
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDeleteImage: (index: number) => void;
 }
 
 const ModuloCard: React.FC<ModuloCardProps> = ({
@@ -547,6 +657,7 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
   onCancelEdit,
   onTogglePreview,
   onImageUpload,
+  onDeleteImage,
 }) => {
   const [editTitulo, setEditTitulo] = useState(modulo.titulo);
   const [editDescripcion, setEditDescripcion] = useState(modulo.descripcion);
@@ -575,14 +686,40 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={onImageUpload}
                 className="hidden"
               />
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Imágenes ({modulo.imagenes.length})
+              </label>
+              
+              {/* Mostrar imágenes existentes */}
+              {modulo.imagenes.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  {modulo.imagenes.map((imagen, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={imagen}
+                        alt={`Imagen ${index + 1}`}
+                        className="w-full h-20 object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() => onDeleteImage(index)}
+                        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
-                Cambiar imagen
+                Añadir más imágenes
               </button>
             </div>
 
@@ -640,13 +777,16 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
             {isPreview && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Vista previa:</h4>
-                {modulo.imagen && (
-                  <div className="mb-3">
-                    <img
-                      src={modulo.imagen}
-                      alt={modulo.titulo}
-                      className="max-w-full rounded-lg shadow"
-                    />
+                {modulo.imagenes.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3">
+                    {modulo.imagenes.map((imagen, index) => (
+                      <img
+                        key={index}
+                        src={imagen}
+                        alt={`${modulo.titulo} - Imagen ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow"
+                      />
+                    ))}
                   </div>
                 )}
                 <p className="text-sm text-gray-600 leading-relaxed">{modulo.descripcion}</p>
@@ -655,13 +795,21 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
 
             {!isPreview && (
               <>
-                {modulo.imagen && (
-                  <div className="mb-3">
-                    <img
-                      src={modulo.imagen}
-                      alt={modulo.titulo}
-                      className="w-full h-auto max-h-40 object-cover rounded-lg shadow md:w-48 md:h-32"
-                    />
+                {modulo.imagenes.length > 0 && (
+                  <div className="flex gap-2 mb-3 overflow-x-auto">
+                    {modulo.imagenes.slice(0, 3).map((imagen, index) => (
+                      <img
+                        key={index}
+                        src={imagen}
+                        alt={`${modulo.titulo} - Imagen ${index + 1}`}
+                        className="w-24 h-24 object-cover rounded-lg shadow flex-shrink-0"
+                      />
+                    ))}
+                    {modulo.imagenes.length > 3 && (
+                      <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-gray-600 font-semibold">+{modulo.imagenes.length - 3}</span>
+                      </div>
+                    )}
                   </div>
                 )}
 
