@@ -10,7 +10,6 @@ import {
   TrendingUp,
   Activity,
   Shield,
-  Info,
   ChevronDown,
   ChevronUp,
   Target,

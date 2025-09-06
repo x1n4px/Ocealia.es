@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Droplets, 
   AlertTriangle, 
-  Info, 
   ChevronDown, 
   ChevronUp,
   CheckCircle,
@@ -13,7 +12,6 @@ import {
   TrendingUp,
   Shield,
   Heart,
-  Fish,
   Leaf,
   AlertCircle,
   Calendar,
