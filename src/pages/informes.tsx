@@ -11,8 +11,10 @@ import {
   Eye,
   Camera,
   Image as ImageIcon,
+  Edit2,
 } from 'lucide-react';
 import jsPDF from 'jspdf';
+import ImageEditorSimple from '../components/ImageEditorSimple';
 
 // Definición de la interfaz
 interface ModuloInforme {
@@ -30,6 +32,7 @@ const InformesPage: React.FC = () => {
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [nombreTienda, setNombreTienda] = useState('tienda');
+  const [editingImage, setEditingImage] = useState<{ url: string, index: number, moduleId?: string } | null>(null);
 
   const [nuevoModulo, setNuevoModulo] = useState({
     titulo: '',
@@ -218,6 +221,30 @@ const InformesPage: React.FC = () => {
     }
   };
 
+  const handleEditImage = (url: string, index: number, moduleId?: string) => {
+    setEditingImage({ url, index, moduleId });
+  };
+
+  const handleSaveEditedImage = (editedImageUrl: string) => {
+    if (editingImage) {
+      if (editingImage.moduleId) {
+        setModulos(modulos.map((m) => {
+          if (m.id === editingImage.moduleId) {
+            const newImagenes = [...m.imagenes];
+            newImagenes[editingImage.index] = editedImageUrl;
+            return { ...m, imagenes: newImagenes };
+          }
+          return m;
+        }));
+      } else {
+        const newImagenes = [...nuevoModulo.imagenes];
+        newImagenes[editingImage.index] = editedImageUrl;
+        setNuevoModulo({ ...nuevoModulo, imagenes: newImagenes });
+      }
+      setEditingImage(null);
+    }
+  };
+
   const handleEditarModulo = (id: string) => {
     setEditingId(id);
   };
@@ -244,13 +271,13 @@ const InformesPage: React.FC = () => {
       let yPosition = margin;
 
       // Título del informe
-      pdf.setFontSize(24);
+      pdf.setFontSize(26); // Aumentado 2px
       pdf.setFont('helvetica', 'bold');
       pdf.text(`Informe ${nombreTienda}`, pageWidth / 2, yPosition, { align: 'center' });
       yPosition += 15;
 
       // Fecha de generación
-      pdf.setFontSize(12);
+      pdf.setFontSize(14); // Aumentado 2px
       pdf.setFont('helvetica', 'normal');
       const fechaGeneracion = new Date().toLocaleDateString('es-ES');
       pdf.text(`Generado el: ${fechaGeneracion}`, pageWidth / 2, yPosition, { align: 'center' });
@@ -267,13 +294,13 @@ const InformesPage: React.FC = () => {
         }
 
         // Título del módulo
-        pdf.setFontSize(18);
+        pdf.setFontSize(20); // Aumentado 2px
         pdf.setFont('helvetica', 'bold');
         pdf.text(modulo.titulo, margin, yPosition);
-        yPosition += 10;
+        yPosition += 12;
 
         // Fecha de creación
-        pdf.setFontSize(10);
+        pdf.setFontSize(12); // Aumentado 2px
         pdf.setFont('helvetica', 'italic');
         pdf.text(`Creado: ${modulo.fechaCreacion.toLocaleDateString('es-ES')}`, margin, yPosition);
         yPosition += 15;
@@ -281,10 +308,10 @@ const InformesPage: React.FC = () => {
         // Imágenes si existen
         if (modulo.imagenes && modulo.imagenes.length > 0) {
           const maxImagesPerRow = 2;
-          const imgMargin = 10; // Aumentado para más espacio entre imágenes
+          const imgMargin = 10; // Espacio entre imágenes
           const availableWidth = pageWidth - (margin * 2);
           const imgMaxWidth = (availableWidth - imgMargin * (maxImagesPerRow - 1)) / maxImagesPerRow;
-          const imgMaxHeight = 80; // Altura máxima para limitar imágenes muy altas
+          const imgMaxHeight = 120; // Aumentado para imágenes más grandes
           
           // Agrupar imágenes por filas
           let currentRowImages: { image: string, width: number, height: number }[] = [];
@@ -356,7 +383,7 @@ const InformesPage: React.FC = () => {
             yPosition += 5;
           }
           
-          pdf.setFontSize(11);
+          pdf.setFontSize(13); // Aumentado 2px
           pdf.setFont('helvetica', 'normal');
 
           const descripcionLines = pdf.splitTextToSize(modulo.descripcion, pageWidth - margin * 2);
@@ -568,12 +595,22 @@ const InformesPage: React.FC = () => {
                             alt={`Imagen ${index + 1}`}
                             className="w-full h-32 object-cover rounded-lg shadow"
                           />
-                          <button
-                            onClick={() => handleEliminarImagen(index)}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
+                          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => handleEditImage(imagen, index)}
+                              className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                              title="Editar imagen"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleEliminarImagen(index)}
+                              className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                              title="Eliminar imagen"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -645,6 +682,7 @@ const InformesPage: React.FC = () => {
               onTogglePreview={() => setPreviewId(previewId === modulo.id ? null : modulo.id)}
               onImageUpload={(e) => handleImagenUpload(e, true, modulo.id)}
               onDeleteImage={(index) => handleEliminarImagen(index, true, modulo.id)}
+              onEditImage={(url, index) => handleEditImage(url, index, modulo.id)}
             />
           ))}
         </div>
@@ -669,6 +707,15 @@ const InformesPage: React.FC = () => {
           {/* ... (el contenido para generar el PDF permanece igual) */}
         </div>
       </div>
+      
+      {/* Editor de imágenes */}
+      {editingImage && (
+        <ImageEditorSimple
+          imageUrl={editingImage.url}
+          onSave={handleSaveEditedImage}
+          onCancel={() => setEditingImage(null)}
+        />
+      )}
     </div>
   );
 };
@@ -685,6 +732,7 @@ interface ModuloCardProps {
   onTogglePreview: () => void;
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onDeleteImage: (index: number) => void;
+  onEditImage: (url: string, index: number) => void;
 }
 
 const ModuloCard: React.FC<ModuloCardProps> = ({
@@ -698,6 +746,7 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
   onTogglePreview,
   onImageUpload,
   onDeleteImage,
+  onEditImage,
 }) => {
   const [editTitulo, setEditTitulo] = useState(modulo.titulo);
   const [editDescripcion, setEditDescripcion] = useState(modulo.descripcion);
@@ -744,12 +793,22 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
                         alt={`Imagen ${index + 1}`}
                         className="w-full h-20 object-cover rounded-lg"
                       />
-                      <button
-                        onClick={() => onDeleteImage(index)}
-                        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
+                      <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => onEditImage(imagen, index)}
+                          className="p-0.5 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                          title="Editar"
+                        >
+                          <Edit2 className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => onDeleteImage(index)}
+                          className="p-0.5 bg-red-500 text-white rounded-full hover:bg-red-600"
+                          title="Eliminar"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
