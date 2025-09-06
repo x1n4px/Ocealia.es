@@ -33,6 +33,8 @@ const InformesPage: React.FC = () => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [nombreTienda, setNombreTienda] = useState('tienda');
   const [editingImage, setEditingImage] = useState<{ url: string, index: number, moduleId?: string } | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [lastGenerationTime, setLastGenerationTime] = useState<number>(0);
 
   const [nuevoModulo, setNuevoModulo] = useState({
     titulo: '',
@@ -254,14 +256,22 @@ const InformesPage: React.FC = () => {
     setEditingId(null);
   };
 
-  // Generar PDF
+  // Generar PDF con throttling
   const handleGenerarPDF = async () => {
     if (modulos.length === 0) {
       alert('No hay módulos para generar el PDF');
       return;
     }
 
+    // Throttling: prevenir generación múltiple (5 segundos entre generaciones)
+    const now = Date.now();
+    if (now - lastGenerationTime < 5000) {
+      alert('Por favor, espera unos segundos antes de generar otro PDF');
+      return;
+    }
+
     setIsGeneratingPDF(true);
+    setLastGenerationTime(now);
 
     try {
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -421,7 +431,20 @@ const InformesPage: React.FC = () => {
       }
 
       // Guardar PDF
-      pdf.save(`informe-${nombreTienda}-${fechaGeneracion}.pdf`);
+      const pdfBlob = pdf.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const fileName = `informe-${nombreTienda}-${fechaGeneracion}.pdf`;
+      
+      // Descargar el archivo
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = fileName;
+      link.click();
+      
+      // Intentar abrir automáticamente en una nueva pestaña (puede ser bloqueado por el navegador)
+      setTimeout(() => {
+        window.open(pdfUrl, '_blank');
+      }, 500);
     } catch (error) {
       console.error('Error generando PDF:', error);
       alert('Error al generar el PDF. Por favor, intenta de nuevo.');
@@ -435,41 +458,41 @@ const InformesPage: React.FC = () => {
       <div className="container mx-auto p-4 md:p-8">
         {/* Encabezado optimizado para móviles */}
         <div className="text-center mb-4 md:mb-10">
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">Informes de Tienda</h1>
-          <p className="text-sm md:text-lg text-gray-600 px-2">
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-gray-800 mb-2">Informes de Tienda</h1>
+          <p className="text-xs sm:text-sm md:text-lg text-gray-600 px-2">
             Crea y gestiona informes de manera rápida y sencilla
           </p>
         </div>
 
         {/* Panel de control y estadísticas */}
-        <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3 md:gap-6 md:mb-10">
-          <div className="bg-white rounded-2xl shadow-lg p-4 flex items-center gap-4 border border-blue-100">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 md:gap-6 md:mb-10">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 flex items-center gap-3 sm:gap-4 border border-blue-100">
             <div className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-lg">
-              <FileText className="w-5 h-5 text-blue-600" />
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-xl font-bold text-gray-800">{modulos.length}</p>
-              <p className="text-sm text-gray-600">Módulos Creados</p>
+              <p className="text-lg sm:text-xl font-bold text-gray-800">{modulos.length}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Módulos</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-4 flex items-center gap-4 border border-green-100">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 flex items-center gap-3 sm:gap-4 border border-green-100">
             <div className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg">
-              <FileImage className="w-5 h-5 text-green-600" />
+              <FileImage className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-xl font-bold text-gray-800">
+              <p className="text-lg sm:text-xl font-bold text-gray-800">
                 {modulos.reduce((total, m) => total + m.imagenes.length, 0)}
               </p>
-              <p className="text-sm text-gray-600">Imágenes Totales</p>
+              <p className="text-xs sm:text-sm text-gray-600">Imágenes</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-4 border border-purple-100">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border border-purple-100">
             <button
               onClick={handleGenerarPDF}
               disabled={modulos.length === 0 || isGeneratingPDF}
-              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl font-semibold shadow hover:from-purple-700 hover:to-purple-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold shadow hover:from-purple-700 hover:to-purple-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isGeneratingPDF ? (
                 <div className="flex items-center">
@@ -478,7 +501,7 @@ const InformesPage: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  <Download className="w-5 h-5 mr-2" />
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                   Generar PDF
                 </>
               )}
@@ -501,35 +524,26 @@ const InformesPage: React.FC = () => {
               placeholder="Ingresa el nombre de tu tienda"
             />
           </div>
-          {/* Botón de debug oculto */}
-          <div className="mt-2 text-right">
+          {/* Botón para eliminar todos los datos - más visible */}
+          <div className="mt-4 flex justify-end">
             <button
-              onClick={() => {
-                if (confirm('¿Estás seguro de que quieres limpiar todos los datos?')) {
-                  localStorage.removeItem('informes-data');
-                  setModulos([]);
-                  setNombreTienda('tienda');
-                  setIsCreating(false);
-                  setEditingId(null);
-                  setPreviewId(null);
-                  alert('Datos limpiados exitosamente');
-                }
-              }}
-              className="text-xs text-red-500 hover:text-red-700 px-2 py-1"
+              onClick={() => setShowDeleteModal(true)}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
             >
-              Limpiar Datos
+              <Trash2 className="w-4 h-4" />
+              Limpiar Todos los Datos
             </button>
           </div>
         </div>
 
         {/* Botón para crear nuevo módulo */}
         {!isCreating && (
-          <div className="mb-6 text-center md:mb-8">
+          <div className="mb-4 md:mb-8 text-center">
             <button
               onClick={() => setIsCreating(true)}
-              className="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl font-semibold shadow-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform md:w-auto md:px-8 md:py-4"
+              className="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold shadow-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform md:w-auto md:px-8 md:py-4"
             >
-              <Plus className="w-5 h-5 mr-2" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               Crear Nuevo Módulo
             </button>
           </div>
@@ -598,17 +612,17 @@ const InformesPage: React.FC = () => {
                           <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => handleEditImage(imagen, index)}
-                              className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                              className="p-1.5 sm:p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600"
                               title="Editar imagen"
                             >
-                              <Edit2 className="w-4 h-4" />
+                              <Edit2 className="w-3 h-3 sm:w-4 sm:h-4" />
                             </button>
                             <button
                               onClick={() => handleEliminarImagen(index)}
-                              className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                              className="p-1.5 sm:p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
                               title="Eliminar imagen"
                             >
-                              <X className="w-4 h-4" />
+                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
                             </button>
                           </div>
                         </div>
@@ -715,6 +729,67 @@ const InformesPage: React.FC = () => {
           onSave={handleSaveEditedImage}
           onCancel={() => setEditingImage(null)}
         />
+      )}
+      
+      {/* Modal de confirmación para eliminar todos los datos */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">¿Eliminar todos los datos?</h3>
+                <p className="text-sm text-gray-500">Esta acción no se puede deshacer</p>
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <p className="text-gray-600">
+                Estás a punto de eliminar permanentemente:
+              </p>
+              <ul className="mt-2 space-y-1 text-sm text-gray-600">
+                <li className="flex items-center">
+                  <span className="text-red-500 mr-2">•</span>
+                  {modulos.length} módulo(s) creado(s)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-red-500 mr-2">•</span>
+                  {modulos.reduce((total, m) => total + m.imagenes.length, 0)} imagen(es)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-red-500 mr-2">•</span>
+                  Toda la información de la tienda
+                </li>
+              </ul>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('informes-data');
+                  setModulos([]);
+                  setNombreTienda('tienda');
+                  setIsCreating(false);
+                  setEditingId(null);
+                  setPreviewId(null);
+                  setShowDeleteModal(false);
+                  alert('Todos los datos han sido eliminados exitosamente');
+                }}
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              >
+                Sí, eliminar todo
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

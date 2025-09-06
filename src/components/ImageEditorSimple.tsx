@@ -69,13 +69,23 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
     setRotation(newRotation);
   };
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = cropMode ? cropCanvasRef.current : drawingCanvasRef.current;
     if (!canvas) return;
     
     const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    let clientX, clientY;
+    
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
+    const x = (clientX - rect.left) * (canvas.width / rect.width);
+    const y = (clientY - rect.top) * (canvas.height / rect.height);
     
     if (cropMode) {
       setIsCropping(true);
@@ -95,13 +105,24 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
     }
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = cropMode ? cropCanvasRef.current : drawingCanvasRef.current;
     if (!canvas) return;
     
     const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    let clientX, clientY;
+    
+    if ('touches' in e) {
+      if (e.touches.length === 0) return;
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
+    const x = (clientX - rect.left) * (canvas.width / rect.width);
+    const y = (clientY - rect.top) * (canvas.height / rect.height);
     
     if (cropMode && isCropping) {
       setCropEnd({ x, y });
@@ -289,32 +310,32 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-auto">
-        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-          <h3 className="text-xl font-semibold text-gray-800">Editor de Imagen</h3>
+    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-2 md:p-4">
+      <div className="bg-white rounded-lg w-full max-w-full md:max-w-5xl h-full md:h-auto md:max-h-[90vh] overflow-auto">
+        <div className="p-3 md:p-4 border-b flex justify-between items-center bg-gray-50">
+          <h3 className="text-lg md:text-xl font-semibold text-gray-800">Editor de Imagen</h3>
           <button onClick={onCancel} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
         
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           {/* Barra de herramientas */}
-          <div className="flex flex-wrap gap-3 mb-6 p-4 bg-gray-100 rounded-lg">
-            <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6 p-3 md:p-4 bg-gray-100 rounded-lg">
+            <div className="flex flex-wrap gap-2 w-full md:w-auto">
               <button
                 onClick={() => {
                   setDrawEnabled(!drawEnabled);
                   if (cropMode) setCropMode(false);
                 }}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-3 py-2 text-sm md:text-base md:px-4 rounded-lg font-medium transition-colors ${
                   drawEnabled 
                     ? 'bg-blue-500 text-white hover:bg-blue-600' 
                     : 'bg-white hover:bg-gray-200'
                 }`}
                 title="Dibujar"
               >
-                <Palette className="w-5 h-5 inline mr-2" />
+                <Palette className="w-4 h-4 md:w-5 md:h-5 inline mr-1 md:mr-2" />
                 Dibujar
               </button>
               
@@ -334,7 +355,7 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
                 }`}
                 title="Recortar"
               >
-                <CropIcon className="w-5 h-5 inline mr-2" />
+                <CropIcon className="w-4 h-4 md:w-5 md:h-5 inline mr-1 md:mr-2" />
                 Recortar
               </button>
               
@@ -342,7 +363,7 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
                 <>
                   <button
                     onClick={applyCrop}
-                    className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-lg font-medium transition-colors"
+                    className="px-3 py-2 text-sm md:text-base md:px-4 bg-green-600 text-white hover:bg-green-700 rounded-lg font-medium transition-colors"
                     title="Aplicar recorte"
                   >
                     <Check className="w-4 h-4 inline mr-2" />
@@ -350,7 +371,7 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
                   </button>
                   <button
                     onClick={cancelCrop}
-                    className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg font-medium transition-colors"
+                    className="px-3 py-2 text-sm md:text-base md:px-4 bg-red-500 text-white hover:bg-red-600 rounded-lg font-medium transition-colors"
                     title="Cancelar recorte"
                   >
                     <XCircle className="w-4 h-4 inline mr-2" />
@@ -361,19 +382,19 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
               
               <button
                 onClick={handleRotate}
-                className="px-4 py-2 bg-white hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                className="px-3 py-2 text-sm md:text-base md:px-4 bg-white hover:bg-gray-200 rounded-lg font-medium transition-colors"
                 title="Rotar 90°"
               >
-                <RotateCw className="w-5 h-5 inline mr-2" />
+                <RotateCw className="w-4 h-4 md:w-5 md:h-5 inline mr-1 md:mr-2" />
                 Rotar
               </button>
               
               <button
                 onClick={resetImage}
-                className="px-4 py-2 bg-white hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                className="px-3 py-2 text-sm md:text-base md:px-4 bg-white hover:bg-gray-200 rounded-lg font-medium transition-colors"
                 title="Resetear cambios"
               >
-                <RefreshCw className="w-5 h-5 inline mr-2" />
+                <RefreshCw className="w-4 h-4 md:w-5 md:h-5 inline mr-1 md:mr-2" />
                 Resetear
               </button>
             </div>
@@ -412,7 +433,7 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
           </div>
           
           {/* Controles de ajuste */}
-          <div className="flex gap-6 mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-4 md:mb-6 p-3 md:p-4 bg-gray-50 rounded-lg">
             <div className="flex-1">
               <label className="block text-sm font-medium mb-2">Brillo: {brightness}%</label>
               <input
@@ -438,13 +459,13 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
           </div>
           
           {/* Área de edición */}
-          <div className="relative flex justify-center bg-gray-100 rounded-lg p-4" style={{ minHeight: '400px' }}>
+          <div className="relative flex justify-center bg-gray-100 rounded-lg p-2 md:p-4" style={{ minHeight: '300px', maxHeight: '50vh' }}>
             <div className="relative">
               <img
                 ref={imageRef}
                 src={croppedImageUrl || imageUrl}
                 alt="Editar"
-                className="max-w-full max-h-[500px] object-contain"
+                className="max-w-full max-h-[40vh] md:max-h-[500px] object-contain"
                 style={{ 
                   transform: `rotate(${rotation}deg)`,
                   filter: `brightness(${brightness}%) contrast(${contrast}%)`,
@@ -466,6 +487,9 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
                 onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
               />
               <canvas
                 ref={cropCanvasRef}
@@ -482,6 +506,9 @@ const ImageEditorSimple: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCan
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
                 onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
               />
             </div>
             <canvas ref={canvasRef} className="hidden" />
