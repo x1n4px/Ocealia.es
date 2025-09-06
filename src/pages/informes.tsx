@@ -858,34 +858,56 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
                 Imágenes ({modulo.imagenes.length})
               </label>
               
-              {/* Mostrar imágenes existentes */}
+              {/* Mostrar imágenes existentes - MÁS GRANDES en edición */}
               {modulo.imagenes.length > 0 && (
-                <div className="grid grid-cols-3 gap-2 mb-3">
-                  {modulo.imagenes.map((imagen, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={imagen}
-                        alt={`Imagen ${index + 1}`}
-                        className="w-full h-20 object-cover rounded-lg"
-                      />
-                      <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => onEditImage(imagen, index)}
-                          className="p-0.5 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-                          title="Editar"
-                        >
-                          <Edit2 className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() => onDeleteImage(index)}
-                          className="p-0.5 bg-red-500 text-white rounded-full hover:bg-red-600"
-                          title="Eliminar"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
+                <div className="space-y-3 mb-4">
+                  <label className="text-sm font-medium text-gray-700">Imágenes actuales:</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {modulo.imagenes.map((imagen, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={imagen}
+                          alt={`Imagen ${index + 1}`}
+                          className="w-full h-48 object-cover rounded-lg shadow-md"
+                        />
+                        {/* Botones grandes y visibles */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-4">
+                          <button
+                            onClick={() => onEditImage(imagen, index)}
+                            className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transform hover:scale-110 transition-all shadow-xl"
+                            title="Editar imagen"
+                          >
+                            <Edit2 className="w-6 h-6" />
+                          </button>
+                          <button
+                            onClick={() => onDeleteImage(index)}
+                            className="p-3 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-110 transition-all shadow-xl"
+                            title="Eliminar imagen"
+                          >
+                            <Trash2 className="w-6 h-6" />
+                          </button>
+                        </div>
+                        {/* Siempre visible en móviles */}
+                        <div className="sm:hidden absolute bottom-2 right-2 flex gap-2">
+                          <button
+                            onClick={() => onEditImage(imagen, index)}
+                            className="p-2 bg-blue-500 text-white rounded-full shadow-lg"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => onDeleteImage(index)}
+                            className="p-2 bg-red-500 text-white rounded-full shadow-lg"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-sm">
+                          Imagen {index + 1}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
               
@@ -950,39 +972,92 @@ const ModuloCard: React.FC<ModuloCardProps> = ({
 
             {isPreview && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Vista previa:</h4>
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">Vista previa completa:</h4>
                 {modulo.imagenes.length > 0 && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     {modulo.imagenes.map((imagen, index) => (
-                      <img
-                        key={index}
-                        src={imagen}
-                        alt={`${modulo.titulo} - Imagen ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg shadow"
-                      />
+                      <div key={index} className="relative group">
+                        <img
+                          src={imagen}
+                          alt={`${modulo.titulo} - Imagen ${index + 1}`}
+                          className="w-full h-48 sm:h-64 md:h-72 object-cover rounded-lg shadow-lg"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 rounded-lg flex items-center justify-center">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-3">
+                            <button
+                              onClick={() => onEditImage(imagen, index)}
+                              className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transform hover:scale-110 transition-all shadow-lg"
+                              title="Editar imagen"
+                            >
+                              <Edit2 className="w-6 h-6" />
+                            </button>
+                            <button
+                              onClick={() => onDeleteImage(index)}
+                              className="p-3 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-110 transition-all shadow-lg"
+                              title="Eliminar imagen"
+                            >
+                              <Trash2 className="w-6 h-6" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                          Imagen {index + 1}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
-                <p className="text-sm text-gray-600 leading-relaxed">{modulo.descripcion}</p>
+                {modulo.descripcion && (
+                  <div className="border-t pt-3">
+                    <p className="text-sm text-gray-600 leading-relaxed">{modulo.descripcion}</p>
+                  </div>
+                )}
               </div>
             )}
 
             {!isPreview && (
               <>
                 {modulo.imagenes.length > 0 && (
-                  <div className="flex gap-2 mb-3 overflow-x-auto">
-                    {modulo.imagenes.slice(0, 3).map((imagen, index) => (
-                      <img
-                        key={index}
-                        src={imagen}
-                        alt={`${modulo.titulo} - Imagen ${index + 1}`}
-                        className="w-24 h-24 object-cover rounded-lg shadow flex-shrink-0"
-                      />
-                    ))}
-                    {modulo.imagenes.length > 3 && (
-                      <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-gray-600 font-semibold">+{modulo.imagenes.length - 3}</span>
-                      </div>
+                  <div className="mb-4">
+                    {/* Vista de miniaturas con botones más visibles */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {modulo.imagenes.map((imagen, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={imagen}
+                            alt={`${modulo.titulo} - Imagen ${index + 1}`}
+                            className="w-full h-32 sm:h-40 object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow"
+                          />
+                          {/* Overlay con botones siempre visibles en móvil */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-lg opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                            <div className="absolute bottom-2 right-2 flex gap-2">
+                              <button
+                                onClick={() => onEditImage(imagen, index)}
+                                className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-lg transform hover:scale-110 transition-all"
+                                title="Editar"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => onDeleteImage(index)}
+                                className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg transform hover:scale-110 transition-all"
+                                title="Eliminar"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                          {/* Número de imagen */}
+                          <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                            {index + 1}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {modulo.imagenes.length > 0 && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        {modulo.imagenes.length} {modulo.imagenes.length === 1 ? 'imagen' : 'imágenes'} • Haz clic en el ojo para ver más grande
+                      </p>
                     )}
                   </div>
                 )}
