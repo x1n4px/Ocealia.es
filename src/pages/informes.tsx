@@ -138,7 +138,13 @@ const InformesPage: React.FC = () => {
 
   // Optimizar imagen para PDF (más agresiva)
   const optimizeImageForPDF = async (dataUrl: string): Promise<string> => {
-    return compressImage(dataUrl, 800, 0.7);
+    try {
+      return await compressImage(dataUrl, 800, 0.7);
+    } catch (error) {
+      console.error('Error optimizando imagen para PDF:', error);
+      // Retornar imagen original si falla la optimización
+      return dataUrl;
+    }
   };
 
   // Funciones de manejo
@@ -257,7 +263,7 @@ const InformesPage: React.FC = () => {
   };
 
   // Función auxiliar para calcular el espacio necesario para un módulo
-  const calcularEspacioModulo = async (modulo: ModuloInforme): Promise<number> => {
+  const calcularEspacioModulo = (modulo: ModuloInforme): number => {
     let espacioNecesario = 0;
     
     // Espacio para título y fecha
@@ -307,6 +313,7 @@ const InformesPage: React.FC = () => {
     setLastGenerationTime(now);
 
     try {
+      console.log('Iniciando generación de PDF con', modulos.length, 'módulos');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -329,9 +336,10 @@ const InformesPage: React.FC = () => {
       // Procesar cada módulo
       for (let i = 0; i < modulos.length; i++) {
         const modulo = modulos[i];
+        console.log(`Procesando módulo ${i + 1}/${modulos.length}: ${modulo.titulo}`);
 
         // Calcular el espacio necesario para este módulo
-        const espacioNecesario = await calcularEspacioModulo(modulo);
+        const espacioNecesario = calcularEspacioModulo(modulo);
         
         // Verificar si el módulo completo cabe en la página actual
         // Si no cabe, mover todo el módulo a la siguiente página
@@ -364,12 +372,21 @@ const InformesPage: React.FC = () => {
           const processedImages: { image: string, width: number, height: number }[] = [];
           for (let j = 0; j < modulo.imagenes.length; j++) {
             try {
+              console.log(`Procesando imagen ${j + 1}/${modulo.imagenes.length}`);
               const optimizedImage = await optimizeImageForPDF(modulo.imagenes[j]);
               const img = new Image();
-              await new Promise((resolve) => {
-                img.onload = resolve;
-                img.src = optimizedImage;
-              });
+              
+              // Añadir timeout para la carga de imagen
+              await Promise.race([
+                new Promise((resolve, reject) => {
+                  img.onload = resolve;
+                  img.onerror = () => reject(new Error('Error cargando imagen'));
+                  img.src = optimizedImage;
+                }),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Timeout cargando imagen')), 5000)
+                )
+              ]);
               
               const aspectRatio = img.height / img.width;
               let imgWidth = imgMaxWidth;
@@ -382,7 +399,8 @@ const InformesPage: React.FC = () => {
               
               processedImages.push({ image: optimizedImage, width: imgWidth, height: imgHeight });
             } catch (error) {
-              console.error('Error procesando imagen:', error);
+              console.error(`Error procesando imagen ${j + 1}:`, error);
+              // Continuar con las demás imágenes si una falla
             }
           }
           
@@ -495,9 +513,9 @@ const InformesPage: React.FC = () => {
           yPosition += 5;
           
           // Si la línea separadora quedaría muy cerca del final de la página,
-          // o si el siguiente módulo no cabería, saltar a la siguiente página
+          // o si el siguiente módulo no cabría, saltar a la siguiente página
           const espacioNecesarioSiguiente = i + 1 < modulos.length ? 
-            await calcularEspacioModulo(modulos[i + 1]) : 0;
+            calcularEspacioModulo(modulos[i + 1]) : 0;
           
           if (yPosition > pageHeight - 40 || 
               (yPosition + 15 + Math.min(espacioNecesarioSiguiente, 50)) > pageHeight - margin) {
@@ -514,6 +532,7 @@ const InformesPage: React.FC = () => {
       }
 
       // Guardar PDF
+      console.log('Finalizando PDF...');
       const pdfBlob = pdf.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const fileName = `informe-${nombreTienda}-${fechaGeneracion}.pdf`;
@@ -528,9 +547,11 @@ const InformesPage: React.FC = () => {
       setTimeout(() => {
         window.open(pdfUrl, '_blank');
       }, 500);
+      
+      console.log('PDF generado exitosamente');
     } catch (error) {
       console.error('Error generando PDF:', error);
-      alert('Error al generar el PDF. Por favor, intenta de nuevo.');
+      alert(`Error al generar el PDF: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       setIsGeneratingPDF(false);
     }
