@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
+import type { Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { 
   Crop as CropIcon, 
@@ -267,8 +268,8 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ imageUrl, onSave, onCancel })
             {crop ? (
               <ReactCrop
                 crop={crop}
-                onChange={(c) => setCrop(c)}
-                onComplete={(c) => setCompletedCrop(c)}
+                onChange={(c: Crop) => setCrop(c)}
+                onComplete={(c: Crop) => setCompletedCrop(c)}
               >
                 <img
                   ref={imgRef}

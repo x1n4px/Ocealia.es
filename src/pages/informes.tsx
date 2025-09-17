@@ -438,7 +438,6 @@ const InformesPage: React.FC = () => {
 
           const descripcionLines = pdf.splitTextToSize(modulo.descripcion, pageWidth - margin * 2);
           const lineHeight = 6;
-          const descripcionHeight = descripcionLines.length * lineHeight;
           
           // Verificar si hay espacio para al menos 3 líneas de descripción
           // Si no, mover toda la descripción a la siguiente página
